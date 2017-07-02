@@ -1,0 +1,74 @@
+<?php
+session_start();
+$client_id = $_SESSION['client_id'];
+#includes
+require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/crud_functions_class.php";
+require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/database_query_processor_class.php";
+require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/utility_class.php";
+require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/json_models_class.php";
+
+//$db= new DatabaseQueryProcessor();
+$mCrudFunctions = new CrudFunctions();
+$json_model_obj = new JSONModel();
+$util_obj = new Utilties();
+
+if ($client_id) {
+    output($client_id);
+} else {
+
+    echo "no client id found";
+
+}
+
+function output($client_id)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+    $mCrudFunctions = new CrudFunctions();
+    $male_counnts = 0;
+    $female_counnts = 0;
+    //$sql = " AND ( dataset_name LIKE '%$search%' OR dataset_type LIKE '%$search%' OR region LIKE '%$search%'   )  ";
+
+    $table = "client_datasets_v";
+    $columns = "*";
+    $where = " client_id='$client_id'";
+    $rows = $mCrudFunctions->fetch_rows($table, $columns, $where);
+
+
+    foreach ($rows as $row) {
+        $male_counnts += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_farmer_gender='male'");
+        $female_counnts += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_farmer_gender='female'");
+    }
+
+    if(draw_pie_chart($male_counnts, $female_counnts, $json_model_obj, $util_obj)){
+        echo "pie drawing";
+    }else echo "not drawing";
+
+    $data = $male_counnts;
+    if(is_array($data) || is_object($data)) {
+        echo("<script>console.log('PHP: ".json_encode($data)."');</script>");
+    } else {
+        echo("<script>console.log('PHP: $data');</script>");
+    }
+
+}
+
+function draw_pie_chart($male, $female, $json_model_obj, $util_obj)
+{
+
+    $titleArray = array('text' => 'Gender Analysis');
+
+    $datax = array();
+
+    $temp = array('Male', $male);
+    array_push($datax, $temp);
+
+    array_push($datax, array('Female', $female));
+
+    $dataArray = array('type' => 'pie', 'name' => 'Gender', 'data' => $datax);
+
+    $data = $json_model_obj->get_piechart_graph_json($titleArray, $dataArray);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
+?>

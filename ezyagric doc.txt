@@ -1,0 +1,53 @@
+#ezyagric_v2
+1.mock ups
+ 
+ #client side
+ -
+
+ #admin side
+
+ -Home page
+           -total client and a view-more link to manage accounts
+           -total datasets and a view-more link to manage datasets
+           -last login --name ,date and time and a view-more link to Usage Logs
+
+ -Accounts 
+           -create 
+                 -Entry fields Full Name,Physical address,Email address,Password and Confirm Password
+                 
+           -Manage
+                 - display Name, address, email  and options- delete, lock ,edit linking to edit account
+                  (changing required)
+ -Datasets
+
+          - create
+                 -Entry Dataset Name ,Dataset Type(VA or Farmer),Region ,From and To dates, csv File import
+                  (Thoughs: add Country and clarify the essence of selecting the dataset type )
+          - manage
+                 - display Name ,Type,	Region,	Period,	Last modified and Options-- edit ,delete, update, view
+
+ -Statistics
+
+          -Farmer
+          -V.A
+          -Client
+
+ -Usage Logs
+          - display Date ,Login time,Logout time,Username and IP address
+
+2.techinicalities
+
+ - mode of data input 
+                    - automation through crone jobs and server scripting
+                    - csv import
+                    (not yet concluded on yet)
+ - mode of data output 
+                    - online page display
+                    - csv export 
+                    - pdf formart
+ -
+
+3.Data base design
+
+
+

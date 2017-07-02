@@ -1,0 +1,26 @@
+
+	// echo $flag;
+	/*if($flag==0){
+	$count=$mCrudFunctions->get_count("fertilizer_".$dataset_id," farmer_id='$farmer_id' AND fertilizer='$fertilizer_selected'")
+	
+	if($count>0){
+	
+	}else{	
+	$yes=$mCrudFunctions->insert_into_table_tb("fertilizer_".$dataset_id, $fertilizer_columns,$fertilizer_values);
+	//echo $yes;
+	}
+	
+	}else{
+	
+	echo "HAHA";
+	/*$count=$mCrudFunctions->get_count("fertilizer_".$dataset_id," farmer_id='$farmer_id' AND fertilizer='$fertilizer_selected'")
+	if($count>0){
+	
+	}else{	
+	$yes=$mCrudFunctions->insert_into_table_tb("fertilizer_".$dataset_id, $fertilizer_columns,$fertilizer_values);
+	echo $yes;
+	}
+	*/
+	
+	}
+   */

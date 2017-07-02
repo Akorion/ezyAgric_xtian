@@ -1,0 +1,18 @@
+
+admin_log_v
+SELECT B.id,A.id, A.user_name, A.email, A.contact, B.login_time, B.login_out_time, B.ip_address
+FROM admin_login_tb A
+INNER JOIN admin_logs_tb B 
+ON A.id=B.user_id;
+
+CREATE VIEW admin_log_v AS
+SELECT B.id,A.id, A.user_name, A.email, A.contact, B.login_time, B.login_out_time, B.ip_address
+FROM admin_login_tb A
+INNER JOIN admin_logs_tb B 
+ON A.id=B.user_id;
+
+CREATE VIEW client_datasets_v AS 
+SELECT A.id, A.dataset_name, B.id AS client_id,B.c_name, A.dataset_type, A.region, A.start_date, A.end_date, A.time_of_creation
+FROM datasets_tb A 
+JOIN client_accounts_tb B 
+ON B.id = A.client_id 

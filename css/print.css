@@ -1,0 +1,49 @@
+@media all {
+    .page-break { display: none; }
+    }
+
+    @media print {
+    .page-break { display: block; page-break-before: always; }
+        }
+           
+table th,.table td{
+    border-top: none !important;
+}
+
+.personal, h6, p
+{
+    display: inline-block;
+    
+
+}
+table
+{       /*   top  
+          right*/
+          margin-left: 45px;
+          margin-right: auto;
+              overflow:none;
+              text-align:justify;
+    
+
+}
+
+body
+{
+  background-color:#9E9E9E;
+}
+
+.container {
+         height:auto;
+          width:220mm;
+        /* to centre page on screen*/
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 15px;
+        margin-top: -35px;
+
+    }
+@page {
+    size: 21cm 29.7cm;
+   /* margin: 30mm 45mm 30mm 45mm;*/ /* change the margins as you want them to be. */
+}
+
