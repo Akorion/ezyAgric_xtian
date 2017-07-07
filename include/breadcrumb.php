@@ -11,8 +11,8 @@ $path = $_SERVER["PHP_SELF"];
 	$_SESSION["pages"];
 	switch(end($parts)){
 	
-	case 'dashboardAll.php';
-	$crumb .="<li><a href=\"./dashboardAll.php\">Home</a></li>";
+	case 'dash.php';
+	$crumb .="<li><a href=\"./dash.php\">Home</a></li>";
 	
 	$_SESSION["pages"][0]=$crumb;
 	$_SESSION["pages"][1]=$crumb;

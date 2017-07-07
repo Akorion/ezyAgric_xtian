@@ -9,7 +9,6 @@ require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/pagination_cla
 
 $mCrudFunctions = new CrudFunctions();
 
-
 if (isset($_POST['id']) && $_POST['id'] != "") {
 
     $page = !empty($_POST['page']) ? (int)$_POST['page'] : 1;

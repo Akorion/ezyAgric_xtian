@@ -20,7 +20,7 @@ if (!isset($_SESSION['client_id'])) {
 $path = $_SERVER["PHP_SELF"];
 
 $connect = mysqli_connect("localhost","root","","akorionc_ezyagric");
-$query = "select biodata_farmer_gender, count(*) as number from dataset_67 GROUP BY biodata_farmer_gender;";
+$query = "select biodata_farmer_gender, count(*) as number from dataset_67 GROUP BY biodata_farmer_gender";
 $result = mysqli_query($connect,$query)or die("not querying");
 
 ?>

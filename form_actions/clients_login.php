@@ -84,7 +84,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 	$_SESSION["role"]=$rows[0]['role'];
 	
 	
-	if($_SESSION["client_id"]==1){
+	if($_SESSION["client_id"]==2){
 	
 	
 	$user_id=(int)$_SESSION["user_id"];
@@ -93,7 +93,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 	$ip_address=$util_obj->getClientIpV4();
 	$mCrudFunctions->insert_into_clients_logs_tb($client_id, $user_id, "Logged In", $time_of_activity, $ip_address);
 	
-	$util_obj->redirect_to( "../dash1.php" );
+	$util_obj->redirect_to( "../dashboardAll.php" );
 	}else{
 	
 	$util_obj->redirect_to( "../dashboardAll.php" );
