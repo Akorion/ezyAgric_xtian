@@ -134,10 +134,10 @@ $mCrudFunctions = new CrudFunctions();
     }
     ?>
 
-    <div id="filtered_data" class="containers down"><!--data grid goes here-->
+            <div id="filtered_data" class="containers down"><!--data grid goes here-->
 
 
-    </div><!--end of data grid-->
+            </div><!--end of data grid-->
 
     <div class="container" style="margin-bottom:80px;"><!--start of pagination row-->
         <div id="pagination_holder" class="col s12 m12 l12"><!--pagination starts-->

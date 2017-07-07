@@ -1,4 +1,5 @@
-<?php include("./include/header_client.php"); ?>
+<?php //include("./include/header_client.php"); ?>
+<?php include("include/header_client.php"); ?>
 <style type="text/css">
     .content h2 {
         color: #ffffff;
@@ -248,7 +249,23 @@ include("include/preloader.php");
             },
             success: function (data) {
 
-                $('#gender_graph').highcharts(data);
+                $('#gender_graph').highcharts(data,function(chart) { // on complete
+
+//                    var xpos = '50%';
+//                    var ypos = '53%';
+//                    var circleradius = 102;
+//
+//                    // Render the text
+//                    chart.renderer.text('<b>Total</b> <br>  200', 150, 160).css({
+//                        width: circleradius*1,
+//                        color: '#4572A7',
+//                        fontSize: '16px',
+//
+//                    }).attr({
+//                        // why doesn't zIndex get the text in front of the chart?
+//                        zIndex: 999
+//                    }).add();
+                });
             }
         });
         hideProgressBar();
@@ -267,7 +284,6 @@ include("include/preloader.php");
             success: function (data) {
 
                 $('#ict_usage_graph').highcharts(data);
-//                console.log(data);
             }
         });
         hideProgressBar();
@@ -285,8 +301,6 @@ include("include/preloader.php");
             },
             success: function (data) {
                 $('#farmers_regions').highcharts(data);
-
-                console.log(data.series);
             }
         });
 
@@ -307,7 +321,6 @@ include("include/preloader.php");
             success: function (data) {
 
                 $('#crops_grown').highcharts(data);
-//                console.log(data.title);
             }
         });
         hideProgressBar();
