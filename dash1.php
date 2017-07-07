@@ -20,11 +20,13 @@
     .x_panel {
         position: relative;
         width: 100%;
+        min-height: 300px;
         margin-bottom: 10px;
         padding: 10px 17px;
         display: inline-block;
         background: #fff;
-        border: 1px solid #E6E9ED;
+        border: thin solid #E6E9ED;
+        border-radius: 5px;
         -webkit-column-break-inside: avoid;
         -moz-column-break-inside: avoid;
         column-break-inside: avoid;
@@ -34,6 +36,10 @@
         -webkit-transition: all .2s ease;
         -ms-transition: all .2s ease;
         transition: all .2s ease;
+
+        -moz-box-shadow: 0 0 5px #999;
+        -webkit-box-shadow: 0 0 5px #999;
+        box-shadow: 0 0 5px #999;
     }
 
     .x_title {
@@ -105,7 +111,7 @@
     }
 
     #row_one .x_title {
-        background-color: #f5b23d;
+        background-color: #ffffff;
     }
 
     .x_title h2:nth-child(1) {
@@ -119,7 +125,7 @@
         font-size: 2em !important;
         text-align: center !important;
         font-weight: 100 !important;
-        color: #999;
+        /*color: #999;*/
     }
 
     #row_one .content h6:nth-child(2) {
@@ -197,6 +203,9 @@
 </style>
 <?php include "include/breadcrumb.php" ?>
 <div class="container-fluid" style="margin-bottom: 4em !important;">
+    <div class=\"x_titles\">
+        <h2 style="font-size:16px; padding-left:10px;">Seasons</h2>
+    </div>
     <div class="row" id="row_one">
         <h1 class="text-center"><br/><br/><br/><i class="fa fa-spinner fa-spin"></i> Loading datasets...</h1>
 

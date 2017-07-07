@@ -53,6 +53,7 @@ class JSONModel
         $response['tooltip'] = array("pointFormat" => '{series.name}: <b>{point.percentage:.1f}%</b>');
 
         $response['series'] = array();
+        $response['total'] = array('total'=>112);
         array_push($response['series'], $dataArray);
 
         return $response;
@@ -61,12 +62,11 @@ class JSONModel
 
     public function get_stat_bar_graph_json2($rows, $titleArray, $label_x, $key)
     {
-
         $response['credits'] = array('enabled' => 0);
 
         $response['exporting'] = array('enabled' => false);
 
-        $response['chart'] = array('type' => 'line');
+        $response['chart'] = array('type' => 'column');
 
         $response['title'] = $titleArray;
 
@@ -90,16 +90,44 @@ class JSONModel
                 array_push($temp["x"], (double)$row["frequency"]);
                 array_push($temp["y"], ucfirst(strtolower($row[$key])));
             }
-
         }
-
         $response['xAxis'] = array('categories' => $temp["y"], "crosshair" => true);
 
         $response['series'] = array();
         array_push($response['series'], array("name" => $label_x, "data" => $temp["x"]));
 
-
         return $response;
+    }
+
+    public function get_column_graph($district, $no_farmers, $youth, $old, $type)
+    {
+        $json['credits'] = array('enabled' => 0);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['chart'] = array('type' => 'column');
+
+        $json['title'] = array('text'=>'Number of farmers in districs');
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>',
+            "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
+
+        $json['series'] = array(array('name' => 'Total farmers', 'data' => $no_farmers),
+            array('name' => 'Youth', 'data' => $youth),
+            array('name' => 'Old', 'data' => $old)
+        );
+        return $json;
     }
 
     public function get_stat_district_json($rows)
@@ -174,7 +202,7 @@ class JSONModel
 
         $response['chart'] = array('type' => 'line');
 
-        $response['title'] = 'graph of farmers';
+        $response['title'] = array('text'=>'graph of farmers');
 
         $response['yAxis'] = array();
         array_push($response['yAxis'], array('min' => 0, 'title' => array("text" => 'Farmers')));
@@ -206,45 +234,12 @@ class JSONModel
         return $response;
     }
 
-
-    public function get_column_graph($district, $no_farmers, $youth, $old, $type)
-    {
-        $json['chart'] = array('type' => $type);
-
-        $json['title'] = 'Number of farmers in their districts';
-
-        $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
-
-        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
-
-        $json['credits'] = array('enabled' => false);
-
-        $json['exporting'] = array('enabled' => false);
-
-        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
-            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>',
-            "footerFormat" => '</table>', "shared" => true,
-            "useHTML" => true);
-
-        $json['plotOptions'] = array(
-            "column" => array(
-                "pointPadding" => 0.2,
-                'borderWidth' => 0
-            ));
-
-        //        $json['series'] = array(array('name'=>'All','data'=>array(49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 116.4, 194.1, 95.6, 54.4))
-        $json['series'] = array(array('name' => 'Farmers', 'data' => $no_farmers),
-            array('name' => 'Youth', 'data' => $youth),
-            array('name' => 'Old', 'data' => $old)
-            );
-        return $json;
-    }
-
     public function drawSeedGraph($district, $no_farmers, $type)
     {
         $json['chart'] = array('type' => $type);
 
-        $json['title'] = 'Number of farmers';
+        $json['title'] = array('text'=>'Farmers and their source of seeds');
+
 
         $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
 
@@ -264,7 +259,7 @@ class JSONModel
                 "pointPadding" => 0.2,
                 'borderWidth' => 0
             ));
-        $json['series'] = array(array('name' => 'Source of seeds', 'data' => $no_farmers));
+        $json['series'] = array(array('name' => 'Number of farmers', 'data' => $no_farmers));
         return $json;
     }
 
@@ -272,7 +267,8 @@ class JSONModel
     {
         $json['chart'] = array('type' => $type);
 
-        $json['title'] = 'Number of farmers in their districts';
+        $json['title'] = array('text'=>'Farmers who applied climate change action');
+
 
         $json['xAxis'] = array('categories' => $district);
 
@@ -302,7 +298,8 @@ class JSONModel
     {
         $json['chart'] = array('type' => $type);
 
-        $json['title'] = 'Number of farmers in their districts';
+        $json['title'] = array('text'=>'Farmers gender distribution in different regions');
+
 
         $json['xAxis'] = array('categories' => $categories, 'crosshair' => true);
 

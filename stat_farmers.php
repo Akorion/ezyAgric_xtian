@@ -11,6 +11,9 @@
         bottom: 90px;
         z-index: 100;
     }
+    .graph_box{
+        padding: 20px; -moz-box-shadow: 0 0 5px #999; -webkit-box-shadow: 0 0 5px #999; box-shadow: 0 0 5px #999;
+    }
 
 
 </style>
@@ -62,7 +65,9 @@
 
     <div class="row" style="margin-top:-5px;">
         <!--<h4 id="heading" class="text-center hide">Graph</h4>id="line_graph"-->
-        <div class="col-md-8">
+        <div class="col-md-8" style=" padding: 20px; -moz-box-shadow: 0 0 5px #999;
+        -webkit-box-shadow: 0 0 5px #999;
+        box-shadow: 0 0 5px #999;">
             <div id="line_graph" style=" height:500px">
             </div>
         </div>
@@ -72,8 +77,13 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div id="gender_graph" style=" height:250px">
+                    <div class="graph_box h4" style="margin-top: 0px;background: rgba(10,134,48,0.8); color: white;">
+                       <center> Total farmers : <span id="total_farmers"></span></center>
                     </div>
+                    <br>
+                    <div id="gender_graph" class="graph_box" style="min-height: 450px;">
+                    </div>
+
                 </div>
             </div>
 
@@ -184,7 +194,6 @@
 
                 $("#sel_va").html(data);
 
-
             }
         });
 
@@ -210,7 +219,6 @@
                 $("#sel_village").html(data);
             }
         });
-
     }
 
 
@@ -470,7 +478,6 @@
             success: function (data) {
                 // window.alert(va);
                 FormLineGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender);
-
             }
 
         });
@@ -498,7 +505,6 @@
 
 
     function FormLineGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender) {
-
 
         $.ajax({
             type: "POST",
@@ -561,6 +567,12 @@
             success: function (data) {
 
                 $('#gender_graph').highcharts(data);
+//                console.log(data.series);
+                var male = data.series[0].data[0][1];
+                var female = data.series[0].data[1][1];
+
+                    $('#total_farmers').html(male+female);
+//                console.log(male+female);
 
             }
         });
@@ -590,7 +602,6 @@
             success: function (data) {
 
                 $('#production_graph').highcharts(data);
-
 
             }
         });

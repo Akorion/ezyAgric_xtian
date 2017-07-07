@@ -3,10 +3,11 @@ body
 	background-image:url(../images/bg.png) ;
     background-repeat: repeat;
 	font-weight: 300;
-	color: #676858;
+	/*color: #676858;*/
+    /*color: #1a1a1a;*/
 	height: 100%;
     position:relative;
-    font-family: sans-serif;
+    /*font-family: sans-serif;*/
 
 }
 
@@ -641,7 +642,7 @@ padding: 3px 5px !important;}
 
 #fixed-header th{
 padding: 8px;
-    text-align: left
+    text-align: left;
   line-height: 1.42857143;
   vertical-align: top;
   border-top: 1px solid #ddd;}

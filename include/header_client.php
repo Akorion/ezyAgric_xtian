@@ -19,9 +19,9 @@ if (!isset($_SESSION['client_id'])) {
 
 $path = $_SERVER["PHP_SELF"];
 
-$connect = mysqli_connect("localhost","root","","akorionc_ezyagric");
-$query = "select biodata_farmer_gender, count(*) as number from dataset_67 GROUP BY biodata_farmer_gender";
-$result = mysqli_query($connect,$query)or die("not querying");
+//$connect = mysqli_connect("localhost","root","","akorionc_ezyagric");
+//$query = "select biodata_farmer_gender, count(*) as number from dataset_67 GROUP BY biodata_farmer_gender";
+//$result = mysqli_query($connect,$query)or die("not querying");
 
 ?>
 <html>
@@ -32,6 +32,7 @@ $result = mysqli_query($connect,$query)or die("not querying");
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/material.min.css">
+
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!--<script src="https://maps.googleapis.com/maps/api/js"></script>-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChJn8njjZxU_B2LtFFjxR5c3M9gTnR0xo&callback=initMap"
@@ -43,10 +44,10 @@ $result = mysqli_query($connect,$query)or die("not querying");
     <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+
     <link rel="stylesheet" type="text/css" href="css/custom.css">
     <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
     <link rel="icon" type="image/png" href="images/ezy-fav.png"/>
-
     <link rel="stylesheet" href="css/morris.css">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
@@ -86,7 +87,7 @@ $result = mysqli_query($connect,$query)or die("not querying");
             <ul class="nav navbar-nav">
                 <li class="active"><?php
                     if ($_SESSION['client_id'] == 2) {
-                        echo "<a href=\"./dash1.php\">Home</a>";
+                        echo "<a href=\"./dashboardAll.php\">Home</a>";
                     } else {
                         echo "<a href=\"./dashboardAll.php\" >Home</a>";
                     } ?>
@@ -108,9 +109,9 @@ $result = mysqli_query($connect,$query)or die("not querying");
                     case  "view.php":
                         echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
                         break;
-                    case "dashboardAll.php":
-                        echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
-                        break;
+//                    case "dashboardAll.php":
+//                        echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
+//                        break;
 
                 }
 
