@@ -239,6 +239,9 @@ td:nth-child(even){
         paddng: 5px;
         color: #000
     }
+    /*td .success {*/
+        /*color: #03852a;*/
+    /*}*/
 
 </style>
 <?php include "include/breadcrumb.php"; ?>
@@ -386,9 +389,10 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                         <th>Intrest(UGX)</th>
                         <th>Produce Supplied(KGS)</th>
                         <th>Price Per Kilo (UGX)</th>
-                        <th>Cash payable (UGX)</th>
+                        <th colspan="2">Cash From Produce(UGX)</th>
+                        <th colspan="2">Cash payable (UGX)</th>
                         <th>Payment status</th>
-                        <th>Action</th>
+                        <th colspan="2">Action</th>
 
                     </tr>
                     </thead>
@@ -564,6 +568,8 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
 
                         $produce_suplied_ = $produce_suplied_ > 0 ? number_format($produce_suplied_) : "N/A";
 
+                        $produce_cash = $produce_cash > 0 ? number_format($produce_cash) : "N/A";
+
                         $intrest = $amount_with_intrest;
 
                         $url = "images/va_receipt/$receipt";
@@ -592,8 +598,9 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
 
                         echo "
 	  <td>$produce_unit_price</td>
-      <td>" . $cash_payable . "  </td>
-      <td class=\"$class\"></td>
+	  <td colspan='2'>$produce_cash</td>
+      <td colspan='2'>" . $cash_payable . "  </td>
+      <td class=\"$class\" style='background-color: #03852a'></td>
       <td>
 	  <a href=\"user_details.php?s=$s&token=$farmer_id&type=Farmer\" title=\"View Profile\" class=\"m-0 btn-primary btn-xs\" style=\"font-size:0.8em;\">
       Profile</a>
