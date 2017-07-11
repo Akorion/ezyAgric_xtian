@@ -287,14 +287,13 @@ class CrudFunctions
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-    public function insert_into_out_grower_input_tb($dataset_id, $va_code, $meta_id, $item_id, $unit_price, $qty, $doc_date, $reciept_url)
-    {
-        $util_obj = new Utilties();
-        $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
-        $table = "out_grower_input_tb";
-        $columns = "dataset_id, va_code, meta_id, item_id, unit_price, qty, doc_date ,reciept_url ";
-        $values = "'$dataset_id', '$va_code', '$meta_id', '$item_id', '$unit_price', '$qty' , '$doc_date', '$reciept_url' ";
-        return $util_obj->insert_into($mDatabaseQueryProcessor, $table, $columns, $values);
+    public function insert_into_out_grower_input_tb($va_dataset_id,$dataset_id, $va_code, $meta_id, $item_id, $unit_price, $qty,$doc_date,$reciept_url){
+        $util_obj= new Utilties();
+        $mDatabaseQueryProcessor =new DatabaseQueryProcessor();
+        $table="out_grower_input_tb";
+        $columns="id,dataset_id, va_code, meta_id, item_id, unit_price, qty, doc_date ,reciept_url ";
+        $values="'$va_dataset_id','$dataset_id', '$va_code', '$meta_id', '$item_id', '$unit_price', '$qty' , '$doc_date', '$reciept_url' ";
+        return $util_obj->insert_into($mDatabaseQueryProcessor,$table,$columns, $values);
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -313,14 +312,13 @@ class CrudFunctions
 ////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-    public function insert_into_out_grower_produce_tb($dataset_id, $va_code, $meta_id, $qty, $commission_per_unit, $receipt, $payment_status, $unit_price, $doc_date)
-    {
-        $util_obj = new Utilties();
-        $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
-        $table = "out_grower_produce_tb";
-        $columns = "dataset_id, va_code, meta_id, qty, commission_per_unit, receipt, payment_status ,unit_price ,doc_date";
-        $values = "'$dataset_id', '$va_code', '$meta_id', '$qty', '$commission_per_unit', '$receipt', '$payment_status', '$unit_price', '$doc_date' ";
-        return $util_obj->insert_into($mDatabaseQueryProcessor, $table, $columns, $values);
+    public function insert_into_out_grower_produce_tb($va_dataset_id,$dataset_id, $va_code, $meta_id, $qty, $commission_per_unit, $receipt, $payment_status,$unit_price,$doc_date){
+        $util_obj= new Utilties();
+        $mDatabaseQueryProcessor =new DatabaseQueryProcessor();
+        $table="out_grower_produce_tb";
+        $columns="id,dataset_id, va_code, meta_id, qty, commission_per_unit, receipt, payment_status ,unit_price ,doc_date";
+        $values="'$va_dataset_id','$dataset_id', '$va_code', '$meta_id', '$qty', '$commission_per_unit', '$receipt', '$payment_status', '$unit_price', '$doc_date' ";
+        return $util_obj->insert_into($mDatabaseQueryProcessor,$table,$columns, $values);
     }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -61,7 +61,6 @@ switch ($_POST["token"]) {
         $youth = array();
         $old = array();
 
-
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $slected_rows = $mCrudFunctions->fetch_farmer_rows("dataset_" . $row['id'] . " GROUP BY biodata_farmer_location_farmer_district ORDER BY biodata_farmer_location_farmer_district ASC",

@@ -60,25 +60,24 @@ if ($_FILES["csv"]["size"] > 0) {
         $flag =$util_obj->createTableFromCSV($db,$handle,$table);
 		
 		//echo $flag;
-        if ($flag) {   
-	         $array=$mCrudFunctions->insertColumnsIntoTractTables($__id,$handle2);
-			// print_r( $array);
-	         $column_string= $util_obj->getColumnsString($db,$table,1);
-	         $counter=$util_obj->insertCSVintoTable($db,$table,$column_string,$handle);
-			echo $counter."<br/>";
-			if($counter>0){
-				$result = $util_obj->insert_into_farmers_bio_data($db,$table,$__id);
-				$util_obj->redirect_to( "../admin/home.php?action=createdataset&success=1&client_id=$client_id&inserted=$result" );
-			}
+        if ($flag)
+        {
+            $array = $mCrudFunctions->insertColumnsIntoTractTables($__id, $handle2);
+//                        $util_obj->debug_to_console($array);
+            $column_string = $util_obj->getColumnsString($db, $table, 1);
+//                        $util_obj->debug_to_console($column_string);
+
+            $string = $util_obj->insertCSVintoTable($db, $table, $column_string, $handle);
+//                        $util_obj->debug_to_console($string);
+
+            if ($string > 0) $util_obj->redirect_to("../admin/home.php?action=createdataset&success=1&client_id=$client_id&inserted=$string");
 		}else{
-		 $util_obj->redirect_to( "../admin/home.php?action=createdataset&success=0&flag=1" );
+		    $util_obj->redirect_to( "../admin/home.php?action=createdataset&success=0&flag=1" );
 		}
 		}
 		}else{
-		
-		$util_obj->redirect_to( "../admin/home.php?action=createdataset&success=0&flag=4" );
+		    $util_obj->redirect_to( "../admin/home.php?action=createdataset&success=0&flag=4" );
 		}
-   
     }     
    }else{
    $size = $_FILES["csv"]["size"];

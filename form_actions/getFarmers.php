@@ -1,4 +1,13 @@
+<style type="text/css">
+    th, thead {
+        height: 2em !important;
+        background: teal;
+        color: #fff !important;
+    }
+</style>
 <?php
+error_reporting(0);
+
 #includes
 session_start();
 require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/crud_functions_class.php";
@@ -9,21 +18,23 @@ require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/pagination_cla
 
 $mCrudFunctions = new CrudFunctions();
 
+
 if (isset($_POST['id']) && $_POST['id'] != "") {
+    $class = 'table table-bordered table-hover';
 
     $page = !empty($_POST['page']) ? (int)$_POST['page'] : 1;
 
     $per_page = 16;
     $id = $_POST['id'];
+    $dataset_get_name = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id ");
+    $dt_st_name = $dataset_get_name[0]['dataset_name'];
     $total_count_default = $mCrudFunctions->get_count("dataset_" . $id, 1);
 
     $total_count = !empty($_POST['total_count']) ? (int)$_POST['total_count'] : $total_count_default;
     $pagination_obj = new Pagination($page, $per_page, $total_count);
     $offset = $pagination_obj->getOffset();
     $gender = $_POST['gender'];
-
-
-    $va = $_POST['va'];;
+    $va = $_POST['va'];
     $va = str_replace("(", "-", $va);
     $va = str_replace(")", "", $va);
 //$string="hyderabad-india";
@@ -38,18 +49,19 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
             case  "all" :
 
 ////////////////////////////////////////////////////////district all starts
-///
                 if ($_POST['sel_production_id'] == "all") {
                     if ($_POST['gender'] == "all") {
                         ///v2 code interview_particulars_va_code
                         if ($_POST['va'] == "all") {
-                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                            output($id, " 1 LIMIT $per_page OFFSET $offset ");
+//                            echo "Dataset: $dt_st_name";
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                            output($id, " 1 ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                             echo "</table>";
 
                         } else {
-                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                            output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset  ");
+//                            echo "Dataset: $dt_st_name";
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                            output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                             echo "</table>";
                         }
 
@@ -59,12 +71,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                         //echo $gender;
 
                         if ($_POST['va'] == "all") {
-                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                            output($id, " lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                            output($id, " lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                             echo "</table>";
                         } else {
-                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                            output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                            output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                             echo "</table>";
                         }
 
@@ -93,12 +105,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
                                         ///v2 code interview_particulars_va_code
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " " . $column . " LIKE 'no'  LIMIT $per_page OFFSET $offset");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " " . $column . " LIKE 'no' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-hover'><thead class='bg bg-success'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
-                                            output($id, " " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset  ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                                             echo "</table>";
                                         }
 
@@ -108,12 +120,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         }
 
@@ -134,13 +146,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
                                     if ($_POST['va'] == "all") {
 
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, "  " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
 
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     }
 
@@ -148,12 +160,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
 
                                     }
@@ -173,12 +185,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                 if ($_POST['va'] == "all") {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, "  " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, "  " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 } else {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, "  " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, "  " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 }
 
@@ -188,13 +200,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                 if ($_POST['va'] == "all") {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
 
                                 } else {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 }
 
@@ -216,12 +228,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                             if ($_POST['va'] == "all") {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, "  " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
                             } else {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
                             }
 
@@ -232,13 +244,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
 
                             if ($_POST['va'] == "all") {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
 
                             } else {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
 
                             }
@@ -267,13 +279,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                             if ($_POST['va'] == "all") {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  LIMIT $per_page OFFSET $offset");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
                                 echo "</table>";
 
                             } else {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset");
                                 echo "</table>";
                             }
 
@@ -283,12 +295,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                             if ($_POST['va'] == "all") {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ") . "</table>";
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
                                 echo "</table>";
                             } else {
-                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
                             }
 
@@ -315,12 +327,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             }
 
@@ -330,13 +342,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             }
@@ -355,12 +367,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                     if ($_POST['gender'] == "all") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         }
 
@@ -370,12 +382,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         }
 
@@ -394,12 +406,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 if ($_POST['gender'] == "all") {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     }
 
@@ -407,13 +419,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 } else {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
 
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
 
                                     }
@@ -434,13 +446,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                 if ($_POST['va'] == "all") {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
 
                                 } else {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
 
                                 }
@@ -450,12 +462,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                 if ($_POST['va'] == "all") {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 } else {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 }
 
@@ -478,13 +490,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                 if ($_POST['va'] == "all") {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
 
                                 } else {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 }
 
@@ -492,12 +504,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                 if ($_POST['va'] == "all") {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 } else {
-                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                     echo "</table>";
                                 }
 
@@ -525,12 +537,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                 if ($_POST['va'] == "all") {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 } else {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 }
 
@@ -539,12 +551,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                 if ($_POST['va'] == "all") {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 } else {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ") . "</table>";
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
                                                     echo "</table>";
                                                 }
 
@@ -563,12 +575,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             }
 
@@ -576,12 +588,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         } else {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             }
 
@@ -601,12 +613,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         }
 
@@ -614,12 +626,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset  ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset  ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                                             echo "</table>";
                                         }
 
@@ -639,12 +651,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     }
 
@@ -653,13 +665,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
 
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
 
                                     }
@@ -686,12 +698,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     }
 
@@ -699,13 +711,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 } else {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' LIMIT $per_page OFFSET $offset  ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                                         echo "</table>";
 
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset  ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                                         echo "</table>";
 
                                     }
@@ -733,12 +745,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                     if ($_POST['va'] == "all") {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
                                                     } else {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     }
@@ -749,13 +761,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                     if ($_POST['va'] == "all") {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     } else {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " ORDER BY biodata_farmer_name LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     }
@@ -774,12 +786,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                 if ($_POST['va'] == "all") {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 } else {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 }
 
@@ -787,13 +799,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                 if ($_POST['va'] == "all") {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
 
                                                 } else {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
 
                                                 }
@@ -814,13 +826,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             }
@@ -828,13 +840,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         } else {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             }
@@ -854,12 +866,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         }
 
@@ -867,13 +879,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
 
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
 
                                         }
@@ -900,12 +912,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     }
 
@@ -913,12 +925,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 } else {
                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
                                     if ($_POST['va'] == "all") {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
                                     } else {
-                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                         echo "</table>";
 
                                     }
@@ -931,7 +943,6 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
                                 $mCrudFunctions = new CrudFunctions();
                                 $string = $_POST['sel_production_id'];
-
 
                                 if (strpos($string, "productionyes") === false) {
                                     if (strpos($string, "productionno") === false) {
@@ -947,13 +958,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                     //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                     if ($_POST['va'] == "all") {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     } else {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     }
@@ -965,14 +976,14 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
 
                                                     if ($_POST['va'] == "all") {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     } else {
-                                                        echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
+                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
 
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                         echo "</table>";
 
                                                     }
@@ -990,12 +1001,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                 if ($_POST['va'] == "all") {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 } else {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
                                                 }
 
@@ -1005,13 +1016,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                                 if ($_POST['va'] == "all") {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
 
                                                 } else {
-                                                    echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                     echo "</table>";
 
                                                 }
@@ -1031,13 +1042,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
 
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             }
 
@@ -1047,12 +1058,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                             //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                             if ($_POST['va'] == "all") {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             } else {
-                                                echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             }
 
@@ -1072,13 +1083,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
 
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
 
                                         }
@@ -1088,12 +1099,12 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
                                         if ($_POST['va'] == "all") {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
                                         } else {
-                                            echo "<table class='table table-bordered'><thead class='bg bg-primary'><tr><th>Gender</th> <th>Name</th> <th>Age</th> <th>Gardens</th> <th>Acreage</th> <th>&nbsp;</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th>  <th>Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                             echo "</table>";
 
                                         }
@@ -1158,7 +1169,7 @@ function output($id, $where)
     if ($dataset_type == "Farmer") {
         if (sizeof($rows) == 0) {
             echo "<p style=\"font-size:1.4em; width:100%; text-align:center; color:#999; margin-top:100px\">No Data</p>";
-        } else {
+        } else {            $counter = 1;
             foreach ($rows as $row) {
                 $real_id = $row['id'];
                 $real_id_ = $row['id'];
@@ -1179,12 +1190,12 @@ function output($id, $where)
                 if ($_SESSION['client_id'] == 1) {
                     echo "<tr>";
                     echo "
-                
-                   <td>" . substr($gender, 0, 1) . "</td>
-                
+                        <td>$counter</td>                          
                   
                   <td style='line-height:12pt; align:center'>$name</td>
-                  <td style='line-height:12pt; align:center'>$age_</td>";
+                  <td style='line-height:12pt; align:center'>$age_</td>
+
+                    <td>" . substr($gender, 0, 1) . "</td>";
 //                    <td style='line-height:12pt; align:center'>$district</td>
 
                     $acares = array();
@@ -1227,16 +1238,15 @@ function output($id, $where)
                             }
 
                             $_gardens = $total_gardens == 1 ? " Garden" : " Gardens";
-                            echo "<td>$total_gardens$_gardens</td>
-                                    <td> <b>Acreage:</b> $average</td>";
+                            echo "<td>$total_gardens</td>
+                                    <td> $average</td>";
                         }
 
-
                     } //<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
-                    echo "<td>
-    
-  <a  href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" class=\" btn \" style=\"color:#F57C00; margin:0; width:100%;\">View Details &raquo;</a>
-    </td>";
+                    echo " 
+ <td>    
+  <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; margin:0; width:35%; margin-left:10%;\">View Details &raquo;</a>
+ </td>";
 
                     $client_id = $_SESSION['client_id'];
                     if ($client_id == 4324524) {
@@ -1267,9 +1277,10 @@ function output($id, $where)
                     echo "</tr>";
                 } else {
                     echo "<tr>
-
+                           <td>$counter</td>                   
+                           <td>$name</td> <td>$age_ yrs</td>  
                            <td>" . substr($gender, 0, 1) . "</td>
-                          <td>$name</td> <td>$age_ yrs</td>
+                          
                           ";
 //                    echo "<a href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\">
 //                          <div class=\"col-sm-12 col-md-3 col-lg-3 col-xs-12\" style=\" margin-top:5px;\">
@@ -1326,18 +1337,18 @@ function output($id, $where)
                             }
 
                             $_gardens = $total_gardens == 1 ? " Garden" : " Gardens";
-                            echo "<td><h6>$total_gardens$_gardens</h6></td>
-                                    <td style=\"color:#888\"> <b>Acreage:</b> $average</td>";
+                            echo "<td><h6>$total_gardens</h6></td>
+                                    <td style=\"color:#888\"> $average</td>";
                         }
 
 
                     } //<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
                     echo "
     <div class=\"row\">
-    <td class=\"col-sm-4\">
-  <td>
-  <a  href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" class=\" btn \" style=\"color:#F57C00; padding: 1px; width:100%;\">Details &raquo;</a></td>
-    </td>";
+    <!--  <td class=\"col-sm-4\">  -->
+  <td>  
+  <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a></td>
+    <!--  </td>  -->";
 
                     $client_id = $_SESSION['client_id'];
                     if ($client_id == 4324524) {
@@ -1365,7 +1376,7 @@ function output($id, $where)
                 }
                 ///////////////////////////////////////////////////////////////////////////////////////
 
-
+                $counter++;
             }
 
 

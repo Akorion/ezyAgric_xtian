@@ -247,61 +247,54 @@ public function get_result_array($db,$table,$columns,$where)
         return $db->getFullResultArray();;
     }
 
-public function getColumnsString($db,$table,$where){
-//	$con = new ServerConnection();
+public function getColumnsString($db,$table,$where)
+{
+
     $query="SELECT * FROM ".$table." WHERE ".$where ; 
     $db->setResultForQuery($query);
 	$fields = $db->getAllFieldsInResult();
-//	$column_string = array();
+
 	$values = array();	$sql_array = array();
 	foreach($fields as $key){
 		array_push($values, $key->name);
 	}
-//	$column_string[] = implode(', ', $values);
-	echo sizeof($values)."<br/>";
+
+//	echo sizeof($values)."<br/>";
 	for($j=1; $j<sizeof($values); $j++){
-		$sql_array[$j] = $values[$j];
+		$sql_array[] = $values[$j];
 	}
-	$this->debug_to_console($values)."<br>";
+//	$this->debug_to_console($values)."<br>";
     return $sql_array;
 }
 
 public function insertCSVintoTable($db,$table,$column_string,$handle){
 	$con = new ServerConnection();
    $counter=0;
-   $uninserted_rows=" ";
+
 	$data_array = array();
    while(($data = fgetcsv($handle,0,";"," ")) !== FALSE){
 	   array_push($data_array, $data);
+       $counter = sizeof($data);
    }
-	$this->debug_to_console($data_array)."<br>";
+
+//	$this->debug_to_console($data_array)."<br>";
 	$values = array();
 	foreach($data_array as $real_data){
 		foreach($real_data as $key => $value){
 			$real_data[$key] = mysqli_real_escape_string($con->getServerConnection(), $real_data[$key]);
 		}
 		$values[] = "('" . implode("', '", $real_data). "')";
-		$counter = sizeof($values);
 	}
-//		 echo $column_string."<br/>";
-	$query= " INSERT INTO ".$table." (".implode(', ', $column_string).") VALUES " .implode(', ', $values);
-	$db->setResultForQuery($query);
-	return $counter;
-//	if($flagx){
-//		return $counter;
-//	}
-//	try{
-//		$flagx=$db->setResultForQuery($query);
-//
-//		if(!$flagx){
-//			throw new Exception($counter);
-//		}
-//	}catch(Exception $e){
-//		echo $e->getMessage();
-//		$uninserted_rows= $uninserted_rows.",".$e->getMessage();
-//		return $uninserted_rows;
-//	}
 
+	$query= " INSERT INTO ".$table." (".implode(', ', $column_string).") VALUES " .implode(', ', $values);
+
+//    $this->debug_to_console($query);
+    $flagx = $db->setResultForQuery($query);
+    if (!$flagx) {
+        return mysqli_error($con->getServerConnection());
+    } else {
+        return $counter;
+    }
 }
 
 public function get_acerage_from_geo($latitudes,$longitudes){
