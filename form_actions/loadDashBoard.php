@@ -114,28 +114,28 @@ function output($client_id, $search)
         echo "
 
     <div class=\"col-md-3 col-sm-4 col-xs-12\">
-    <div class=\"x_panel tile fixed_height_400\">
+    <div class=\"x_panel tile fixed_height_400\" style=' -moz-box-shadow: 0 0 5px #999;
+        -webkit-box-shadow: 0 0 5px #999;
+        box-shadow: 0 0 5px #999;'>
 
     <div class=\"x_title\">
       <h2 style=\"font-size:12px\">$dataset_name</h2>
       <ul class=\"nav navbar-right\">
-        <a><i class=\"fa fa-file\" style=\"font-size:17px;\"></i></a>
+        <a><i class=\"fa fa-folder-open\" style=\"font-size:17px;\"></i></a>
       </ul>
       <div class=\"clearfix\"></div>
     </div>
 
     <div class=\"content\">
 
-    <h6>$region</h6>
+    <span class='bg bg-primary col-lg-12' style='margin-left: 0px;'>$region</span>
     <h6>$number <span>$type$s</span></h6>";
         if ($total_gardens > 0 && $total_acerage > 0) {
 
-            echo "<p style='padding: 0px 10px; font-size:13px'><b><span>$total_gardens Gardens</span><span> ($total_acerage acres) </span></b></p>
-
-    ";
+            echo "<p class='row col-lg-12' style='padding: 0px 10px; font-size:13px' align='center'><b><span><td>Gardens : </td>$total_gardens </span><br/><span> Acres : $total_acerage  </span></b></p>";
         }
 
-        echo "<h6 style=\"margin-left:.5em !important;\">$period</h6><br/>";
+        echo "<h6 style=\"margin-left:.5em !important;\" align='center'>$period</h6><br/>";
         if ($type == "Farmer") {
             echo "<a style=\"margin-left:15px; font-size:.8em;\" id=\"csv\" class=\"btn btn-xs btn-success\"  onclick=\"Export2Csv($dataset_id);\"  >Export to CSV</a>";
         }

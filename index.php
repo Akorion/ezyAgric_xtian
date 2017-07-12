@@ -37,7 +37,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 //        if($_SESSION['client_id']==2){
 //            $util_obj->redirect_to( "dash1.php" );
 //        }else{
-            $util_obj->redirect_to( "dashboardAll.php" );
+    $util_obj->redirect_to( "dashboardAll.php" );
 //        }
 //        $util_obj->redirect_to("dashboardAll.php");
 //
@@ -70,7 +70,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 
 </head>
 
-<body style="background: url('images/woman.jpg'); 
+<body style="background: url('images/woman.jpg');
       background-position:center; ">
 <!--<nav class="navbar navbar-default teal">
   <div class="container">
@@ -90,7 +90,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
             <p class="secondary-light">Your number one solution<br/> for all your profiling needs.</p>
         </div>
         <div class="col-sm-6">
-            <form method="post" action="./form_actions/clients_login.php" class="form-signin bg">
+            <form method="post" action="./form_actions/clients_login.php" class="form-signin bg" style="background-color: #f9f9f9;">
                 <h3 class="form-signin-heading no-margin">Sign in</h3>
                 <div class="form-group">
                     <br/>
