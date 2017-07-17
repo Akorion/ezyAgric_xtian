@@ -18,7 +18,6 @@ require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/pagination_cla
 
 $mCrudFunctions = new CrudFunctions();
 
-
 if (isset($_POST['id']) && $_POST['id'] != "") {
     $class = 'table table-bordered table-hover';
 
@@ -1185,7 +1184,6 @@ function output($id, $where)
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");;
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
 
-
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
                 if ($_SESSION['client_id'] == 1) {
                     echo "<tr>";
@@ -1237,7 +1235,7 @@ function output($id, $where)
                                 $average = round(array_sum($acares)/*$total_gardens*/, 2);
                             }
 
-                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
+//                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
                             echo "<td>$total_gardens</td>
                                     <td> $average</td>";
                         }
@@ -1279,23 +1277,8 @@ function output($id, $where)
                     echo "<tr>
                            <td>$counter</td>                   
                            <td>$name</td> <td>$age_ yrs</td>  
-                           <td>" . substr($gender, 0, 1) . "</td>
-                          
+                           <td>" . substr($gender, 0, 1) . "</td>                          
                           ";
-//                    echo "<a href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\">
-//                          <div class=\"col-sm-12 col-md-3 col-lg-3 col-xs-12\" style=\" margin-top:5px;\">
-//                          <div class=\"thumbnabil card\" id=\"space\">
-//                          <div class=\"image-box\" style=\"background-image:url('$picture');
-//                          background-color:#e9e9e9;
-//                          background-position:center;
-//                          background-repeat:no-repeat;
-//                          background-size:100%\">
-//
-//                           <span class=\"gender\">" . substr($gender, 0, 1) . "</span>
-//                           </div>
-//                          <div class=\"caption\" style=\"margin:0; padding:10px;\">
-//                          <p style='line-height:12pt;'>$name <span class=\"badge1\">$age_ yrs</span></p><br/>
-//                          ";
 
                     $acares = array();
 
@@ -1336,7 +1319,7 @@ function output($id, $where)
                                 $average = round(array_sum($acares)/*$total_gardens*/, 2);
                             }
 
-                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
+//                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
                             echo "<td><h6>$total_gardens</h6></td>
                                     <td style=\"color:#888\"> $average</td>";
                         }
