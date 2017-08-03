@@ -44,7 +44,7 @@ if ($_FILES["csv"]["size"] > 0) {
         $to=$_POST["end"];
 	    $region=$_POST["region"];
 		
-	    $flag_0=$mCrudFunctions->insert_into_datasets_tb($name,$client_id,$type,$region,$util_obj->mysql_prep($from),$util_obj->mysql_prep($to),0);
+	    $flag_0=$mCrudFunctions->insert_into_datasets_tb($name,$client_id,$type,$region,$util_obj->mysql_prep($from),$util_obj->mysql_prep($to),175);
 		if($flag_0){
 		$rows= $mCrudFunctions->fetch_rows("datasets_tb","*"," 1 ORDER BY id DESC LIMIT 1");
         if(sizeof($rows)==0){ 
