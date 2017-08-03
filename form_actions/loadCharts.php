@@ -170,7 +170,7 @@ switch ($_POST["token"]) {
                 }
             }
         }
-        draw_climate_graph($district, $no_farmers, $youth, "line");
+        draw_climate_graph($district, $no_farmers, $youth, "column");
         break;
 }
 

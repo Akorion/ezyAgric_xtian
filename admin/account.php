@@ -34,7 +34,7 @@
     <div class="form-group">
       <label for="email" class="col-sm-3 control-label">Value Chain:</label>
       <div class="col-sm-12 col-md-6 col-lg-6">
-        <input type="email" name="c_valuechain"class="form-control" id="addr" placeholder="Value Chain">
+        <input type="text" name="c_valuechain"class="form-control" id="addr" placeholder="Value Chain">
       </div>
     </div>
 
@@ -85,7 +85,7 @@
     <div class="form-group">
       <label for="email" class="col-sm-3 control-label">Office Location:</label>
       <div class="col-sm-12 col-md-6 col-lg-6">
-        <input type="email" class="form-control" name="contact_office"  placeholder="Office Location">
+        <input type="text" class="form-control" name="contact_office"  placeholder="Office Location">
       </div>
     </div>
     </div>

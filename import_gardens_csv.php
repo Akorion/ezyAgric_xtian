@@ -7,7 +7,8 @@ require_once dirname(__FILE__)."/php_lib/lib_functions/utility_class.php";
 $db= new DatabaseQueryProcessor();
 $mCrudFunctions = new CrudFunctions();
 $util_obj= new Utilties();
-   $_POST['id']=52;
+
+$_POST['id']=52;
 if(isset($_POST["id"]) &&$_POST["id"]!=''){
 
 
@@ -26,19 +27,16 @@ if ($_FILES["csv"]["size"] > 0) {
 	else
 	{   
 	    $id=$_POST["id"];
-		
-		
 		$file_path = $_FILES["csv"]["tmp_name"];
         $handle = fopen($file_path,"r"); 
 		$handle2 = fopen($file_path,"r"); 
 		$table="garden_".$id;
-		
-		
 		$array= array();
+
         $flag =$util_obj->createTableFromCSV($db,$handle,$table);
 		
 		echo $flag;
-       if ($flag) {   
+        if ($flag) {
 	         $array=$mCrudFunctions->insertColumnsIntoTractTables($id,$handle2);
 			 print_r( $array);
 	         $column_string= $util_obj->getColumnsString($db,$table,1);

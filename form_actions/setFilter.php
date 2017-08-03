@@ -36,9 +36,7 @@ if (isset($_POST['va']) && isset($_POST['id'])) {
     } else {
         $row0s = $mCrudFunctions->fetch_rows($table, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) AS interview_particulars_va_code  ,interview_particulars_va_name ", "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$va_district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$va_county' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$va_parish'  AND TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$va_village'GROUP BY interview_particulars_va_code ORDER BY interview_particulars_va_name ASC ");
 
-
     }
-
 
     $f = sizeof($row0s);
     echo "<option value=\"all\">all</option>";
@@ -83,7 +81,6 @@ if (isset($_POST['district']) && isset($_POST['id'])) {
 
     if ($dataset_type == "Farmer") {
 
-
         $row0s = $mCrudFunctions->fetch_rows($table, " DISTINCT TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) as biodata_farmer_location_farmer_subcounty ", " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' ORDER BY biodata_farmer_location_farmer_subcounty ASC");
         echo "<option value=\"all\">all</option>";
         //print_r($district." ".$table." ".$_POST['id']);
@@ -96,7 +93,6 @@ if (isset($_POST['district']) && isset($_POST['id'])) {
             } else {
                 array_push($temp_array, $value);
             }
-
         }
 
         foreach ($temp_array as $temp) {
@@ -126,7 +122,6 @@ if (isset($_POST['district']) && isset($_POST['id'])) {
         }
 
     }
-
 
 }
 
@@ -179,12 +174,12 @@ if (isset($_POST['parish_district']) && isset($_POST['parish_subcounty']) && iss
 
 }
 
-if (isset($_POST['village_district']) && isset($_POST['village_subcounty']) && isset($_POST['parish']) && isset($_POST['id'])) {
+if (isset($_POST['village_district']) && isset($_POST['village_subcounty']) && isset($_POST['village_parish']) && isset($_POST['id'])) {
 
     $table = "dataset_" . $_POST['id'];
     $district = $_POST['village_district'];
     $subcounty = $_POST['village_subcounty'];
-    $parish = $_POST['parish'];
+    $parish = $_POST['village_parish'];
 
     if ($dataset_type == "Farmer") {
         $row0s = $mCrudFunctions->fetch_rows($table, " DISTINCT  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as biodata_farmer_location_farmer_village ", " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' ORDER BY biodata_farmer_location_farmer_village ASC ");
@@ -198,7 +193,6 @@ if (isset($_POST['village_district']) && isset($_POST['village_subcounty']) && i
             } else {
                 array_push($temp_array, $value);
             }
-
         }
         foreach ($temp_array as $temp) {
             echo "<option value=\"$temp\">$temp</option>";

@@ -1,0 +1,169 @@
+ <script>
+    function printReport() {
+		/*if(/chrome/i.test(navigator.userAgent) {
+    	
+		}*/
+      var divToPrint = document.getElementById('areaToPrint');
+	  //newWin=document.write('<link rel="stylesheet" href="styles/print.css" media="print"/>');
+      newWin = window.open('', '_blank', 'width=800,height=842,location=no,left=200px');
+	    //newWin.document.write('<style>@media print{ table #parintArea {font-size:10pt; background:#FFFFCC; color:#003366;}}</style>');
+      newWin.document.write(divToPrint.outerHTML);
+      newWin.print();
+      newWin.close();
+   }
+</script>
+<div id="areaToPrint">
+      <?php 
+	  
+	  
+	if(isset($_POST['check'])){
+	
+	$class=$_POST['class'];
+	$term=$_POST['term'];
+	$ya=$_POST['ya'];
+
+$sql=mysql_query("select * from report.student where class='$class'");
+   		
+		while($selecting=mysql_fetch_array($sql)){
+		
+		$st_id = $selecting['st_id'];
+		
+	//_____________________________________________________________________________________________________________________
+	
+		$sel=mysql_query("SELECT * FROM report.student, report.marks
+		where student.st_id='$st_id' AND marks.student_id='$st_id' AND marks.year='$ya' AND marks.term='$term' ")or die(mysql_error());
+
+		 $pick=mysql_fetch_array($sel);
+		 $count=mysql_num_rows($sel);
+		 if ($count > 0){
+			$totalT =$pick['testmark'];
+			$totalE =$pick['score'];
+			$totalA =(($pick['testmark']+$pick['score'])/2);
+			//$class = $pick['student.class']; //picking student name
+			//$name = $fetch['name'];
+			
+		 echo '<table border="1px" style="width:100%; border:thin solid #000000; page-break-after:always;"><tr><th width="130">';?>
+      <img src="images/apexof.jpg" style=" height:auto; width:inherit;" /><?php echo '</th><th colspan="4" align="center"><p>APEXOFT SCHOOLS &nbsp; P.O BOX 121, KAMPALA </p>
+				  
+				  <p><U>REPORT CARD</U> </p>
+				  <p>ID: '.$pick['student_id'].' &nbsp;  Class: '.strtoupper($pick['class']).'  '.$pick['stream'].'<br/> Name: '.strtoupper($pick['name']).'  </p></th><th width="130">'; ?><img src="<?php echo $image['location']; ?>" width="130" height="130"  id="images"/>
+      <?php 
+				echo '</th></tr><tr>
+				<td>SUBJECT</td>
+				<td>TEST</td>
+				<td>EXAM</td>
+				<td>AVERAGE</td>
+				<td>GRADES</td>
+				<td>REMARKS</td>
+				
+			  </tr>
+			 <tr> <td>';
+			
+			$totalAgr = agg($pick['testmark'], $pick['score'], $pick['class']);  //registering aggregates
+			$times = 1;
+
+ 		 echo $pick['subject'].'</td><td>'?>
+      <?php 
+			echo $pick['testmark'];
+			
+	?>
+      <?php echo '</td><td>'?>
+      <?php 
+			echo $pick['score'];
+			
+	 ?>
+      <?php echo '</td>  <td>'.(($pick['testmark']+$pick['score'])/2).'</td> <td> '.getGrade($pick['testmark'], $pick['score'], $pick['class']).' </td><td> &nbsp;</td> </tr>';
+					while($fetch=mysql_fetch_array($sel)){
+			$totalT+=$fetch['testmark'];
+			$totalE+=$fetch['score'];
+			$totalA+=(($fetch['testmark']+$fetch['score'])/2);
+			
+			$totalAgr+=agg($fetch['testmark'], $fetch['score'], $pick['class']);  //incrementing aggregates
+			$times++;
+			
+			echo '<tr><td>'.$fetch['subject'].'</td><td>'?>
+      <?php 
+			if ($fetch['testmark']==NULL){
+			echo 'missed';
+			}else 
+			echo $fetch['testmark'];
+		?>
+      <?php echo '</td><td>'?>
+      <?php 
+			if ($fetch['score']==NULL){
+			echo 'missed';
+			}else 
+			echo $fetch['score'];
+			
+			?>
+      <?php echo '</td> <td>'.(($fetch['testmark']+$fetch['score'])/2).'</td><td> '.getGrade($fetch['testmark'], $fetch['score'], $pick['class']).' </td> <td> &nbsp;</td> </tr>';
+	  }
+			echo '
+			
+			<tr>
+				<td height="90" valign="bottom">TOTAL</td>
+				<td valign="bottom">'.$totalT.'</td>
+				<td valign="bottom">'.$totalE.'</td>
+			   <td valign="bottom">'.$totalA.'</td>
+			   <td valign="bottom"> &nbsp; </td>
+			   <td valign="bottom">&nbsp;</td>
+			   
+			   
+			  </tr>
+			  <tr>
+				<td>AVERAGE</td>
+				<td>'.$totalT/$count.'</td>
+				<td>'.$totalE/$count.'</td>
+			   <td>'.$totalA/$count.'</td>
+			   <td valign="bottom"> &nbsp; </td>
+				<td valign="bottom">&nbsp;</td>
+			  </tr>
+			  <tr>
+				<td>AGGREGATES</td>
+				<td> &nbsp'  ; // including marks grade
+		
+				
+				echo '</td> <td>'?>
+      <?php 
+				
+				'&nbsp'; // including marks grade
+				echo '</td>
+			  <td>'?>
+      <?php 
+				
+				///_______________________________________'.$totalAgr+=agg(33,79).    //in '.$times.' subjects
+				echo '&nbsp';
+				echo '</td>
+				<td valign="bottom">'. $totalAgr.'   </td>
+			   <td valign="bottom"> &nbsp;</td>
+			  </tr>
+			  <tr>
+				<td>GRADE</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				 <td>&nbsp;</td>
+			  </tr>
+			  <tr>
+				<td colspan="6"><p>&nbsp;</p>
+				  <p>&nbsp;</p>
+				  <p>Head teacher\'s signature:...................................     &nbsp &nbsp D.O.S signature...............................<hr/>
+				  <center>Apexoft technologies schools </center>
+				  </p></td>
+			  </tr></table>'; ?>
+			  
+			  <p style="page-break-after:always;"></p>
+      
+      <br/>
+      <?php
+	}
+	
+	//_____________________________________________________________________________________________________________________
+	
+		
+		?><a href="javascript:printReport()" style="margin-top:0px; text-decoration:none; color:#333333; font-weight:bold;">Print</a> <br/>
+		<?php }
+	}
+	?>
+	</div>

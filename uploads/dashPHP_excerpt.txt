@@ -1,0 +1,344 @@
+============================= dash1.php > excerpt ===================
+<!--
+    <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+    <div class="x_title">
+      <h2>SEASON A 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+      </div>
+    </div>
+
+
+<div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON B 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+   <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+      </div>
+    </div>
+
+  <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON C 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+   <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div> 
+    
+</div>
+</div>
+-->
+</div>
+<!--
+<div class="row" id="row_2">
+
+    <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+    <div class="x_title">
+      <h2>SEASON A 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+ <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+      </div>
+    </div>
+
+
+<div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON B 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+      </div>
+    </div>
+
+  <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON C 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+   <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+    
+</div>
+</div>
+</div>
+
+<div class="row" id="row_3">
+    <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON A 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+      </div>
+    </div>
+
+
+<div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON B 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+   <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+      </div>
+    </div>
+
+  <div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel tile fixed_height_400">
+
+    <div class="x_title">
+      <h2>SEASON C 2016</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="content">
+    <h6>Hoima District</h6>
+    <h6>03/07 to 03/12</h6>
+        <h6><a href="dashboard.php" class="btn btn-primary btn-xs">View More</a></h6>
+        </div>
+    
+</div>
+</div>
+</div>
+-->
+
+========================== dash.php > excerpt ===========:
+
+<!--
+<div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="x_panel tile fixed_height_400">
+              <div class="x_title">
+                <h2>Learning Progress</h2>
+                <ul class="nav navbar-right">
+                  <a><i class="fa fa-question-circle" style="font-size:17px;"></i></a>
+                </ul>
+                <div class="clearfix"></div>
+              </div>
+              <div class="x_content">
+               <div class="col-xs-5">
+
+                   <span class="chart" id="chart_learning" data-percent="16">
+                      <span class="percent" ></span>
+                    </span>
+               </div>
+                  <div class="col-xs-7">
+                      <h4 style="margin:0px;"><b>Beginner</b></h4>
+                      <p>Your Estimated Learning progress.</p>
+                      <a class="btn btn-xs btn-success">Take A Tour</a>
+               </div>
+              </div>
+            </div>
+
+          </div>-->
+
+
+
+
+<!--
+<div class="container down">
+
+<div id="dataset" class="row">
+  <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Seeds</h2>
+  <h6>300 KGs<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+    <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Fertiliser</h2>
+  <h6>300 KGs<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+    <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Cash Given</h2>
+  <h6>3000,000 Ugx<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Acrage Ploughed</h2>
+  <h6>300 Acres<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+
+   <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+
+  <h2>Total Commission</h2>
+  <h4>Profiling:30m</h4>
+  <h4>Produce: 6m</h4>
+      </div>
+    </div>
+  </div>
+
+     <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Cash Given</h2>
+  <h6>3000,000 Ugx<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- second row-->
+
+<!-- <div id="dataset" class="row second_row">
+
+</div> -->
+
+<!--
+<div class="container down">
+
+<div id="dataset" class="row">
+  <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Seeds</h2>
+  <h6>300 KGs<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+    <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Fertiliser</h2>
+  <h6>300 KGs<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+    <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Cash Given</h2>
+  <h6>3000,000 Ugx<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Acrage Ploughed</h2>
+  <h6>300 Acres<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+
+   <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+
+  <h2>Total Commission</h2>
+  <h4>Profiling:30m</h4>
+  <h4>Produce: 6m</h4>
+      </div>
+    </div>
+  </div>
+
+     <div class="col-sm-6 col-md-2 col-lg-2">
+  <div class="thumbnail card" id="cardc">
+  <div class="content">
+  <h2>Total Cash Given</h2>
+  <h6>3000,000 Ugx<span></span></h6>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- second row-->
+
+<!-- <div id="dataset" class="row second_row">
+
+</div> -->
+
+<!--
+<div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="x_panel tile fixed_height_400">
+              <div class="x_title">
+                <h2>Learning Progress</h2>
+                <ul class="nav navbar-right">
+                  <a><i class="fa fa-question-circle" style="font-size:17px;"></i></a>
+                </ul>
+                <div class="clearfix"></div>
+              </div>
+              <div class="x_content">
+               <div class="col-xs-5">
+
+                   <span class="chart" id="chart_learning" data-percent="16">
+                      <span class="percent" ></span>
+                    </span>
+               </div>
+                  <div class="col-xs-7">
+                      <h4 style="margin:0px;"><b>Beginner</b></h4>
+                      <p>Your Estimated Learning progress.</p>
+                      <a class="btn btn-xs btn-success">Take A Tour</a>
+               </div>
+              </div>
+            </div>
+
+          </div>-->
+

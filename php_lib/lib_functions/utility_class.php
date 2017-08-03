@@ -298,52 +298,52 @@ public function insertCSVintoTable($db,$table,$column_string,$handle){
 }
 
 public function get_acerage_from_geo($latitudes,$longitudes){
- 
- if(sizeof($latitudes)>0 && sizeof($longitudes)){
- $first_lat=$latitudes[0];
- $first_long=$longitudes[0];
- 
- array_push($latitudes, $first_lat);
-  array_push($longitudes, $first_long);
- 
- $acerage_constant=  0.00024711 ;
- $e_circum=  40091147 ;
- if(sizeof($latitudes)==sizeof($longitudes)&&$latitudes[0]==$latitudes[sizeof($latitudes)-1]&&$longitudes[0]==$longitudes[sizeof($longitudes)-1]){
- $y= array();
-for($i=0;$i<sizeof($latitudes)-2 ; $i++){
-$y_value=(($latitudes[$i+1]-$latitudes[0])/360)*$e_circum;
-array_push($y, $y_value);
-}
+
+    if (sizeof($latitudes) > 0 && sizeof($longitudes)) {
+        $first_lat = $latitudes[0];
+        $first_long = $longitudes[0];
+
+        array_push($latitudes, $first_lat);
+        array_push($longitudes, $first_long);
+
+        $acerage_constant = 0.00024711;
+        $e_circum = 40091147;
+        if (sizeof($latitudes) == sizeof($longitudes) && $latitudes[0] == $latitudes[sizeof($latitudes) - 1] && $longitudes[0] == $longitudes[sizeof($longitudes) - 1]) {
+            $y = array();
+            for ($i = 0; $i < sizeof($latitudes) - 2; $i++) {
+                $y_value = (($latitudes[$i + 1] - $latitudes[0]) / 360) * $e_circum;
+                array_push($y, $y_value);
+            }
 
 //print_r($y);
-$x= array();
-for($i=0;$i<sizeof($longitudes)-2 ; $i++){
-$x_cosine=cos(($latitudes[$i+1]/180)*(22/7));
-$x_value=(($longitudes[$i+1]-$longitudes[0])/360)*$e_circum*$x_cosine;
-array_push($x, $x_value);
-}
+            $x = array();
+            for ($i = 0; $i < sizeof($longitudes) - 2; $i++) {
+                $x_cosine = cos(($latitudes[$i + 1] / 180) * (22 / 7));
+                $x_value = (($longitudes[$i + 1] - $longitudes[0]) / 360) * $e_circum * $x_cosine;
+                array_push($x, $x_value);
+            }
 //print_r($x);
 
-$area= array();
-for($i=0;$i<sizeof($x)-1 ; $i++){
-$area_value=(($y[$i]*$x[$i+1])-($x[$i]*$y[$i+1]))/2;
-array_push($area, $area_value);
-}
+            $area = array();
+            for ($i = 0; $i < sizeof($x) - 1; $i++) {
+                $area_value = (($y[$i] * $x[$i + 1]) - ($x[$i] * $y[$i + 1])) / 2;
+                array_push($area, $area_value);
+            }
 //print_r($area);
-$total_squared=pow(array_sum($area), 2);
-$final= sqrt($total_squared)*$acerage_constant;
+            $total_squared = pow(array_sum($area), 2);
+            $final = sqrt($total_squared) * $acerage_constant;
 
-return round($final/*array_sum($area)*/,3);
+            return round($final/*array_sum($area)*/, 3);
 
-}else{
+        } else {
 
-return "InputError";
+            return "InputError";
 
-}
-}else{
+        }
+    } else {
 
-return 0;
-}
+        return 0;
+    }
 }
 
 /*

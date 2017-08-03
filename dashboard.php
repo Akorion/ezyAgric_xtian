@@ -308,7 +308,7 @@ if (isset($_GET['token']) && $_GET['token'] != "") {
 <div class="container-fluid">
     <div class='col-xs-12'><h2
                 style='font-size:16pt; color: #1a405b; padding:10px 0px; border-bottom:1px solid #eee;'><i
-                    class='fa fa-file'></i><?php echo $dataset_name; ?></h2>
+                    class='glyphicon glyphicon-folder-open'></i> <?php echo " &nbsp; ".$dataset_name; ?></h2>
         <div class='clearfix'></div>
     </div>
     <!--    </div>-->

@@ -239,8 +239,9 @@ td:nth-child(even){
         paddng: 5px;
         color: #000
     }
+
     /*td .success {*/
-        /*color: #03852a;*/
+    /*color: #03852a;*/
     /*}*/
 
 </style>
@@ -364,14 +365,31 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
             <div class="h400" style="background:none; margin-bottom:100px">
                 <div class="card prodn">
                     <h5 class="">Season Summary</h5>
-                    <h6 class="trim">Farmers Profiled</h6><p id="profiled_farmers">0</p><hr/>
-                    <h6 class="trim">Total acrege</h6><p id="farmer_acreage">0</p><hr/>
-                    <h6 class="trim">Total Seed</h6><p><?php echo number_format($total_seed) . " KGS"; ?></p><hr/>
-                    <h6 class="trim">Total Herbicide</h6><p><?php echo number_format($total_herbicide_solid) . " KGS ," . $total_herbicide_liquid . " LITRES "; ?></p><hr/>
-                    <h6 class="trim">Total Fertilizer</h6><p><?php echo number_format($total_fertilizer_solid) . " KGS ," . $total_fertilizer_liquid . " LITRES "; ?></p><hr/>
-                    <h6 class="trim">Total Produce Supplied</h6><p><?php echo number_format($total_produce_supplied) . " KGS"; ?></p><hr/>
-                    <input id="unit_profiling_commission" type="hidden" value="<?php echo $total_commision_on_profiling; ?>"/>
-                    <h6 class="trim">Total Commission</h6><p>Profiling: <span id="profilling_commision">0</span><br/>Produce:<?php echo number_format($total_commision_on_produce_supplied) . " UGX"; ?></p><hr/>
+                    <h6 class="trim">Farmers Profiled</h6>
+                    <p id="profiled_farmers">0</p>
+                    <hr/>
+                    <h6 class="trim">Total acrege</h6>
+                    <p id="farmer_acreage">0</p>
+                    <hr/>
+                    <h6 class="trim">Total Seed</h6>
+                    <p><?php echo number_format($total_seed) . " KGS"; ?></p>
+                    <hr/>
+                    <h6 class="trim">Total Herbicide</h6>
+                    <p><?php echo number_format($total_herbicide_solid) . " KGS ," . $total_herbicide_liquid . " LITRES "; ?></p>
+                    <hr/>
+                    <h6 class="trim">Total Fertilizer</h6>
+                    <p><?php echo number_format($total_fertilizer_solid) . " KGS ," . $total_fertilizer_liquid . " LITRES "; ?></p>
+                    <hr/>
+                    <h6 class="trim">Total Produce Supplied</h6>
+                    <p><?php echo number_format($total_produce_supplied) . " KGS"; ?></p>
+                    <hr/>
+                    <input id="unit_profiling_commission" type="hidden"
+                           value="<?php echo $total_commision_on_profiling; ?>"/>
+                    <h6 class="trim">Total Commission</h6>
+                    <p>Profiling: <span
+                                id="profilling_commision">0</span><br/>Produce:<?php echo number_format($total_commision_on_produce_supplied) . " UGX"; ?>
+                    </p>
+                    <hr/>
                 </div>
             </div>
         </div>
@@ -557,7 +575,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                         $produce_cash = $produce_unit_price * $produce_suplied_;
 
                         $cash_payable = $produce_cash > 0 ? number_format((($produce_unit_price * $produce_suplied_) - ($total_cash_inputs + $amount_with_intrest))) : "N/A";
-                        $class = $produce_cash < 0 ? 'danger' :  ($produce_cash - $total_cash_inputs) > 0 ? 'success' : 'danger';
+                        $class = $produce_cash < 0 ? 'danger' : ($produce_cash - $total_cash_inputs) > 0 ? 'success' : 'danger';
 
                         $farmer = $util_obj->captalizeEachWord($farmer);
 
@@ -601,7 +619,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
 	  <td colspan='2'>$produce_cash</td>
       <td colspan='2'>" . $cash_payable . "  </td>
       <td class=\"$class\" style='background-color: #03852a'></td>
-      <td>
+      <td style='width: 100px;'>
 	  <a href=\"user_details.php?s=$s&token=$farmer_id&type=Farmer\" title=\"View Profile\" class=\"m-0 btn-primary btn-xs\" style=\"font-size:0.8em;\">
       Profile</a>
       
@@ -713,8 +731,14 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
 
     }
 
+    /*.dark td {*/
+    /*color: teal;*/
+    /*border-bottom: 1px solid red;*/
+    /*font-weight: bold;*/
+    /*}*/
     .dark td {
-        color: teal;
+        background-color: teal;
+        color: white;
         border-bottom: 1px solid red;
         font-weight: bold;
     }
@@ -922,7 +946,8 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                             <div class="form-group">
                                 <label class="col-sm-5 control-label" for="textinput">Attach Receipt If Any:</label>
                                 <div class="col-sm-7">
-                                    <a title="attach receipt" class="attach-file" onclick="attachFile(this)"><i class="fa fa-paperclip"></i> receipt</a>
+                                    <a title="attach receipt" class="attach-file" onclick="attachFile(this)"><i
+                                                class="fa fa-paperclip"></i> receipt</a>
                                     <input type="file" name="receipt" class="file hide" accept="images/*"/>
                                     <input type='hidden' class='id' value='0'/>
                                     <input type='hidden' class='type' value='inputs'/>
@@ -940,31 +965,38 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                                 <td>Tractor Cost</td>
                                 <td class="input" style="">
                                     <input id='tractor_amount' oninput="tractorSelected();" min="0" type="number"
-                                           onkeyup="this.value = this.value.replace(/[^0-9]/, '')" placeholder="amount"/>
+                                           onkeyup="this.value = this.value.replace(/[^0-9]/, '')"
+                                           placeholder="amount"/>
                                 </td>
                                 <td>
-                                    <a title="attach receipt" class="attach-file" onclick="attachFile(this)"><i class="fa fa-paperclip"></i> receipt</a>
+                                    <a title="attach receipt" class="attach-file" onclick="attachFile(this)"><i
+                                                class="fa fa-paperclip"></i> receipt</a>
                                     <input type="file" name="receipt" class="hide" accept="image/*"/>
                                     <input type='hidden' class='id' value='0'/>
                                     <input type='hidden' class='type' value='tractor'/>
                                     <input id='acerage_tractor' type='hidden' class='type'/>
                                 </td>
-                                <td class='input'><input id='tractor_date' onchange='tractorSelected()' class='date-input' placeholder='select date'/></td>
+                                <td class='input'><input id='tractor_date' onchange='tractorSelected()'
+                                                         class='date-input' placeholder='select date'/></td>
                             </tr>
 
                             <tr>
                                 <td>Cash Taken</td>
                                 <td class="input">
-                                    <input id='cash_amount' oninput="cashSelected();" min="0" type="number" onkeyup="this.value = this.value.replace(/[^0-9]/, '')" placeholder="amount"/>
+                                    <input id='cash_amount' oninput="cashSelected();" min="0" type="number"
+                                           onkeyup="this.value = this.value.replace(/[^0-9]/, '')"
+                                           placeholder="amount"/>
                                 </td>
                                 <td>
-                                    <a title="attach receipt" class="attach-file" onclick="attachFile(this)"><i class="fa fa-paperclip"></i> receipt</a>
+                                    <a title="attach receipt" class="attach-file" onclick="attachFile(this)"><i
+                                                class="fa fa-paperclip"></i> receipt</a>
                                     <input type="file" class="hide" name="receipt" accept="image/*"/>
                                     <input type='hidden' class='id' value='0'/>
                                     <input type='hidden' class='type' value='cashtaken'/>
                                 </td>
                                 <td class='input'>
-                                    <input id='cash_date' onchange='cashSelected()' class='date-input' placeholder='select date'/>
+                                    <input id='cash_date' onchange='cashSelected()' class='date-input'
+                                           placeholder='select date'/>
                                 </td>
                             </tr>
                             </tbody>
@@ -977,9 +1009,12 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                         <div class="form-group row">
                             <label class="col-sm-4 control-label" for="textinput">Produce Supplied</label>
                             <div class="col-sm-4">
-                                <input oninput="produceSelected();" min="0" type="number" onkeyup="this.value = this.value.replace(/[^0-9]||(^[1-9]\d*$)/, '')"
-                                       placeholder="produce supplied" class="form-control" name="produce_supplied" id="produce_supplied">
-                                <input id='produce_date' onchange='produceSelected()' class='date-input2' placeholder='select date'/>
+                                <input oninput="produceSelected();" min="0" type="number"
+                                       onkeyup="this.value = this.value.replace(/[^0-9]||(^[1-9]\d*$)/, '')"
+                                       placeholder="produce supplied" class="form-control" name="produce_supplied"
+                                       id="produce_supplied">
+                                <input id='produce_date' onchange='produceSelected()' class='date-input2'
+                                       placeholder='select date'/>
                             </div>
                         </div>
 
@@ -1011,7 +1046,8 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                                 <!--                                <br/>-->
                                 <label class="col-sm-4 control-label" for="textinput">Produce receipt</label>
                                 <div class="col-sm-8">
-                                    <a class="attach-file" onclick="attachFile(this)" title="attach receipt"><i class="fa fa-paperclip"></i> receipt</a>
+                                    <a class="attach-file" onclick="attachFile(this)" title="attach receipt"><i
+                                                class="fa fa-paperclip"></i> receipt</a>
                                     <input type="file" class="hide" name="receipt" accept="image/*"/>
                                     <input type='hidden' class='id' value='0'/>
                                     <input type='hidden' class='type' value='produce'/>
@@ -1358,7 +1394,7 @@ function escapeJavaScriptText($string)
         ///$(el).parent().find("input[type=file]").trigger("click");
     }
 
-    $("input[type=file]").on('change',function (e) {
+    $("input[type=file]").on('change', function (e) {
 
         var target = $(this).parent().find(".attach-file");
 
@@ -1969,7 +2005,7 @@ function escapeJavaScriptText($string)
     function saveRecords() {
 
         var flag = checked_butValid();
-        console.log("flag: ",flag);
+        console.log("flag: ", flag);
 
         if (flag == 0) {
 //            console.log("flag: ",flag);

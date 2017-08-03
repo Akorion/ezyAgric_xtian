@@ -67,7 +67,7 @@ foreach( $rows as $row){
 	}
 
     if($row['dataset_type'] == 'Farmer'){
-        echo "<a  class=\"txt\" data-toggle='modal' onclick='getDatasets($dataset_client_id, $real_id);' data-target='#attachdataset'>Attach Dataset</a>";
+        echo "&nbsp; <a  class=\"txt\" data-toggle='modal' onclick='getDatasets($dataset_client_id, $real_id);' data-target='#attachdataset'>Attach Dataset</a>";
     }
 	 echo "</td>";
 	
@@ -139,7 +139,6 @@ echo"</tbody>";
         </div>
     </div>
 
-
       <!--model for adding gardens-->
 	 <div id="attachdataset" class="modal fade">
         <div class="modal-dialog">
@@ -182,12 +181,12 @@ echo"</tbody>";
     </div>
 	
 <!--end of main container-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/material.min.js"></script>
-<script type="text/javascript" src="js/bootstrap-datepicker.js"></script>
+<script src="../js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/material.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
-<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
 
 <script type="text/javascript">
 var dataset_name;
@@ -202,7 +201,8 @@ function Refresh(){
 
 function setDataset(id){
 	var dataset_id = document.getElementById("dataset");
-	dataset_id .value=id; 
+	dataset_id .value=id;
+//	return dataset_id;
 }
 
 function setDataset4delete(id){
@@ -222,18 +222,17 @@ function getDatasets(id, datasetid){
            dataset_name = dataset.dataset_name;
            var va_dataset_id = dataset.va_dataset_id;
            if(va_dataset_id != '0'){
-                dataset_name = get_dataset_name(va_dataset_id);
+                dataset_name = getDatasets(va_dataset_id);
                alert(dataset_name);
                 active_dataset_html += "<input type='checkbox' class='styled' name='dataset_radio' id='dataset_radio' onclick='checkuncheck2();' value="+dataset_id+" checked><label>"+dataset_name+"</label><br>";
            }else{
-           dataset_html += "<input type='checkbox' class='styled' name='dataset_radio' id='dataset_radio' onclick='checkuncheck();' value="+dataset_id+"><label>"+dataset_name+"</label><br>";
+                dataset_html += "<input type='checkbox' class='styled' name='dataset_radio' id='dataset_radio' onclick='checkuncheck();' value="+dataset_id+"><label>"+dataset_name+"</label><br>";
            
            }
         }
      $('#available_datasets').html(dataset_html);
      $('#active_datasets').html(active_dataset_html);
-    })
-   
+    });
 }
 function checkuncheck(){
     $('#available_datasets input[type="checkbox"]').on('change', function() {

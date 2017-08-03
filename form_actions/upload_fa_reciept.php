@@ -19,15 +19,12 @@ require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/utility_class.ph
  $input_type=$_POST['type'];
  $input_id=$_POST['id'];
  
- 
  $va_rows= $mCrudFunctions->fetch_rows("dataset_".$va_dataset_id,"*"," id='$va_id' ");
 
  $code=str_replace(".","",$va_rows[0]['biodata_va_code']);
  $code=str_replace(" ","",$code);
  $code=strtolower($code);
  $va_code=$code;
- 
- 
  
  $target="../images/va_receipt/";
  
@@ -49,7 +46,6 @@ require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/utility_class.ph
           $image_flag=true;
 		  
         }
-		
 		
 		if( $image_flag==true){
           

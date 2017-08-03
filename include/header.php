@@ -40,7 +40,6 @@ if(!isset($_SESSION['user_id'])){
     <![endif]-->
   <title>Welcome to akorion: ezyagric_v2</title>
 
-
 </head>
 <body>
 

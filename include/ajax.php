@@ -1,8 +1,9 @@
 <?php
 session_start();
-require_once $_SERVER['DOCUMENT_ROOT']."/ezyagric_v2/php_lib/user_functions/crud_functions_class.php";
-require_once $_SERVER['DOCUMENT_ROOT']."/ezyagric_v2/php_lib/lib_functions/database_query_processor_class.php";
-require_once $_SERVER['DOCUMENT_ROOT']."/ezyagric_v2/php_lib/lib_functions/utility_class.php";
+require_once dirname(dirname(__FILE__)) ."/php_lib/user_functions/crud_functions_class.php";
+require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/database_query_processor_class.php";
+require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/utility_class.php";
+
 $util_obj= new Utilties();
 $db= new DatabaseQueryProcessor();
 $mCrudFunctions = new CrudFunctions();
@@ -105,7 +106,6 @@ function delete_user(){
 	$result = $mCrudFunctions->delete_from_clients_users_tb($id); 
 
 }
-
 
 function delete_item(){
   global $util_obj;
@@ -224,7 +224,6 @@ function update_va_dataset_id(){
      echo "A network Error occured";
    }
 }
-
 
 function get_dataset_name(){
    global $util_obj;

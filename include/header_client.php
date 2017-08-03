@@ -87,9 +87,9 @@ $path = $_SERVER["PHP_SELF"];
             <ul class="nav navbar-nav">
                 <li class="active"><?php
                     if ($_SESSION['client_id'] == 2) {
-                        echo "<a href=\"./dashboardAll.php\">Home</a>";
+                        echo "<a href=\"./dashboardAll.php\">Dashboard</a>";
                     } else {
-                        echo "<a href=\"./dashboardAll.php\" >Home</a>";
+                        echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
                     } ?>
                 </li>
                 <li class="dropdown">

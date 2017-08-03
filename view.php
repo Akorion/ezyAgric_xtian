@@ -77,7 +77,6 @@
     }
 </style>
 
-
 <?php include("./include/header_client.php");
 
 #includes
@@ -497,7 +496,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function getVAs() {
 
         var va_district = document.getElementById("sel_district").value;
@@ -531,7 +529,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function getParish() {
         var sel_district = document.getElementById("sel_district");
         var sel_county = document.getElementById("sel_county");
@@ -552,7 +549,6 @@ $mCrudFunctions = new CrudFunctions();
         });
 
     }
-
 
     function getPagination(page) {
 
@@ -629,6 +625,7 @@ $mCrudFunctions = new CrudFunctions();
 
 
     }
+
     function getPaginationSearch(page) {
 
         showProgressBar();
@@ -693,7 +690,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     $(document).ready(function () {
         dataset_type = document.getElementById("dataset_type").value;
         if (dataset_type == "Farmer") {
@@ -715,7 +711,6 @@ $mCrudFunctions = new CrudFunctions();
 
     });
 
-
     function getProductionFilter() {
         dataset_type = document.getElementById("dataset_type").value;
         var dataset_id = document.getElementById("dataset_id_holder");
@@ -732,7 +727,6 @@ $mCrudFunctions = new CrudFunctions();
         });
 
     }
-
 
     function filterDataPagination(page) {
 
@@ -805,7 +799,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function getVAPagination(page) {
         var dataset_id = document.getElementById("dataset_id_container");
         id = dataset_id.value;
@@ -862,7 +855,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function getVADATA() {
         showProgressBar();
 
@@ -883,7 +875,6 @@ $mCrudFunctions = new CrudFunctions();
         });
 
     }
-
 
     function filterData() {
         showProgressBar();
@@ -937,7 +928,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     $("#search_holder").on("input", function (e) {
 
 //window.alert(1);
@@ -984,7 +974,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function getLoadData(page) {
 
         var search_id = document.getElementById("search_holder");
@@ -1027,7 +1016,6 @@ $mCrudFunctions = new CrudFunctions();
         });
 
     }
-
 
     function Export2Csv() {
 
@@ -1136,12 +1124,12 @@ $mCrudFunctions = new CrudFunctions();
 
 
     }
+
     $("#sel_va").change(function () {
 
         filterDataPagination(1);
         ;
     });
-
 
     $("#sel_village").change(function () {
         $("#sel_va").val("all");

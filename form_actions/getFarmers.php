@@ -4,6 +4,9 @@
         background: teal;
         color: #fff !important;
     }
+    /*td > a > .btn .btn-primary {*/
+    /*background: #03a9f4;*/
+    /*}*/
 </style>
 <?php
 error_reporting(0);
@@ -53,13 +56,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                         ///v2 code interview_particulars_va_code
                         if ($_POST['va'] == "all") {
 //                            echo "Dataset: $dt_st_name";
-                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th> <th>Details</th></tr></thead>";
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th>Soil Testing Results</th><th>Details</th></tr></thead>";
                             output($id, " 1 ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                             echo "</table>";
 
                         } else {
 //                            echo "Dataset: $dt_st_name";
-                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th> <th>Acreage</th> <th>Details</th></tr></thead>";
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th> <th>Acreage</th><th>Soil Testing Results</th><th>Details</th></tr></thead>";
                             output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                             echo "</table>";
                         }
@@ -1129,7 +1132,6 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
 }
 
-
 function output($id, $where)
 {
     $util_obj = new Utilties();
@@ -1140,15 +1142,13 @@ function output($id, $where)
     $dataset_name = $dataset[0]["dataset_name"];
     $dataset_type = $dataset[0]["dataset_type"];
 
-
     $table = "dataset_" . $id;
     $columns = "* , (DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25) as actualAgeInYrs , floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25) as ageInYrs ";
 
     $age_min = !empty($_POST['age_min']) ? (int)$_POST['age_min'] : 0;
     $age = !empty($_POST['age']) ? (int)$_POST['age'] : 0;
     $age_max = !empty($_POST['age_max']) ? (int)$_POST['age_max'] : 0;
-//$where =$where ." ORDER BY ageInYrs ASC";
-//floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25)
+
     if ($age != "" && $age != 0) {
         $where = "floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25)=$age  AND " . $where;
     }
@@ -1161,10 +1161,16 @@ function output($id, $where)
         $where = " (floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25) > $age_min )  AND " . $where;
     }
 
-//global $age=$_POST['age'];//
-//global $age_max=$_POST['age_max'];//
+    $rows = $mCrudFunctions->fetch_rows($table, $columns, $where);
 
-    $rows = $mCrudFunctions->fetch_rows($table, $columns, $where);//
+    /** this will use two variables i.e.
+     * 1. to capture .docx and
+     * 2. to capture .pdf  **/
+//    $soil_test_results_docx = array();  $soil_test_results_pdf = array();
+//    $soil_test_results  = $mCrudFunctions->fetch_rows("soil_testing_results", "document_url", "dataset_id = $id");
+    $soil_test_results_docx = $mCrudFunctions->fetch_rows("soil_testing_results", "document_url", "dataset_id = $id AND document_url LIKE '%docx'");
+    $soil_test_results_pdf = $mCrudFunctions->fetch_rows("soil_testing_results", "document_url", "dataset_id = $id AND document_url LIKE '%pdf'");
+
     if ($dataset_type == "Farmer") {
         if (sizeof($rows) == 0) {
             echo "<p style=\"font-size:1.4em; width:100%; text-align:center; color:#999; margin-top:100px\">No Data</p>";
@@ -1172,6 +1178,7 @@ function output($id, $where)
             foreach ($rows as $row) {
                 $real_id = $row['id'];
                 $real_id_ = $row['id'];
+
                 $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
                 $name = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_name']));
                 $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_gender']));
@@ -1181,7 +1188,7 @@ function output($id, $where)
                 $phone_number = $util_obj->remove_apostrophes($row['biodata_farmer_phone_number']);
 
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
-                $age_ = $util_obj->getAge($dob, "Africa/Nairobi");;
+                $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
@@ -1245,32 +1252,11 @@ function output($id, $where)
  <td>    
   <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a>
  </td>";
-
-                    $client_id = $_SESSION['client_id'];
-                    if ($client_id == 4324524) {
-
-                        echo "
-     <div class=\"col-sm-6 col-sm-offset-1 \">
-    <p style=\"margin-top:0px\" style=\"color:#F57C00; margin:0; width:100%;\">
-        <div class=\"dropdown\">
-        <a href=\"#\" data-toggle=\"dropdown\" class=\"dropdown-toggle btn \" style=\"color:teal; margin:0; width:100%;\">Add Details &raquo;</a>
-            <ul class=\"dropdown-menu\">
-			<li><a href=\"#inputs\"  onclick=\"predictor($real_id_,$average);\" data-toggle=\"modal\" data-target=\"#inputs\">Record Farm Inputs</a></li>
-            <li><a href=\"#yield\" onclick=\"predictor($real_id_,$average);\" data-toggle=\"modal\" data-target=\"#yield\">Record Farmer's Yield</a></li>
-			<li><a href=\"#cash\" onclick=\"predictor($real_id_,$average);\" data-toggle=\"modal\" data-target=\"#cash\">Record Cash Returned</a></li>
-          </ul>
-        </div>
-    </p>
-    </div>
-	";
-                    }
-
-
                     echo "
-    </div>
       </div>
     </div>
-  </div> </a>";
+   </div>
+ </div> </a>";
 
                     echo "</tr>";
                 } else {
@@ -1281,7 +1267,6 @@ function output($id, $where)
                           ";
 
                     $acares = array();
-
                     $gardens_table = "garden_" . $id;
 
                     if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
@@ -1326,43 +1311,35 @@ function output($id, $where)
 
 
                     } //<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
+                    $count = $counter - 1;
+                    $docx = $util_obj->remove_apostrophes($soil_test_results_docx[$count]['document_url']);
+                    $pdf = $util_obj->remove_apostrophes($soil_test_results_pdf[$count]['document_url']);
+
+//                    print_r($pdf);
                     echo "
-    <div class=\"row\">
+  <div class='row'>
     <!--  <td class=\"col-sm-4\">  -->
-  <td>  
-  <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a></td>
-    <!--  </td>  -->";
+    <td>  
+        <!--   <a class='btn btn-primary' href='../uploads/ANAKA%20SOIL%20RESULTS.pdf' style=\"background: #03a9f4; color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Results &raquo;</a> -->
+        <div class='btn-group'>
+            <a class='dropdown-toggle btn btn-default' data-toggle='dropdown' aria-haspopup='true' style=\"background: #03a9f4; color: white; padding: 10px; width:100%; margin: 0; \" > <i class='fa fa-ellipsis-v'></i> Results </a>
+            <ul class='dropdown-menu'>
+                <li><a href=\"$pdf\"> View Results </a></li>
+                <li><a href=\"$docx\"> Download Results </a></li>
+            </ul>
+        </div>
+    </td>
+    <td>  
+        <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a>
+    </td>
+  </div>";
 
-                    $client_id = $_SESSION['client_id'];
-                    if ($client_id == 4324524) {
-
-                        echo "
-                         <div class=\"col-sm-6 col-sm-offset-1 \">
-                        <p style=\"margin-top:0px\" style=\"color:#F57C00; margin:0; width:100%;\">
-                            <div class=\"dropdown\">
-                            <a href=\"#\" data-toggle=\"dropdown\" class=\"dropdown-toggle btn \" style=\"color:teal; margin:0; width:100%;\">Add Details &raquo;</a>
-                                <ul class=\"dropdown-menu\">
-                                <li><a href=\"#inputs\"  onclick=\"predictor($real_id_,$average);\" data-toggle=\"modal\" data-target=\"#inputs\">Record Farm Inputs</a></li>
-                                <li><a href=\"#yield\" onclick=\"predictor($real_id_,$average);\" data-toggle=\"modal\" data-target=\"#yield\">Record Farmer's Yield</a></li>
-                                <li><a href=\"#cash\" onclick=\"predictor($real_id_,$average);\" data-toggle=\"modal\" data-target=\"#cash\">Record Cash Returned</a></li>
-                              </ul>
-                            </div>
-                        </p>
-                        </div>
-                        ";
-                    }
-
-                    echo "
-
-  </tr>";
-
+                    echo "</tr>";
                 }
                 ///////////////////////////////////////////////////////////////////////////////////////
 
                 $counter++;
             }
-
-
         }
 
         if ($dataset_type == "VA") {

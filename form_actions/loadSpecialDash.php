@@ -12,9 +12,7 @@ if (isset($_POST['search'])) {
     $search = $_POST['search'];
     output($client_id, $search);
 } else {
-
     output($client_id, "");
-
 }
 
 
@@ -22,7 +20,6 @@ function output($client_id, $search)
 {
     $util_obj = new Utilties();
     $mCrudFunctions = new CrudFunctions();
-
 
     $sql = "";
     if ($search != "") {
@@ -51,8 +48,8 @@ function output($client_id, $search)
         $table = "dataset_" . $dataset_id;
         $records = $mCrudFunctions->fetch_rows($table, " * ", 1);
 
-        $district = $records[0]['biodata_farmer_location_farmer_district'];
-
+        $farmer_district = $records[0]['biodata_farmer_location_farmer_district'];
+        $va_district = $records[0]['biodata_location_va_district'];
 
         $number = sizeof($records);
         $type = "Farmer";
@@ -82,7 +79,6 @@ function output($client_id, $search)
 
             $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
 
-
             $dataset_name = strlen($dataset_name) > 40 ? substr($dataset_name, 0, 39) . "..." : $dataset_name;// = substr($dataset_name,0,38).'</br>'.substr($dataset_name,38);
 
             echo "
@@ -96,7 +92,7 @@ function output($client_id, $search)
                     <h2 style='color: black;'> <br/>
                       <br/>
                       $dataset_name</h2>
-                    <h5 style='background-color: #388ac4; color: white;'>$district District</h5>
+                    <h5 style='background-color: #388ac4; color: white;'>$farmer_district District</h5>
                   </div>
                 </div>
                 <div class='col-xs-12'>
@@ -112,6 +108,40 @@ function output($client_id, $search)
             </div>
             ";
         }
+//        else {
+//
+//            $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
+//
+//            $dataset_name = strlen($dataset_name) > 40 ? substr($dataset_name, 0, 39) . "..." : $dataset_name;// = substr($dataset_name,0,38).'</br>'.substr($dataset_name,38);
+//
+//            echo "
+//             <div class='col-md-3 col-sm-4 col-xs-12 text-center'>
+//              <div class='x_panel'>
+//                <div class='col-xs-12'>
+//                  <div class='panel-title'>
+//                    <div style='' class='col-lg-12'>
+//                        <span class='fa fa-folder-open' style='font-size: 40px; margin-top: -12px; color: #0D47A1;'>	</span>
+//                    </div>
+//                    <h2 style='color: black;'> <br/>
+//                      <br/>
+//                      $dataset_name</h2>
+//                    <h5 style='background-color: #388ac4; color: white;'>$va_district District</h5>
+//                  </div>
+//                </div>
+//                <div class='col-xs-12'>
+//                  <div class='content'>
+//                    <span style='font-size:15px;'>$period</span>
+//
+//                    <h6>
+//                    <a href='dashboard.php?token=$key' class='btn btn-success btn-sm'>
+//                    Open</a></h6>
+//                  </div>
+//                </div>
+//              </div>
+//            </div>
+//            ";
+//
+//        }
 
         /*
 

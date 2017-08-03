@@ -29,39 +29,35 @@ $total_count =!empty($_POST['total_count'])? (int)$_POST['total_count'] :$total_
 output($origin,$id," 1 LIMIT $per_page OFFSET $offset");
 
 }
-
- 
- 
  
  function output($origin,$id,$where){
-$util_obj= new Utilties();
-$db= new DatabaseQueryProcessor();
-$mCrudFunctions = new CrudFunctions();
-$dataset_=$util_obj->encrypt_decrypt("encrypt", $id);
-$dataset= $mCrudFunctions->fetch_rows("datasets_tb","*"," id =$id ");
-$dataset_name=$dataset[0]["dataset_name"];
-$dataset_type=$dataset[0]["dataset_type"];
+     $util_obj = new Utilties();
+     $db = new DatabaseQueryProcessor();
+     $mCrudFunctions = new CrudFunctions();
+     $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
+     $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id ");
+     $dataset_name = $dataset[0]["dataset_name"];
+     $dataset_type = $dataset[0]["dataset_type"];
 
-$table="dataset_".$id;		 
-$columns="*";
+     $table = "dataset_" . $id;
+     $columns = "*";
 
-$rows= $mCrudFunctions->fetch_rows($table,$columns,$where);
+     $rows = $mCrudFunctions->fetch_rows($table, $columns, $where);
 
- 
-if($dataset_type=="VA"){
-if(sizeof($rows)==0){  
-}else{
-foreach($rows as $row ){
-$real_id=$row['id'];
+     if ($dataset_type == "VA") {
+         if (sizeof($rows) == 0) {
+         } else {
+             foreach ($rows as $row) {
+                 $real_id = $row['id'];
 
-$real_id=$util_obj->encrypt_decrypt("encrypt", $real_id);
-$name=$util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_va_name']));
-$gender=$util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_va_gender']));
-$dob='';//$row['biodata_farmer_dob'];
-$picture=$util_obj->remove_apostrophes($row['biodata_va_picture']);
+                 $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+                 $name = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_va_name']));
+                 $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_va_gender']));
+                 $dob = '';//$row['biodata_farmer_dob'];
+                 $picture = $util_obj->remove_apostrophes($row['biodata_va_picture']);
 
-$name = strlen($name) > 18? substr($name, 0, 16)."...": $name;
- echo"
+                 $name = strlen($name) > 18 ? substr($name, 0, 16) . "..." : $name;
+                 echo "
  <div class=\"col-sm-12 col-md-4 col-lg-3\">
   
   <div class=\"thumbnail card\" id=\"\">
@@ -71,7 +67,7 @@ $name = strlen($name) > 18? substr($name, 0, 16)."...": $name;
   background-repeat:no-repeat;
   background-size:100%\">
   
-   <span class=\"gender\">".substr($gender,0,1)."</span>
+   <span class=\"gender\">" . substr($gender, 0, 1) . "</span>
    </div>
   <div class=\"caption\" style=\"margin:0\"> 
   <p style='padding-bottom:20px; border-bottom:1px solid #eee; width:100%;'>$name</p>
@@ -79,21 +75,19 @@ $name = strlen($name) > 18? substr($name, 0, 16)."...": $name;
  <div class=\"card-foot\">
     ";
 
-if($_SESSION["role"]==1){
-  echo "<a title='add a reciept' class='btn attach-file' onclick='attachFile(this); getVa(\"{$real_id}\");'><i class='fa fa-paperclip'></i> Add receipt</a>
+                 if ($_SESSION["role"] == 1) {
+                     echo "<a title='add a reciept' class='btn attach-file' onclick='attachFile(this); getVa(\"{$real_id}\");'><i class='fa fa-paperclip'></i> Add receipt</a>
   <input name='receipt' type='file' accept='image/*' class='hide'>";
-}
+                 }
 
-echo "
+                 echo "
   <div class=\"btn-group\">
-  <a class='dropdown-toggle btn'
-  data-toggle=\"dropdown\" aria-haspopup=\"true\" > <i class='fa fa-ellipsis-v'></i> View More </a>
+    <a class='dropdown-toggle btn' data-toggle=\"dropdown\" aria-haspopup=\"true\" > <i class='fa fa-ellipsis-v'></i> View More </a>
     <ul class='dropdown-menu'>
-    <li><a href='user_details.php?o=$origin&s=$dataset_&token=$real_id&type=$dataset_type'>VA Profile</a></li>
-    <li><a href=\"va_farmers.php?o=$origin&s=$dataset_&token=$real_id&type=$dataset_type\" class=''>VA Farmers</a></li>
-    <li><a href=\"va_receipts.php?o=$origin&s=$dataset_&token=$real_id&type=$dataset_type\">Receipts</a></li>
-    
-  </ul>
+        <li><a href='user_details.php?o=$origin&s=$dataset_&token=$real_id&type=$dataset_type'>VA Profile</a></li>
+        <li><a href=\"va_farmers.php?o=$origin&s=$dataset_&token=$real_id&type=$dataset_type\" class=''>VA Farmers</a></li>
+        <li><a href=\"va_receipts.php?o=$origin&s=$dataset_&token=$real_id&type=$dataset_type\">Receipts</a></li>    
+    </ul>
   </div>
     
      
@@ -106,11 +100,11 @@ echo "
  
  ";
 
-  }
+             }
+         }
+     }
+
  }
-}
- 
-}
 
 ?>
 

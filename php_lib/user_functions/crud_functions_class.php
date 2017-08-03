@@ -474,6 +474,16 @@ class CrudFunctions
         return $util_obj->insert_into($mDatabaseQueryProcessor, $table, $columns, $values);
     }
 
+    public function insert_into_soil_testing_results($dataset_id, $document_url, $farmers_id)
+    {
+        $util_obj = new Utilties();
+        $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
+        $table = "soil_testing_results";
+        $columns = "dataset_id, document_url, farmers_id";
+        $values = "'$dataset_id','$document_url','$farmers_id'";
+        return $util_obj->insert_into($mDatabaseQueryProcessor, $table, $columns, $values);
+    }
+
     public function get_count($table, $where)
     {
         $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
