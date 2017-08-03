@@ -13,16 +13,15 @@ $total_acreage = 0;
 
 $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
 
-$total_seed = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND  item_type='Seed'  ");
+$total_seed = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND  item_type='Seed' ");
 
-
-$total_fertilizer_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND  item_type='Fertilizer' AND units='KGS' ");
+$total_fertilizer_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND  item_type='Fertilizer' AND units='Kgs' ");
 
 $total_fertilizer_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND  item_type='Fertilizer' AND units='LITRES' ");
 
-$total_herbicide_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND item_type='Herbicide' AND units='KGS' ");
+$total_herbicide_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND item_type='Herbicide' AND units='Kgs' ");
 
-$total_herbicide_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id'  AND item_type='Herbicide' AND units='LITRES' ");
+$total_herbicide_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id'  AND item_type='Herbicide' AND units='ltrs' ");
 //out_grower_produce_tb
 $total_tractor_cash = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND cash_type='tractor' ");
 
@@ -34,7 +33,6 @@ $total_produce_commission = (double)$mCrudFunctions->get_sum("out_grower_produce
 
 
 $client_id = $_SESSION["client_id"];
-
 $profiling_constant = (double)$mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", " client_id='$client_id' AND item='Profiling' AND item_type='Service' ")[0]['commission_per_unit'];
 
 //echo $client_id;
@@ -355,7 +353,7 @@ if (isset($_GET['token']) && $_GET['token'] != "") {
                     <div class="data">
 
                         <a><b>Solid</b>: <b><?php echo $total_herbicide_solid; ?> KGS</b></a>
-                        <a><b>Liquid</b>:<b> <?php echo $total_herbicide_liquid ?> LITRES</b></a>
+                        <a><b>Liquid</b>:<b> <?php echo $total_herbicide_liquid; ?> LITRES</b></a>
 
                     </div>
                 </div>

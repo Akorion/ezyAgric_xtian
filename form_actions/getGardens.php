@@ -13,7 +13,6 @@ if(isset($_POST['dataset_id'])&&isset($_POST['uuid'])){
 $dataset_id=$_POST['dataset_id'];
 $uuid=$_POST['uuid'];
 
-
 $gardens_table="garden_".$dataset_id;
  
 if($mCrudFunctions->check_table_exists($gardens_table)>0){

@@ -58,7 +58,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
     <link rel="stylesheet" type="text/css" href=".css/datepicker.css">
     <link rel="stylesheet" type="text/css" href="less/datepicker.less">
     <link rel="stylesheet" href="../css/bootstrap-multiselect.css" type="text/css"/>
-    <title>ezyagric_v2-Login</title>
+    <title>EZYAGRIC - Digitise Agriculture</title>
     <style>
         input {
             text-align: left !important;
@@ -86,7 +86,7 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
     <div class="row">
 
         <div class="col-sm-6 ">
-            <h1 class="primary-light"><b><i>EZY</i></b> AGRIC</h1><br/>
+            <h1 class="primary-light"><b>EZYAGRIC</b></h1><br/>
             <p class="secondary-light">Your number one solution<br/> for all your profiling needs.</p>
         </div>
         <div class="col-sm-6">

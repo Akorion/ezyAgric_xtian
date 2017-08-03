@@ -1,7 +1,7 @@
 
  		<footer style="z-index:4000 !important">
                     <p id="copy">&copy; <?php echo date('Y'); ?> Akorion Co LTD</p> &nbsp; &nbsp; | &nbsp;&nbsp;
-            <p><a href="#">Terms and conditions</a></p> &nbsp; &nbsp; | &nbsp;&nbsp;<a href="#"><p>Powered by lacel technologies ltd</p></a>
+            <p><a href="#">Terms and conditions</a></p> &nbsp; &nbsp; | &nbsp;&nbsp;<a href="https://www.akorion.com"><p>Powered by Akorion</p></a>
         </footer>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="../js/jq.js"></script>

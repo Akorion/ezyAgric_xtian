@@ -11,6 +11,137 @@ $json_model_obj = new JSONModel();
 $util_obj = new Utilties();
 
 switch ($_POST["token"]) {
+
+    //geting loans summary : used in farmerloans.php
+    case  "get_expenditure":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+        $male = 0;
+        $female = 0;
+
+
+        foreach ($rows as $row) {
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+
+                $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", "biodata_farmer_gender='male'");
+
+                $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", "biodata_farmer_gender='female'");
+
+            }
+        }
+        echo "
+            <table class='table table-responsive table-bordered' style='height: 85%; font-size: larger;'>
+                <thead class='dark' style=\" min-height: 20%; font-weight: bolder; font-size: 1.2em; \">
+                <td colspan=\"2\" class='text-center'>Expenditure on Fertlizers</td>
+                
+                </thead>
+
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Male</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($male) . " UGX</td>
+                </tr>
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Female</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($female) . " UGX</td>
+                </tr>
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Total</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($male + $female) . " UGX</td>
+                </tr>
+                
+            </table>
+        ";
+
+        break;
+
+    //geting loans summary : used in farmerloans.php
+    case  "get_loans_data":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+        $male = 0;
+        $female = 0;
+
+
+        foreach ($rows as $row) {
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+
+                $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_loan_amount_accessed", "biodata_farmer_gender='male' AND general_questions_loan_amount_accessed != ''");
+
+                $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_loan_amount_accessed", "biodata_farmer_gender='male' AND general_questions_loan_amount_accessed != ''");
+
+            }
+        }
+        echo "
+            <table class='table table-responsive table-bordered' style='height: 85%; font-size: larger;'>
+                <thead class='dark' style=\" min-height: 20%; font-weight: bolder; font-size: 1.2em; \">
+                <td colspan=\"2\" class='text-center'>Total Loans that farmers got</td>
+                
+                </thead>
+
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Male</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($male) . " UGX</td>
+                </tr>
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Female</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($female) . " UGX</td>
+                </tr>
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Grand Total</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($male + $female) . " UGX</td>
+                </tr>
+                
+            </table>
+        ";
+
+        break;
+    //geting insurance summary : used in farmersInsured.php
+    case  "farmers_insured_data":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+        $male = 0;
+        $female = 0;
+
+
+        foreach ($rows as $row) {
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+
+                $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_crop_insurance_sources", "biodata_farmer_gender='male' AND general_questions_crop_insurance_sources != ''");
+
+                $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_loan_amount_accessed", "biodata_farmer_gender='male' AND general_questions_loan_amount_accessed != ''");
+//                $female += (int)$mCrudFunctions->fetch_rows()
+            }
+        }
+        echo "
+            <table class='table table-responsive table-bordered' style='height: 85%; font-size: larger;'>
+                <thead class='dark' style=\" min-height: 20%; font-weight: bolder; font-size: 1.2em; \">
+                <td colspan=\"2\" class='text-center'>Total Loans that farmers got</td>
+                
+                </thead>
+
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Male</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($male) . " UGX</td>
+                </tr>
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Female</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($female) . " UGX</td>
+                </tr>
+                <tr>
+                    <td style=\" font-weight: bolder; color:dodgerblue\">Grand Total</td>
+                    <td style=\" font-weight: bolder; color:dodgerblue\"> " . number_format($male + $female) . " UGX</td>
+                </tr>
+                
+            </table>
+        ";
+
+        break;
     case  "farmers_piechart" :
 
         if (isset($_POST['gender'])) {
@@ -31,7 +162,6 @@ switch ($_POST["token"]) {
             draw_donut_chart($male, $female);
         }
         break;
-
     case  "ict_usage_piechart" :
 
         if (isset($_POST['ict_range'])) {
@@ -56,12 +186,14 @@ switch ($_POST["token"]) {
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
+
         $district = array();
         $no_farmers = array();
         $youth = array();
         $old = array();
 
         foreach ($rows as $row) {
+
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $slected_rows = $mCrudFunctions->fetch_farmer_rows("dataset_" . $row['id'] . " GROUP BY biodata_farmer_location_farmer_district ORDER BY biodata_farmer_location_farmer_district ASC",
                     "biodata_farmer_location_farmer_district AS district, COUNT(*) AS farmers, 
@@ -80,7 +212,6 @@ switch ($_POST["token"]) {
         }
         draw_graph($district, $no_farmers, $youth, $old, "column");
         break;
-
     case  "crops_grown" :
         session_start();
         $client_id = $_SESSION["client_id"];
@@ -113,9 +244,8 @@ switch ($_POST["token"]) {
 
             }
         }
-        analyseRegions("column", $regions, $numbers, $males, $females);
+        analyseRegions("column", $regions, $numbers, $males, $females, "Farmers and their regions");
         break;
-
     case "youth_farmers" :
 
         session_start();
@@ -133,16 +263,14 @@ switch ($_POST["token"]) {
                 $slected_rows = $mCrudFunctions->fetch_farmer_rows("dataset_" . $row['id'] . " GROUP BY maize_production_data_improved_seeds_source ORDER BY farmers DESC ",
                     "maize_production_data_improved_seeds_source as seed_source, COUNT(*) as farmers
                     ");
-
                 foreach ($slected_rows as $sel) {
                     array_push($farmers_number, $sel['farmers']);
                     array_push($seed_source, $sel['seed_source']);
                 }
             }
         }
-        analyseSeeds($seed_source, $farmers_number, "bar");
+        analyseSeeds($seed_source, $farmers_number, "column", "Sources where farmers got seeds from");
         break;
-
     case  "average_yield" :
 
         session_start();
@@ -152,7 +280,6 @@ switch ($_POST["token"]) {
         $district = array();
         $no_farmers = array();
         $youth = array();
-
 
 
         foreach ($rows as $row) {
@@ -217,7 +344,9 @@ function draw_graph($district, $no_farmers, $youth, $old, $type)
     $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $type);
     $util_obj->deliver_response(200, 1, $data);
 }
-function draw_climate_graph($district, $used_action, $no_action, $type){
+
+function draw_climate_graph($district, $used_action, $no_action, $type)
+{
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
 
@@ -229,7 +358,7 @@ function draw_climate_graph($district, $used_action, $no_action, $type){
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function analyseSeeds($source, $farmers, $type)
+function analyseSeeds($source, $farmers, $type, $title)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -238,11 +367,11 @@ function analyseSeeds($source, $farmers, $type)
     $array_int = array_map(create_function('$value', 'return (int)$value;'), $farmers);
 
 
-    $data = $json_model_obj->drawSeedGraph($source, $array_int, $type);
+    $data = $json_model_obj->drawSeedGraph($source, $array_int, $type, $title);
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function analyseRegions($type, $categories, $farmers, $males, $females)
+function analyseRegions($type, $categories, $farmers, $males, $females, $title)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -251,7 +380,7 @@ function analyseRegions($type, $categories, $farmers, $males, $females)
     $males_int = array_map(create_function('$value', 'return (int)$value;'), $males);
     $females_int = array_map(create_function('$value', 'return (int)$value;'), $females);
 
-    $data = $json_model_obj->getRegions($type, $categories, $array_int, $males_int, $females_int);
+    $data = $json_model_obj->getRegions($type, $categories, $array_int, $males_int, $females_int, $title);
     $util_obj->deliver_response(200, 1, $data);
 }
 

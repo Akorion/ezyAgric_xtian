@@ -538,10 +538,11 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-money fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                          <h4>Fertlizer expenditure</h4>
+                       <h4> <a href='expenditure.php'> Fertlizer Expenditure </a> </h4>
+                        
                            <a style=\"font-size:15px; color:blue\"><b>UGX " . number_format($cash_given_out) . "</b></a> <br>
                            <a style=\"font-size:13px; color:green\">UGX " . number_format($cash_returned) . " returned</a>
-
+<a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>
@@ -552,9 +553,11 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-sitemap fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4>Loans accessed</h4>
+                       <h4> <a href='farmerloans.php'> Loans accessed </a> </h4>
+                         
                            <a style=\"font-size:15px; color:blue\"><b> " . number_format($taken_loans) . " farmers got </b></a> <br>
                            <a style=\"font-size:13px; color:green\"> " . number_format($taken_no_loans) . " farmers didnt get</a>
+                           <a href='farmerloans.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>

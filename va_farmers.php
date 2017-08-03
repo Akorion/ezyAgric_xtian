@@ -306,7 +306,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
 
             $total_herbicide_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$origin' AND lower(REPLACE(REPLACE(va_code,' ',''),'.','')) ='$code' AND item_type='Herbicide' AND units='KGS' ");
 
-            $total_herbicide_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$origin' AND lower(REPLACE(REPLACE(va_code,' ',''),'.','')) ='$code' AND item_type='Herbicide' AND units='LITRES' ");
+            $total_herbicide_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$origin' AND lower(REPLACE(REPLACE(va_code,' ',''),'.','')) ='$code' AND item_type='Herbicide' AND units='ltrs' ");
 //out_grower_produce_tb
             $total_produce_supplied = (int)$mCrudFunctions->get_sum("out_grower_produce_tb", "qty", " dataset_id='$origin' AND lower(REPLACE(REPLACE(va_code,' ',''),'.','')) ='$code'  ");
 
@@ -909,7 +909,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                          <input type='hidden' class='unit-price-herbicide' value='$unit_price'/>
                          <input type='hidden' class='per-acre-herbicide' value='$qty_per'/>
 					 </td>
-					 <td class=\"input\"><input  id='herbicide_qty_$id'class='qty-herbicide' type=\"text\" placeholder=\"quantity\" readonly/></td>
+					 <td class=\"input\"><input  id='herbicide_qty_$id' class='qty-herbicide' type=\"text\" placeholder=\"quantity\" readonly/></td>
                      <!--  <td class=\"units\">$units</td>  -->
 					 <td class='qty_prev'> <!-- <span class='value'>0</span>  -->
 					    <input type='text' value='0' id='herbicides_$id' oninput='updateHerbicidecost($id,$unit_price)' />

@@ -158,52 +158,29 @@
     </div>
 </div>
 
+<div class="h4 container" style="padding-top: 1.5em;">Loans accessed</div>
 
-<?php
-include("include/preloader.php");
-//include("include/empty.php");
-
-?>
 
 <div class="container-fluid">
-    <div class="col-md-12 col-sm-4 col-lg-5" style="box-shadow: 2px 2px 2px 2px lightgray;">
-        <div id="farmers_regions" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
+
+    <div class="col-md-12 col-sm-4 col-lg-6" style="box-shadow: 2px 2px 2px 2px lightgray;">
+        <div id="farmers_loans" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
 
         </div>
-
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-6">
         <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
             <div id="gender_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
-        <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
-            <div id="ict_usage_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
-            </div>
-        </div>
-    </div>
+
 </div>
-<br><br>
-<div class="container-fluid">
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="crops_grown" style=" height:350px; padding-top: 10px;">
-
-        </div>
-    </div>
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="youth_farmers" style=" height:350px; padding-top: 10px;">
-
-        </div>
-    </div>
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12" id="average_yield" style=" height:350px; padding-top: 10px;">
-
-        </div>
-    </div>
-</div>
+<?php
+include("include/preloader.php");
+//include("include/empty.php");
+?>
 <div>
     <br>
     <br>
@@ -218,24 +195,16 @@ include("include/preloader.php");
 
     $(document).ready(function () {
         getLoadOutGrowerDash();
-//        getLoadDataSets();
-//        formGenderGraph();
-        getAjaxData(1);
-        ictUsageGraph("ict");               //piechart for ict usage
-//        farmersDistrictGraph();             //farmers column graph
-        cropsAnalysis("name_crop");
-        youthFarmers(" ");
-        averageYield(' ');
+        getAjaxData();
+        FormGenderGraph();
 
-        FormGenderGraph("all");
     });
 
     $("#search_holder").on("input", function (e) {
         getLoadDataSets();
     });
 
-    function FormGenderGraph(gender) {
-
+    function FormGenderGraph() {
         token = "farmers_piechart";
         $.ajax({
             type: "POST",
@@ -243,130 +212,33 @@ include("include/preloader.php");
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
                 token: token,
-                gender: gender
+                gender: ""
             },
             success: function (data) {
-
-                $('#gender_graph').highcharts(data,function(chart) { // on complete
-
-//                    var xpos = '50%';
-//                    var ypos = '53%';
-//                    var circleradius = 102;
-//
-//                    // Render the text
-//                    chart.renderer.text('<b>Total</b> <br>  200', 150, 160).css({
-//                        width: circleradius*1,
-//                        color: '#4572A7',
-//                        fontSize: '16px',
-//
-//                    }).attr({
-//                        // why doesn't zIndex get the text in front of the chart?
-//                        zIndex: 999
-//                    }).add();
-                });
+                $('#gender_graph').highcharts(data);
             }
         });
         hideProgressBar();
-    }
-    function ictUsageGraph(range) {
 
-        token = "ict_usage_piechart";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token,
-                ict_range: range
-            },
-            success: function (data) {
-
-                $('#ict_usage_graph').highcharts(data);
-            }
-        });
-        hideProgressBar();
     }
+
     //-------------------------getting ajax data directly-- trial
-    function getAjaxData(id) {
-        token = "farmers_districts";
+    function getAjaxData() {
+        token = "get_loans_data";
         $.ajax({
             type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token,
-                gender: id
-            },
+            url: "form_actions/loadCharts.php",
+            data: {token: token},
             success: function (data) {
-                $('#farmers_regions').highcharts(data);
+                $("#farmers_loans").html(data);
 //                console.log(data);
-//                if (data.series.length == 3){
-//                    $('#season').html("<div align='justify'> Season1 Season2 Season3</div>");
-//                }
             }
+
         });
 
-    }
-
-    function cropsAnalysis(name) {
-
-        token = "crops_grown";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token,
-                farmers: "farmers",
-                crop: name
-            },
-            success: function (data) {
-
-                $('#crops_grown').highcharts(data);
-            }
-        });
-        hideProgressBar();
-    }
-
-    function youthFarmers(name) {
-
-        token = "youth_farmers";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token,
-                crop: name
-            },
-            success: function (data) {
-                $('#youth_farmers').highcharts(data);
-            }
-        });
-        hideProgressBar();
-    }
-
-    function averageYield(name) {
-
-        token = "average_yield";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token:token,
-                farmers: "farmers",
-                crop: name
-            },
-            success: function (data) {
-                $('#average_yield').highcharts(data);
-            }
-        });
-//        hideProgressBar();
     }
 
     function getLoadOutGrowerDash() {
-
         token = "outgrower_dash";
         $.ajax({
             type: "POST",

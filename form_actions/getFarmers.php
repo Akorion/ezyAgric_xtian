@@ -1178,7 +1178,6 @@ function output($id, $where)
             foreach ($rows as $row) {
                 $real_id = $row['id'];
                 $real_id_ = $row['id'];
-
                 $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
                 $name = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_name']));
                 $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_gender']));
@@ -1186,7 +1185,6 @@ function output($id, $where)
                 $picture = $util_obj->remove_apostrophes($row['biodata_farmer_picture']);
                 $district = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_location_farmer_district']));
                 $phone_number = $util_obj->remove_apostrophes($row['biodata_farmer_phone_number']);
-
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
@@ -1195,26 +1193,21 @@ function output($id, $where)
                 if ($_SESSION['client_id'] == 1) {
                     echo "<tr>";
                     echo "
-                        <td>$counter</td>                          
-                  
-                  <td style='line-height:12pt; align:center'>$name</td>
-                  <td style='line-height:12pt; align:center'>$age_</td>
-
-                    <td>" . substr($gender, 0, 1) . "</td>";
+                      <td>$counter</td> 
+                      <td style='line-height:12pt; align:center'>$name</td>
+                      <td style='line-height:12pt; align:center'>$age_</td>
+                      <td>" . substr($gender, 0, 1) . "</td>";
 //                    <td style='line-height:12pt; align:center'>$district</td>
 
                     $acares = array();
-
                     $gardens_table = "garden_" . $id;
 
                     if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
 //echo $uuid;
-
                         $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
 
                         if (sizeof($gardens) < 0) {
 //echo"<p>Number of Gardens: $total_gardens ,AverageAcerage: $average </p><br/>";
-
                         } else {
                             $z = 1;
                             foreach ($gardens as $garden) {
@@ -1227,10 +1220,8 @@ function output($id, $where)
                                 $longitudes = array();
 
                                 foreach ($data_rows as $row_) {
-
                                     array_push($longitudes, $row_['garden_gps_point_Longitude']);
                                     array_push($latitudes, $row_['garden_gps_point_Latitude']);
-
                                 }
                                 $acerage = $util_obj->get_acerage_from_geo($latitudes, $longitudes);
                                 array_push($acares, $acerage);
@@ -1259,24 +1250,23 @@ function output($id, $where)
  </div> </a>";
 
                     echo "</tr>";
-                } else {
+                }
+                else {
                     echo "<tr>
                            <td>$counter</td>                   
                            <td>$name</td> <td>$age_ yrs</td>  
-                           <td>" . substr($gender, 0, 1) . "</td>                          
-                          ";
+                           <td>" . substr($gender, 0, 1) . "</td>";
 
-                    $acares = array();
-                    $gardens_table = "garden_" . $id;
+                        $acares = array();
+                        $gardens_table = "garden_" . $id;
 
                     if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
-//echo $uuid;
+                        //echo $uuid;
 
                         $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
 
                         if (sizeof($gardens) < 0) {
 //echo"<p>Number of Gardens: $total_gardens ,AverageAcerage: $average </p><br/>";
-
                         } else {
                             $z = 1;
                             foreach ($gardens as $garden) {

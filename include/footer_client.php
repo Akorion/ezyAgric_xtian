@@ -10,8 +10,8 @@
     </div>
  		<footer>
             
-            <p>&copy; <?php echo date("Y");?>   EZY AGRIC</p> &nbsp; &nbsp; | &nbsp;&nbsp;
-            <p><a href="#">Terms and conditions</a></p> &nbsp; &nbsp;  &nbsp;&nbsp;<p>Powered by:<a href="akorion.com">Akorion Co LTD</p></a>
+            <p>&copy; <?php echo date("Y");?>   EZYAGRIC</p> &nbsp; &nbsp; | &nbsp;&nbsp;
+            <p><a href="#">Terms and conditions</a></p> &nbsp; &nbsp;  &nbsp;&nbsp;<p>Powered by: <a href="https://www.akorion.com">Akorion Co LTD</p></a>
         </footer>
 <!--<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>-->
 <script>
