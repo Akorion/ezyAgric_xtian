@@ -1182,11 +1182,15 @@ function output($id, $where)
                 $name = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_name']));
                 $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_gender']));
                 $dob = $util_obj->remove_apostrophes($row['biodata_farmer_dob']);
+                $birth_date = explode('-',$dob);
+                $birth_date[2] = '19'.$birth_date[2];
+                $dob = implode('-',$birth_date);
                 $picture = $util_obj->remove_apostrophes($row['biodata_farmer_picture']);
                 $district = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_location_farmer_district']));
                 $phone_number = $util_obj->remove_apostrophes($row['biodata_farmer_phone_number']);
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
+//                print_r($dob);
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
@@ -1266,7 +1270,8 @@ function output($id, $where)
                         $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
 
                         if (sizeof($gardens) < 0) {
-//echo"<p>Number of Gardens: $total_gardens ,AverageAcerage: $average </p><br/>";
+                            echo "<td><h6> 0</h6></td>
+                                    <td style=\"color:#888\"> 0</td>";
                         } else {
                             $z = 1;
                             foreach ($gardens as $garden) {
