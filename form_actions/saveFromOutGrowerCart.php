@@ -8,7 +8,7 @@ require_once   dirname(dirname(__FILE__))."/php_lib/lib_functions/utility_class.
 $mCrudFunctions = new CrudFunctions();
 $util_obj= new Utilties();
 
-print_r($_SESSION['inputs']);
+//print_r($_SESSION['inputs']);
 
 if(isset($_SESSION['inputs']) && !empty($_SESSION['inputs']))
 {
@@ -311,7 +311,7 @@ farmer_id='$meta_id' AND input_id='0' AND input_type='tractor'");
 
         $id = (double)$produce_array['id'];
 
-        $row = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", " client_id='$client_id' AND item='produce_supplied'  ");
+        $row = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", " item='produce_supplied'  "); //item client_id removed
 
         $unit_price = (int)$row[0]['unit_price'];
         $commission_per_unit = $row[0]['commission_per_unit'];

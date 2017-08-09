@@ -797,7 +797,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                             </tr>
                             <?php
                             $client_id = $_SESSION['client_id'];
-                            $seeds = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", "client_id='$client_id' AND item_type='Seed' ");//item
+                            $seeds = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", "item_type='Seed' ");//item removed: client_id
 
                             //$selected_farmer_id=$_SESSION['meta'];
                             //echo "<tr class='title'><td colspan = '6'><b>Seeds</b></td></tr>";
@@ -850,7 +850,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
                             </tr>
                             <?php
                             $client_id = $_SESSION['client_id'];
-                            $fertilizers = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", "client_id='$client_id' AND item_type='Fertilizer'");//item
+                            $fertilizers = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", "item_type='Fertilizer'");//item removed: client_id
 
                             foreach ($fertilizers as $fertilizer) {
                                 $id = $fertilizer['id'];
@@ -893,7 +893,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['s']) && $_GET[
 
                             <?php
                             $client_id = $_SESSION['client_id'];
-                            $herbicides = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", "client_id='$client_id' AND item_type='Herbicide' ");//item
+                            $herbicides = $mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", "item_type='Herbicide' ");//item
 
 
                             foreach ($herbicides as $herbicide) {
@@ -1844,7 +1844,6 @@ function escapeJavaScriptText($string)
 
         if ((ammount != "") && (date != "")) {
 
-
             var va_dataset_id = getQueryVariable("s");
             var va_id = getQueryVariable("token");
 
@@ -1867,12 +1866,8 @@ function escapeJavaScriptText($string)
                     token: 'add'
                 },
                 success: function (data) {
-
                     //upload done
-
                     //window.alert(data);
-
-
                 }
             });
         } else {
@@ -1882,7 +1877,6 @@ function escapeJavaScriptText($string)
 
             var farmer_dataset_id = document.getElementById('farmer_dataset_id').value;
             var farmer_id = document.getElementById('farmer_id').value;
-
 
             $.ajax({
                 type: "POST",
@@ -1899,21 +1893,12 @@ function escapeJavaScriptText($string)
                     token: 'remove'
                 },
                 success: function (data) {
-
                     //upload done
-
                     //window.alert(data);
-
-
                 }
             });
-
-
         }
-
-
     }
-
 
     function produceSelected() {
 
@@ -1942,12 +1927,8 @@ function escapeJavaScriptText($string)
                     token: 'add'
                 },
                 success: function (data) {
-
-                    //upload done
-
+//                    saveRecords();
                     //window.alert(data);
-
-
                 }
             });
 
@@ -2172,11 +2153,9 @@ function escapeJavaScriptText($string)
 
         tractor_amount = document.getElementById('tractor_amount').value;
         cash_amount = document.getElementById('cash_amount').value;
-
         if (tractor_amount.length > 0) {
 
             tractor_date = document.getElementById('tractor_date').value;
-
             if (tractor_date.length > 1) {
                 flag = 1;
             }
@@ -2184,8 +2163,7 @@ function escapeJavaScriptText($string)
         }
 
         if (cash_amount.length > 0) {
-            cash_date = document.getElementById('cash_date').value
-
+            cash_date = document.getElementById('cash_date').value;
             if (cash_date.length > 1) {
                 flag = 1;
             }
