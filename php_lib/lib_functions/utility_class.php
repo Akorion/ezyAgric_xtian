@@ -106,10 +106,9 @@ return $date->format('Y-m-d H:i a');;
 public function getAge( $birth_date,$time_zone ) {
 
 $birth_date=date_create(str_replace(":000"," ",$birth_date));
+//    $birth_date = Date('15-Feb-10');
 $birth_date=date_format($birth_date,"Y-m-d");
-
 $current_date= Date('Y-m-d');
-
 $current_date=$this->ChangeTimeZone( $current_date,$time_zone);
 
 return round($this->daysBetween($birth_date,$current_date)/365,0);

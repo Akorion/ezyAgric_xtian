@@ -11,7 +11,6 @@ $util_obj= new Utilties();
  //  $_POST['id']=52;
 if(isset($_POST["id"]) &&$_POST["id"]!=''){
 
-
 //echo $size;
 if ($_FILES["csv"]["size"] > 0) {
     

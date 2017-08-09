@@ -130,11 +130,10 @@ echo"</tbody>";
                     <p><input id="file" type="file" name="csv" accept=".csv" value="Choose CSV"></p>
                 </div>
                 <div class="modal-footer">
-      
                     <input type="submit" name="Submit" class="btn btn-primary"/>
-		    </form>
 					<button type="button" onclick="Refresh();" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                 </div>
+            </form>
             </div>
         </div>
     </div>
@@ -202,6 +201,8 @@ function Refresh(){
 function setDataset(id){
 	var dataset_id = document.getElementById("dataset");
 	dataset_id .value=id;
+
+    $(this).parent().find("input[name=id]").val(id);
 //	return dataset_id;
 }
 
@@ -234,6 +235,7 @@ function getDatasets(id, datasetid){
      $('#active_datasets').html(active_dataset_html);
     });
 }
+
 function checkuncheck(){
     $('#available_datasets input[type="checkbox"]').on('change', function() {
     $('#available_datasets input[type="checkbox"]').not(this).prop('checked', false);

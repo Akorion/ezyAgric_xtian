@@ -25,7 +25,6 @@ function output($client_id, $search)
         $sql = " AND ( dataset_name LIKE '%$search%' OR dataset_type LIKE '%$search%' OR region LIKE '%$search%'   )  ";
     }
 
-
     $table = "client_datasets_v";
     $columns = "*";
     $where = " client_id='$client_id' " . $sql . " ORDER BY time_of_creation DESC  ";
@@ -71,9 +70,10 @@ function output($client_id, $search)
                     $total_gardens = $total_acerage_gardens[1];
                     $mCrudFunctions->insert_into_total_acerage_tb($dataset_id, $total_gardens, $total_acerage);
                 }
+//                echo " data";
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-            }
+            }       //echo "no data";
 
 
             $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
@@ -85,8 +85,8 @@ function output($client_id, $search)
               <div class='x_panel'>
                 <div class='col-xs-12'>
                   <div class='panel-title'>
-                    <div style='' class='col-lg-12'> 
-                        <span class='fa fa-folder-open' style='font-size: 40px; margin-top: -12px; color: #0D47A1;'>	</span> 
+                    <div style='' class='col-lg-12'>
+                        <span class='fa fa-folder-open' style='font-size: 40px; margin-top: -12px; color: #0D47A1;'>	</span>
                     </div>
                     <h2 style='color: black;'> <br/>
                       <br/>
@@ -97,7 +97,7 @@ function output($client_id, $search)
                 <div class='col-xs-12'>
                   <div class='content'>
                     <span style='font-size:15px;'>$period</span>
-                    
+
                     <h6>
                     <a href='dashboard.php?token=$key' class='btn btn-success btn-sm'>
                     Open</a></h6>
@@ -178,9 +178,6 @@ function output($client_id, $search)
           </div>";*/
 
     }
-
-
 }
-
 
 ?>

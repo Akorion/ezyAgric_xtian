@@ -118,7 +118,7 @@
 
 
 
-<div class="container-fluid">
+<div class="container-fluid" style="border: solid lightgray thin; padding: 20px; border-radius: 5px; ">
 <div class="col-md-12 col-sm-4 col-xs-12">
 <div class="row">
 

@@ -428,7 +428,6 @@ echo"
  
 }
 
-
 if($type=="Farmer"){
 $latitude=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
 $longitude=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
@@ -823,8 +822,7 @@ echo"<div class=\"row\">
 </div>
 
 <div class=\"col-sm-5 col-md-5 col-lg-5\">
-<h6>GPs location: <span style=\"color:#999\">$latitude , $longitude</span></h6>
-
+    <h6>GPs location: <span style=\"color:#999\">$latitude , $longitude</span></h6>
 </div>";
 echo"
   <div class=\"right print_export\">
@@ -990,8 +988,6 @@ echo"</div>";
  $rows_tractor_money_returned=number_format($rows_tractor_money_returned);
  $tractor_money_taken=number_format($tractor_money_taken);
  
- 
- 
 echo "
   <div class=\" col-sm-12 col-md-7 col-lg-7\">
     <div class=\"card prodn\">
@@ -1061,7 +1057,6 @@ echo "
 </div>";
 
 }
-
 
 if( sizeof($rows_herbicide)>0){
 echo "
@@ -1138,12 +1133,6 @@ echo "
 
 }
 
-
-
-
-
-
-
 echo"<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
 <div class=\"card prodn\">
 <h5 class=\"\">Production Data</h5>";
@@ -1188,7 +1177,6 @@ echo"<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
 
 
 }
-
 
 
 
@@ -1300,11 +1288,8 @@ function getGardens(){
 		  var total_acerage = document.getElementById("total_acerage").value;
 		  
 		   $("#total").html(total_acerage);
-		 
-		  
      }
     });
-     
 	
 	
 }

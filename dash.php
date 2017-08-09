@@ -2,7 +2,7 @@
 session_start();
 $client_id = $_SESSION['client_id'];
 
-if ($_SESSION['client_id'] == 2) {
+if (($_SESSION['client_id'] == 2) || ($_SESSION["account_name"] == 'demo')) {
     //$util_obj-
 
     header("Location: dash1.php");

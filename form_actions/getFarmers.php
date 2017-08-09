@@ -56,13 +56,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                         ///v2 code interview_particulars_va_code
                         if ($_POST['va'] == "all") {
 //                            echo "Dataset: $dt_st_name";
-                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th>Soil Testing Results</th><th>Details</th></tr></thead>";
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='".hide()."'>Soil Testing Results</th><th>Details</th></tr></thead>";
                             output($id, " 1 ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                             echo "</table>";
 
                         } else {
 //                            echo "Dataset: $dt_st_name";
-                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th> <th>Acreage</th><th>Soil Testing Results</th><th>Details</th></tr></thead>";
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th> <th>Acreage</th><th style='".hide()."'>Soil Testing Results</th><th>Details</th></tr></thead>";
                             output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
                             echo "</table>";
                         }
@@ -1270,8 +1270,8 @@ function output($id, $where)
                         $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
 
                         if (sizeof($gardens) < 0) {
-                            echo "<td><h6> 0</h6></td>
-                                    <td style=\"color:#888\"> 0</td>";
+//                            echo "<td> 0 </td>
+//                                    <td style=\"color:#888\"> 0 </td>";
                         } else {
                             $z = 1;
                             foreach ($gardens as $garden) {
@@ -1305,29 +1305,31 @@ function output($id, $where)
                         }
 
 
-                    } //<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
-                    $count = $counter - 1;
-                    $docx = $util_obj->remove_apostrophes($soil_test_results_docx[$count]['document_url']);
-                    $pdf = $util_obj->remove_apostrophes($soil_test_results_pdf[$count]['document_url']);
+                    } else {
+                        echo "<td> 0 </td>
+                              <td style=\"color:#888\"> 0 </td>";
+                    }//<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
 
-//                    print_r($pdf);
+                        $count = $counter - 1;
+                        $docx = $util_obj->remove_apostrophes($soil_test_results_docx[$count]['document_url']);
+                        $pdf = $util_obj->remove_apostrophes($soil_test_results_pdf[$count]['document_url']);
+
+//                    print_r($pdf);  <!-- <a class='btn btn-primary' href='../uploads/ANAKA%20SOIL%20RESULTS.pdf' style="background: #03a9f4; color:#FFFFFF; padding: 8px; width:50%; margin: 0;">View Results &raquo;</a> -->
                     echo "
-  <div class='row'>
-    <!--  <td class=\"col-sm-4\">  -->
-    <td>  
-        <!--   <a class='btn btn-primary' href='../uploads/ANAKA%20SOIL%20RESULTS.pdf' style=\"background: #03a9f4; color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Results &raquo;</a> -->
-        <div class='btn-group'>
-            <a class='dropdown-toggle btn btn-default' data-toggle='dropdown' aria-haspopup='true' style=\"background: #03a9f4; color: white; padding: 10px; width:100%; margin: 0; \" > <i class='fa fa-ellipsis-v'></i> Results </a>
-            <ul class='dropdown-menu'>
-                <li><a href=\"$pdf\"> View Results </a></li>
-                <li><a href=\"$docx\"> Download Results </a></li>
-            </ul>
-        </div>
-    </td>
-    <td>  
-        <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a>
-    </td>
-  </div>";
+                     <div class='row'>      
+                        <td style='".hide()."'>                              
+                            <div class='btn-group'>
+                                <a class='dropdown-toggle btn btn-default' data-toggle='dropdown' aria-haspopup='true' style=\"background: #03a9f4; color: white; padding: 10px; width:100%; margin: 0; \" > <i class='fa fa-ellipsis-v'></i> Results </a>
+                                <ul class='dropdown-menu'>
+                                    <li><a href=\"$pdf\"> View Results </a></li>
+                                    <li><a href=\"$docx\"> Download Results </a></li>
+                                </ul>
+                            </div>
+                        </td> 
+                        <td>  
+                            <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a>
+                        </td>
+                     </div>";
 
                     echo "</tr>";
                 }
@@ -1396,6 +1398,13 @@ function output($id, $where)
         }
 
     }
+}
+
+function hide(){
+    if($_SESSION['client_id'] != 16){
+        return 'display: none';
+    }
+//    else return "show";
 }
 
 ?>
