@@ -1184,8 +1184,10 @@ function output($id, $where)
 
                 $dob = $util_obj->remove_apostrophes($row['biodata_farmer_dob']);
                 $birth_date = explode('-',$dob);
-                $birth_date[2] = '19'.$birth_date[2];
-                $dob = implode('-',$birth_date);
+                if(strlen($birth_date[2]) == 2){
+                    $birth_date[2] = '19'.$birth_date[2];
+                    $dob = implode('-',$birth_date);
+                }
 
                 $picture = $util_obj->remove_apostrophes($row['biodata_farmer_picture']);
                 $district = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_location_farmer_district']));
