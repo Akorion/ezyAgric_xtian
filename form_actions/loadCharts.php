@@ -142,6 +142,7 @@ switch ($_POST["token"]) {
         ";
 
         break;
+
     case  "farmers_piechart" :
 
         if (isset($_POST['gender'])) {
@@ -162,6 +163,7 @@ switch ($_POST["token"]) {
             draw_donut_chart($male, $female);
         }
         break;
+
     case  "ict_usage_piechart" :
 
         if (isset($_POST['ict_range'])) {
@@ -181,6 +183,7 @@ switch ($_POST["token"]) {
             draw_ict_pie_chart($ict_used, $ict_not_used);
         }
         break;
+
     case  "farmers_districts" :
         session_start();
         $client_id = $_SESSION["client_id"];
@@ -212,6 +215,7 @@ switch ($_POST["token"]) {
         }
         draw_graph($district, $no_farmers, $youth, $old, "column");
         break;
+
     case  "crops_grown" :
         session_start();
         $client_id = $_SESSION["client_id"];
@@ -219,7 +223,6 @@ switch ($_POST["token"]) {
 
         $numbers = array();
         $regions = array();
-
         $males = array();
         $females = array();
 
@@ -246,6 +249,7 @@ switch ($_POST["token"]) {
         }
         analyseRegions("column", $regions, $numbers, $males, $females, "Farmers and their regions");
         break;
+
     case "youth_farmers" :
 
         session_start();
