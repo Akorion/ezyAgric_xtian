@@ -1183,6 +1183,7 @@ function output($id, $where)
                 $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_gender']));
 
                 $dob = $util_obj->remove_apostrophes($row['biodata_farmer_dob']);
+
                 $birth_date = explode('-',$dob);
                 if(strlen($birth_date[2]) == 2){
                     $birth_date[2] = '19'.$birth_date[2];
@@ -1279,7 +1280,7 @@ function output($id, $where)
                         } else {
                             $z = 1;
                             foreach ($gardens as $garden) {
-                                $key = $uuid . "/Number of Gardens[$z]";
+                                $key = $uuid . "/gardens[$z]";
                                 $data_rows = $mCrudFunctions->fetch_rows($gardens_table, "garden_gps_point_Latitude,garden_gps_point_Longitude", " PARENT_KEY_ ='$key'");
                                 if (sizeof($data_rows) == 0) {
                                     $data_rows = $mCrudFunctions->fetch_rows($gardens_table, "garden_gps_point_Latitude,garden_gps_point_Longitude", " PARENT_KEY_ ='$uuid'");
