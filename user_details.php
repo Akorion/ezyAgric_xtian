@@ -1183,7 +1183,7 @@ elseif ($_SESSION['client_id'] == 16){
 
 
     }
-elseif ($_SESSION['client_id'] == 17)
+elseif ($_SESSION["account_name"] == "Insurance")
 {
 
 

@@ -56,7 +56,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 	elseif($_SESSION["client_id"]==16){
         $util_obj->redirect_to( "../acpudash.php" );
     }
-    elseif ($_SESSION["client_id"] == 17){
+    elseif ($_SESSION["account_name"] == "Insurance"){
         $util_obj->redirect_to("../insuranceDash.php");
     }
 	else{//

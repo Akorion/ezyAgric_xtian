@@ -88,7 +88,7 @@ $path = $_SERVER["PHP_SELF"];
                 <li class="active"><?php
                     if ($_SESSION['client_id'] == 2) {
                         echo "<a href=\"../dashboardAll.php\">Dashboard</a>";
-                    } elseif($_SESSION['client_id'] == 17){
+                    } elseif($_SESSION["account_name"] == "Insurance"){
                         echo "<a href=\"../insuranceDash.php\">Dashboard</a>";
                     } else {
                         echo "<a href=\"../dashboardAll.php\" >Dashboard</a>";
