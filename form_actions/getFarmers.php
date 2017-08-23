@@ -1195,7 +1195,6 @@ function output($id, $where)
                 $phone_number = $util_obj->remove_apostrophes($row['biodata_farmer_phone_number']);
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
-//                print_r($dob);
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
@@ -1289,10 +1288,8 @@ function output($id, $where)
                                 $longitudes = array();
 
                                 foreach ($data_rows as $row_) {
-
                                     array_push($longitudes, $row_['garden_gps_point_Longitude']);
                                     array_push($latitudes, $row_['garden_gps_point_Latitude']);
-
                                 }
                                 $acerage = $util_obj->get_acerage_from_geo($latitudes, $longitudes);
                                 array_push($acares, $acerage);

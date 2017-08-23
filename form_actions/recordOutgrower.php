@@ -251,7 +251,7 @@ switch ($_POST["token"]) {
 
         break;
 
-    case "farm_yield" :
+    case  "farm_yield" :
 
         if (isset($_POST["dataset_id"]) &&
             $_POST["dataset_id"] != '' &&
@@ -310,7 +310,7 @@ switch ($_POST["token"]) {
         }
         break;
 
-    case "farm_cash_returns" :
+    case  "farm_cash_returns" :
 
         if (isset($_POST["dataset_id"]) &&
             $_POST["dataset_id"] != '' &&
@@ -414,7 +414,7 @@ switch ($_POST["token"]) {
         }
         break;
 
-    case "farm_acerage":
+    case  "farm_acerage":
         if (isset($_POST["dataset_id"]) &&
             $_POST["dataset_id"] != '' &&
             isset($_POST["farmer_id"]) &&
@@ -443,7 +443,6 @@ switch ($_POST["token"]) {
                     $count = $mCrudFunctions->get_count("acerage_" . $dataset_id, $where);
 
                     if ($count > 0) {
-
                         $yes = $mCrudFunctions->update("acerage_" . $dataset_id, $columns_value, $where);
                         echo $yes;
                     } else {
@@ -452,7 +451,6 @@ switch ($_POST["token"]) {
                     }
 
                 } else {
-
                     $count = $mCrudFunctions->get_count("acerage_" . $dataset_id, " farmer_id='$farmer_id'");
 
                     if ($count > 0) {
@@ -462,16 +460,12 @@ switch ($_POST["token"]) {
                         $yes = $mCrudFunctions->insert_into_table_tb("acerage_" . $dataset_id, $acerage_columns, $acerage_values);
                         echo $yes;
                     }
-
                 }
-
             }
-
-
         }
         break;
 
-    case "outgrower_dash":
+    case  "outgrower_dash":
         session_start();
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
@@ -492,15 +486,15 @@ switch ($_POST["token"]) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1);
+            if($_SESSION['client_id'] == 16 || $_SESSION['client_id'] == 17) $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
+            elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
             }
 
-
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 //                echo "the table exists";
                 $taken_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='yes'");
-
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $taken_no_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='no'");
@@ -512,6 +506,7 @@ switch ($_POST["token"]) {
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
+                if($_SESSION['client_id'] == 17){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
@@ -542,7 +537,7 @@ switch ($_POST["token"]) {
                         
                            <a style=\"font-size:15px; color:blue\"><b>UGX " . number_format($cash_given_out) . "</b></a> <br>
                            <a style=\"font-size:13px; color:green\">UGX " . number_format($cash_returned) . " returned</a>
-<a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                           <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>

@@ -6,11 +6,8 @@ require_once dirname(dirname(__FILE__))."/php_lib/user_functions/crud_functions_
 require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/database_query_processor_class.php";
 require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/utility_class.php";
 require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/pagination_class.php";
-	
 
 $mCrudFunctions = new CrudFunctions();
-
-
 
 if(isset($_POST['id'])&&$_POST['id']!=""){
 $per_page= 16;
@@ -23,7 +20,7 @@ $total_count_default=$mCrudFunctions->get_count("dataset_".$id,1);
 if(!empty($_POST['search'])){
 $search=$_POST['search'];
 if($_POST['district']=="all"){
-$sql= " AND  (   biodata_farmer_location_farmer_district LIKE '%$search%' OR 
+$sql = " AND  (   biodata_farmer_location_farmer_district LIKE '%$search%' OR 
                  biodata_farmer_location_farmer_subcounty LIKE '%$search%' OR
                  biodata_farmer_location_farmer_parish LIKE '%$search%' OR 
 				 biodata_farmer_location_farmer_village LIKE '%$search%' OR 
@@ -58,7 +55,7 @@ $total_count_default=$mCrudFunctions->get_count("dataset_".$id,$sql_);/// $sql_
 }
 
 
-$total_count =!empty($_POST['total_count'])? (int)$_POST['total_count'] :$total_count_default;
+$total_count = !empty($_POST['total_count'])? (int)$_POST['total_count'] :$total_count_default;
  $pagination_obj= new Pagination($page,$per_page,$total_count); 
  $offset= $pagination_obj->getOffset();
 $gender=$_POST['gender'];

@@ -1,3 +1,4 @@
+
 <div class="container-fluid">
 <div class="row">
 <?php include("../include/sidebar.php");
@@ -142,37 +143,27 @@ echo"</tbody>";
 	 <div id="attachdataset" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-			
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title text-success">ATTACH DATASET - SELECT ONLY ONE</h4>
                 </div>
-
                 <div class="modal-body"  id="available_datasets">
 				 
                    <div class="checkbox" >
 
-
                    </div>
-                    
                   
                 </div>
                     <h5 style='text-align:center;'>Currently Attached Datasets</h5>
-                    <div class="modal-body"  id="active_datasets">
-
-                 
+                <div class="modal-body"  id="active_datasets">
 				 
-                   <div class="checkbox" >
-
+                   <div class="checkbox">
 
                    </div>
-                    
                   
                 </div>
                 <div class="modal-footer">
-
                     <input type="submit" id="btnattach" name="submit" value="Attach" class="btn btn-primary" onclick="attach();"/>
-		    
 					<button type="button" onclick="Refresh();" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                 </div>
             </div>

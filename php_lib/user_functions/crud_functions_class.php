@@ -474,6 +474,16 @@ class CrudFunctions
         return $util_obj->insert_into($mDatabaseQueryProcessor, $table, $columns, $values);
     }
 
+    public function insert_into_garden_gps($dataset_id, $column_data)
+    {
+        $util_obj = new Utilties();
+        $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
+        $table = "garden_gps";
+        $columns = "dataset_id,columns";
+        $values = "'$dataset_id','$column_data'";
+        return $util_obj->insert_into($mDatabaseQueryProcessor, $table, $columns, $values);
+    }
+
     public function insert_into_soil_testing_results($dataset_id, $document_url, $farmers_id)
     {
         $util_obj = new Utilties();
@@ -548,6 +558,14 @@ class CrudFunctions
                 if ($matches[0] == "general_questions") {
                     $this->insert_into_general_questions($dataset_id, $column);
                 }
+
+                if($matches[0] == "production_data") {
+                    $this->insert_into_garden_gps($dataset_id, $column);
+                }
+
+//                if($matches[0] == "production_data" && $matches[1] == "garden_gps") {
+//                    $this->insert_into_garden_gps($dataset_id, $column);
+//                }
 
                 $matches2 = explode("_on_other_", $intial_data);
                 if ($matches2[0] == "information") {
@@ -679,7 +697,6 @@ class CrudFunctions
         $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
         return $util_obj->get_farmer_result_array($mDatabaseQueryProcessor, $table, $columns);
     }
-
 
     public function update($table, $columns_value, $where)
     {

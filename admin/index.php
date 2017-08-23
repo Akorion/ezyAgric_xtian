@@ -34,7 +34,7 @@ if(isset($_SESSION['user_id'])){$util_obj->redirect_to( "home.php" );}
 <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 <link href='http://fonts.googleapis.com/css?family=Lato:300,100' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../css/custom.css">
-	<title>ezyagric_v2-Login</title>
+	<title>EZYAGRIC | ADMIN</title>
 </head>
 <body>
 <nav class="navbar navbar-default teal">

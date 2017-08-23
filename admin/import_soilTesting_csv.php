@@ -33,7 +33,7 @@ if(isset($_POST["id"]) &&$_POST["id"]!=''){
 //            $farmer_id = $_POST["id"];
             $id = $util_obj->encrypt_decrypt("encrypt", $_POST["id"]);
             $file_path = $_FILES["csv"]["tmp_name"];
-            $targetPath =  '../uploads/'. $fileinfo["basename"];
+            $targetPath =  "../uploads/farmer".$farmer_id."_".$fileinfo["basename"];
 //            echo "success: <br> target_path: ".$targetPath."<br> tmp_name: ".$file_path;
             if(move_uploaded_file($file_path,$targetPath)) {
 //            echo "success: <br> target_path:".$targetPath."<br> tmp_name:".$file_path;

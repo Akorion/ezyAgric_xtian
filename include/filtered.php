@@ -134,8 +134,6 @@
 <div class="container-fluid" style="border: solid lightgray thin; padding: 20px; border-radius: 5px; ">
     <div class="col-md-12 col-sm-4 col-xs-12">
         <div class="row">
-
-
             <div class="col-sm-2">
                 <label for="inputPassword3" class="control-label">District</label>
                 <div>
@@ -165,7 +163,7 @@
                             }
 
                             //hidden
-                            echo "<input id=\"dataset_id_holder\"type=\"hidden\" value=\"$id\" />";
+                            echo "<input id=\"dataset_id_holder\" type=\"hidden\" value=\"$id\" />";
 
 
                         }

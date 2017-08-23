@@ -167,21 +167,18 @@ include("include/preloader.php");
 
 <div class="container-fluid">
     <div class="col-md-12 col-sm-4 col-lg-5" style="box-shadow: 2px 2px 2px 2px lightgray;">
-        <div id="farmers_regions" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
-
+        <div id="ph_levels" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
         </div>
-
     </div>
-
     <div class="col-lg-4">
         <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
-            <div id="gender_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            <div id="organic_matter" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
     <div class="col-lg-3">
         <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
-            <div id="ict_usage_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            <div id="soil_composition" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
@@ -189,17 +186,16 @@ include("include/preloader.php");
 <br><br>
 <div class="container-fluid">
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="crops_grown" style=" height:350px; padding-top: 10px;">
+        <div class="col-lg-12 row" id="macro_nutrients_nitrogen" style=" height:350px; padding-top: 10px;">
+        </div>
+    </div>
+    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
+        <div class="col-lg-12 row" id="macro_nutrients_phosphorous" style=" height:350px; padding-top: 10px;">
 
         </div>
     </div>
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="seed_sources" style=" height:350px; padding-top: 10px;">
-
-        </div>
-    </div>
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12" id="average_yield" style=" height:350px; padding-top: 10px;">
+        <div class="col-lg-12" id="macro_nutrients_potassium" style=" height:350px; padding-top: 10px;">
 
         </div>
     </div>
@@ -218,150 +214,119 @@ include("include/preloader.php");
     $(document).ready(function () {
         getLoadOutGrowerDash();
 //        getLoadDataSets();
-//        formGenderGraph();
-        getAjaxData(1);
-        ictUsageGraph("ict");               //piechart for ict usage
+//        organicMatter();
+        phLevels();
+        soil_texture();               //piechart for soil_texture
 //        farmersDistrictGraph();             //farmers column graph
-        cropsAnalysis("name_crop");
-        youthFarmers(" ");
-        averageYield(' ');
-
-        FormGenderGraph("all");
+        macro_nutrients_nitrogen();
+        macro_nutrients_phosphorous();
+        macro_nutrients_potassium();
+        organicMatter();
     });
 
     $("#search_holder").on("input", function (e) {
         getLoadDataSets();
     });
 
-    function FormGenderGraph(gender) {
+    function organicMatter() {
 
-        token = "farmers_piechart";
+        token = "farmers_organic_matter";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                gender: gender
+                token: token
             },
             success: function (data) {
-
-                $('#gender_graph').highcharts(data,function(chart) { // on complete
-
-//                    var xpos = '50%';
-//                    var ypos = '53%';
-//                    var circleradius = 102;
-//
-//                    // Render the text
-//                    chart.renderer.text('<b>Total</b> <br>  200', 150, 160).css({
-//                        width: circleradius*1,
-//                        color: '#4572A7',
-//                        fontSize: '16px',
-//
-//                    }).attr({
-//                        // why doesn't zIndex get the text in front of the chart?
-//                        zIndex: 999
-//                    }).add();
-                });
+                $('#organic_matter').highcharts(data);
             }
         });
         hideProgressBar();
     }
-    function ictUsageGraph(range) {
+    function soil_texture() {
 
-        token = "ict_usage_piechart";
+        token = "farmers_soil_composition";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                ict_range: range
+                token: token
             },
             success: function (data) {
 
-                $('#ict_usage_graph').highcharts(data);
+                $('#soil_composition').highcharts(data);
             }
         });
         hideProgressBar();
     }
     //-------------------------getting ajax data directly-- trial
-    function getAjaxData(id) {
-        token = "farmers_districts";
+    function phLevels() {
+        token = "farmers_ph_levels";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                gender: id
+                token: token
             },
             success: function (data) {
-                $('#farmers_regions').highcharts(data);
-//                console.log(data);
-//                if (data.series.length == 3){
-//                    $('#season').html("<div align='justify'> Season1 Season2 Season3</div>");
-//                }
-            }
-        });
-
-    }
-
-    function cropsAnalysis(name) {
-
-        token = "crops_grown";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token,
-                farmers: "farmers",
-                crop: name
-            },
-            success: function (data) {
-
-                $('#crops_grown').highcharts(data);
+                $('#ph_levels').highcharts(data);
             }
         });
         hideProgressBar();
     }
 
-    function youthFarmers(name) {
+    function macro_nutrients_nitrogen() {
 
-        token = "youth_farmers";
+        token = "macro_nutrients_nitrogen";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                crop: name
+                token: token
             },
             success: function (data) {
-                $('#youth_farmers').highcharts(data);
+                $('#macro_nutrients_nitrogen').highcharts(data);
             }
         });
         hideProgressBar();
     }
 
-    function averageYield(name) {
+    function macro_nutrients_phosphorous() {
 
-        token = "average_yield";
+        token = "macro_nutrients_phosphorous";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token:token,
-                farmers: "farmers",
-                crop: name
+                token: token
             },
             success: function (data) {
-                $('#average_yield').highcharts(data);
+                $('#macro_nutrients_phosphorous').highcharts(data);
             }
         });
-//        hideProgressBar();
+        hideProgressBar();
+    }
+
+    function macro_nutrients_potassium() {
+
+        token = "macro_nutrients_potassium";
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "form_actions/loadCharts.php", //Relative or absolute path to file
+            data: {
+                token:token
+            },
+            success: function (data) {
+                $('#macro_nutrients_potassium').highcharts(data);
+            }
+        });
+        hideProgressBar();
     }
 
     function getLoadOutGrowerDash() {

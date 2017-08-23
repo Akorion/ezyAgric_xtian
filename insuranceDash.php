@@ -158,16 +158,14 @@
     </div>
 </div>
 
-
 <?php
 include("include/preloader.php");
 //include("include/empty.php");
-
 ?>
 
 <div class="container-fluid">
     <div class="col-md-12 col-sm-4 col-lg-5" style="box-shadow: 2px 2px 2px 2px lightgray;">
-        <div id="farmers_regions" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
+        <div id="ace_average_yield" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
 
         </div>
 
@@ -175,13 +173,13 @@ include("include/preloader.php");
 
     <div class="col-lg-4">
         <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
-            <div id="gender_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            <div id="ace_average_cost_of_prodn" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
     <div class="col-lg-3">
         <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
-            <div id="ict_usage_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            <div id="ace_crop_insured" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
@@ -189,17 +187,17 @@ include("include/preloader.php");
 <br><br>
 <div class="container-fluid">
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="crops_grown" style=" height:350px; padding-top: 10px;">
+        <div class="col-lg-12 row" id="ace_average_acerage" style=" height:350px; padding-top: 10px;">
 
         </div>
     </div>
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="seed_sources" style=" height:350px; padding-top: 10px;">
+        <div class="col-lg-12 row" id="ace_average_yield_insured" style=" height:350px; padding-top: 10px;">
 
         </div>
     </div>
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12" id="average_yield" style=" height:350px; padding-top: 10px;">
+        <div class="col-lg-12" id="insurance_vs_age_group" style=" height:350px; padding-top: 10px;">
 
         </div>
     </div>
@@ -215,153 +213,127 @@ include("include/preloader.php");
 
 <script type="text/javascript">
 
+
     $(document).ready(function () {
         getLoadOutGrowerDash();
 //        getLoadDataSets();
 //        formGenderGraph();
-        getAjaxData(1);
-        ictUsageGraph("ict");               //piechart for ict usage
+        aceAverageYield();
+        aceCropInsured();               //piechart for ict usage
 //        farmersDistrictGraph();             //farmers column graph
-        cropsAnalysis("name_crop");
-        youthFarmers(" ");
-        averageYield(' ');
-
-        FormGenderGraph("all");
+        aceAverageAcerage();
+        aceAverageYieldInsured();
+        insuranceAgeGroup();
+        aceAverageCostOfProdn();
     });
 
     $("#search_holder").on("input", function (e) {
         getLoadDataSets();
     });
 
-    function FormGenderGraph(gender) {
+    function aceAverageCostOfProdn() {
 
-        token = "farmers_piechart";
+        token = "ace_average_cost_of_prodn_per_acre";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                gender: gender
+                token: token
             },
             success: function (data) {
-
-                $('#gender_graph').highcharts(data,function(chart) { // on complete
-
-//                    var xpos = '50%';
-//                    var ypos = '53%';
-//                    var circleradius = 102;
-//
-//                    // Render the text
-//                    chart.renderer.text('<b>Total</b> <br>  200', 150, 160).css({
-//                        width: circleradius*1,
-//                        color: '#4572A7',
-//                        fontSize: '16px',
-//
-//                    }).attr({
-//                        // why doesn't zIndex get the text in front of the chart?
-//                        zIndex: 999
-//                    }).add();
-                });
+                $('#ace_average_cost_of_prodn').highcharts(data);
             }
         });
         hideProgressBar();
     }
-    function ictUsageGraph(range) {
 
-        token = "ict_usage_piechart";
+    function aceCropInsured() {
+
+        token = "ace_crop_insured";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                ict_range: range
+                token: token
             },
             success: function (data) {
 
-                $('#ict_usage_graph').highcharts(data);
+                $('#ace_crop_insured').highcharts(data);
             }
         });
         hideProgressBar();
     }
     //-------------------------getting ajax data directly-- trial
-    function getAjaxData(id) {
-        token = "farmers_districts";
+
+    function aceAverageYield() {
+        token = "ace_average_yield_per_acre";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                gender: id
+                token: token
             },
             success: function (data) {
-                $('#farmers_regions').highcharts(data);
 //                console.log(data);
-//                if (data.series.length == 3){
-//                    $('#season').html("<div align='justify'> Season1 Season2 Season3</div>");
-//                }
+                $('#ace_average_yield').highcharts(data);
             }
         });
 
     }
 
-    function cropsAnalysis(name) {
+    function aceAverageAcerage() {
 
-        token = "crops_grown";
+        token = "ace_average_acerage";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                farmers: "farmers",
-                crop: name
+                token: token
             },
             success: function (data) {
 
-                $('#crops_grown').highcharts(data);
+                $('#ace_average_acerage').highcharts(data);
             }
         });
         hideProgressBar();
     }
 
-    function youthFarmers(name) {
+    function aceAverageYieldInsured() {
 
-        token = "youth_farmers";
+        token = "ace_average_yield_insured";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                crop: name
+                token: token
             },
             success: function (data) {
-                $('#youth_farmers').highcharts(data);
+                $('#ace_average_yield_insured').highcharts(data);
             }
         });
         hideProgressBar();
     }
 
-    function averageYield(name) {
+    function insuranceAgeGroup() {
 
-        token = "average_yield";
+        token = "insurance_age_group";
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "form_actions/loadCharts.php", //Relative or absolute path to file
             data: {
-                token:token,
-                farmers: "farmers",
-                crop: name
+                token:token
             },
             success: function (data) {
-                $('#average_yield').highcharts(data);
+                $('#insurance_vs_age_group').highcharts(data);
             }
         });
-//        hideProgressBar();
+        hideProgressBar();
     }
 
     function getLoadOutGrowerDash() {

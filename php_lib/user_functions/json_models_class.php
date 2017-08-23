@@ -32,7 +32,6 @@ class JSONModel
         $response['series'] = array();
         array_push($response['series'], $dataArray);
 
-
         return $response;
     }
 
@@ -59,6 +58,28 @@ class JSONModel
         return $response;
     }
 
+    public function InsuranceAgeGroup_donut_chart($title, $data)
+    {
+
+        $response = array();
+
+        $response['credits'] = array('enabled' => 0);
+
+        $response['exporting'] = array('enabled' => false);
+
+        $response['chart'] = array('type' => 'pie', 'option3d' => array('enabled' => true, 'alpha' => 45, 'beta' => 0));
+        $response['plotOptions'] = array('pie' => array('innerSize' => 70, 'depth' => 45));
+
+        $response['title'] = $title;
+
+        $response['tooltip'] = array("pointFormat" => '{series.name}: <b>{point.percentage:.1f}%</b>');
+
+        $response['series'] = array();
+        $response['total'] = array('total'=>112);
+        array_push($response['series'], $data);
+
+        return $response;
+    }
 
     public function get_stat_bar_graph_json2($rows, $titleArray, $label_x, $key)
     {
@@ -146,7 +167,6 @@ class JSONModel
         return $response;
     }
 
-
     public function get_stat_county_json($rows)
     {
         $response['data'] = array();
@@ -191,7 +211,6 @@ class JSONModel
         }
         return $response;
     }
-
 
     public function bar_graph_json2($rows, $label_x, $key)
     {
@@ -294,6 +313,126 @@ class JSONModel
         return $json;
     }
 
+    function get_ph_graph($district, $acid, $optimal, $neutral, $alkaline, $type)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average PH Levels For Farmer Gardens');
+
+        $json['xAxis'] = array('categories' => $district);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+
+        $json['series'] = array(array('name' => 'Acidic', 'data' => $acid), array('name' => 'Optimal', 'data' => $optimal),
+            array('name'=>'Neutral', 'data'=>$neutral), array('name' => 'Alkaline', 'data' => $alkaline)
+        );
+        return $json;
+    }
+
+    function get_macro_nutrients_nitrogen_graph($district, $low, $medium, $high, $excessive, $type)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Nitrogen Levels For Farmer Gardens');
+
+        $json['xAxis'] = array('categories' => $district);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+
+        $json['series'] = array(array('name' => 'LOW', 'data' => $low), array('name' => 'MEDIUM', 'data' => $medium),
+            array('name'=>'HIGH', 'data'=>$high), array('name' => 'EXCESSIVE', 'data' => $excessive)
+        );
+        return $json;
+    }
+
+    function get_macro_nutrients_phosphorous_graph($district, $low, $medium, $high, $excessive, $type)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Phosphorous Levels For Farmer Gardens');
+
+        $json['xAxis'] = array('categories' => $district);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+
+        $json['series'] = array(array('name' => 'LOW', 'data' => $low), array('name' => 'MEDIUM', 'data' => $medium),
+            array('name'=>'HIGH', 'data'=>$high), array('name' => 'EXCESSIVE', 'data' => $excessive)
+        );
+        return $json;
+    }
+
+    function get_macro_nutrients_potassium_graph($district, $very_low_arr, $low_arr, $medium_arr, $high_arr, $very_high_arr, $type)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Potassium Levels For Farmer Gardens');
+
+        $json['xAxis'] = array('categories' => $district);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+
+        $json['series'] = array(array('name' => 'VERY_LOW', 'data' => $very_low_arr) ,array('name' => 'LOW', 'data' => $low_arr), array('name' => 'MEDIUM', 'data' => $medium_arr),
+            array('name'=>'HIGH', 'data'=>$high_arr), array('name' => 'EXCESSIVE', 'data' => $very_high_arr)
+        );
+        return $json;
+    }
+
     function getRegions($type, $categories, $farmers, $males_int, $females_int)
     {
         $json['chart'] = array('type' => $type);
@@ -325,6 +464,114 @@ class JSONModel
         return $json;
     }
 
+    function getAceAverageYield($type, $aces, $yield_arr)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Yield Per Acre Per ACE');
+
+        $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Average Yield (/Kg)'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['series'] = array(array('name' => 'Average Yield Per Acre(/Kg)', 'data' => $yield_arr) );
+        return $json;
+
+    }
+
+    function getAceAverageCostOfProdn($type, $aces, $cost_of_prodn_arr)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Prodn Cost Per Acre Per ACE');
+
+        $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Average Prodn Cost (/Shs)'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['series'] = array(array('name' => 'Average Cost Of Production Per Acre(/Shs)', 'data' => $cost_of_prodn_arr) );
+        return $json;
+    }
+
+    function getAceAverageYieldInsured($type, $aces, $yield_insured_arr)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Yield Insured Per ACE');
+
+        $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Yield Insured (/Kg)'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['series'] = array(array('name' => 'Average Yield Insured(/Kg)', 'data' => $yield_insured_arr) );
+        return $json;
+    }
+
+    function getAceAverageAcerage($type, $aces, $acerage_arr)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>'Average Acerage Per ACE');
+
+        $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Acerage'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} </b></td></tr>', "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['series'] = array(array('name' => 'Average Acerage', 'data' => $acerage_arr) );
+        return $json;
+    }
 
 }
 

@@ -87,9 +87,11 @@ $path = $_SERVER["PHP_SELF"];
             <ul class="nav navbar-nav">
                 <li class="active"><?php
                     if ($_SESSION['client_id'] == 2) {
-                        echo "<a href=\"./dashboardAll.php\">Dashboard</a>";
+                        echo "<a href=\"../dashboardAll.php\">Dashboard</a>";
+                    } elseif($_SESSION['client_id'] == 17){
+                        echo "<a href=\"../insuranceDash.php\">Dashboard</a>";
                     } else {
-                        echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
+                        echo "<a href=\"../dashboardAll.php\" >Dashboard</a>";
                     } ?>
                 </li>
                 <li class="dropdown">

@@ -26,486 +26,468 @@ $gender=$_POST['gender'];
 if(isset($_POST['district'])&&$_POST['district']!=""){
 
 switch($_POST['district']){
-case  "all" :
+    case  "all" :
 
 ////////////////////////////////////////////////////////district all starts
-if($_POST['sel_production_id']=="all"){
-   if($_POST['gender']=="all"){
-   output($id," 1 LIMIT $per_page OFFSET $offset ");
-   }else{
-   //
-   echo $gender;
-   output($id," lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
-   }
-   }else{
-  
-    
-   $string=$_POST['sel_production_id'];
-    
-	
-   if(strpos($string, "productionyes")===false){
-   if(strpos($string, "productionno")===false){
-   
-   if(strpos($string, "generalyes")===false){
-   
-   if(strpos($string, "generalno")===false){
-   }else{
-    $p_id=str_replace("generalno","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id'  "  );
-    $column =$row[0]['columns'];
-    
-	if($_POST['gender']=="all"){
-    output($id," ".$column." LIKE 'no'  LIMIT $per_page OFFSET $offset");
-    }else{
-   //
-    output($id," lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-   
-    }
-	
-   }
-   
-   }else{
-    $p_id=str_replace("generalyes","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-	
-	if($_POST['gender']=="all"){
-    output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-   
-    output($id," lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-   
-    }
-  
-   }
-   
-   }else{
-	$p_id=str_replace("productionno","",$string);
-    $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-   
-    if($_POST['gender']=="all"){
-    output($id,"  ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-   
-    output($id," lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-   
-    }
-   
-   
-   }
-   }
-   else{
-    $p_id=str_replace("productionyes","",$string);
-   //echo $string;
-   $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id'  ");
-   $column =$row[0]['columns'];
-  // echo $column;
-  // output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-   //echo $per_page;
-   if($_POST['gender']=="all"){
-    output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-   
-    output($id," lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-   
-    }
-   
-   }
-   
-   
-   
-   }
+        if ($_POST['sel_production_id'] == "all") {
+            if ($_POST['gender'] == "all") {
+                output($id, " 1 LIMIT $per_page OFFSET $offset ");
+            } else {
+                //
+                echo $gender;
+                output($id, " lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
+            }
+        } else {
+            $string = $_POST['sel_production_id'];
+            if (strpos($string, "productionyes") === false) {
+                if (strpos($string, "productionno") === false) {
+                    if (strpos($string, "generalyes") === false) {
+                        if (strpos($string, "generalno") === false) {
+                        } else {
+                            $p_id = str_replace("generalno", "", $string);
+                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id'  ");
+                            $column = $row[0]['columns'];
+
+                            if ($_POST['gender'] == "all") {
+                                output($id, " " . $column . " LIKE 'no'  LIMIT $per_page OFFSET $offset");
+                            } else {
+                                //
+                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+
+                            }
+
+                        }
+
+                    } else {
+                        $p_id = str_replace("generalyes", "", $string);
+                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                        $column = $row[0]['columns'];
+
+
+                        if ($_POST['gender'] == "all") {
+                            output($id, "  " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                        } else {
+
+                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                        }
+
+                    }
+
+                } else {
+                    $p_id = str_replace("productionno", "", $string);
+                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                    $column = $row[0]['columns'];
+
+                    if ($_POST['gender'] == "all") {
+                        output($id, "  " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                    } else {
+
+                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+
+                    }
+
+
+                }
+            } else {
+                $p_id = str_replace("productionyes", "", $string);
+                //echo $string;
+                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id'  ");
+                $column = $row[0]['columns'];
+                // echo $column;
+                // output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                //echo $per_page;
+                if ($_POST['gender'] == "all") {
+                    output($id, "  " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                } else {
+
+                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                }
+
+            }
+
+
+        }
 
 
 /////////////////////////////////////////////////////////////////////district all ends
-break;
-default: 
+        break;
+    default:
 
-if($_POST['subcounty']=="all"){
-$district=$_POST['district'];
+        if ($_POST['subcounty'] == "all") {
+            $district = $_POST['district'];
 
 ///////////////////////////////////////////////////////////////////// subcounty all starts
-   if($_POST['sel_production_id']=="all"){
-   
-   
-    if($_POST['gender']=="all"){
-	//echo $per_page;
-	//$snt= filter_var($district, FILTER_SANITIZE_STRING);
-    output($id,"  biodata_farmer_location_farmer_district LIKE '%$district%'  LIMIT $per_page OFFSET $offset");
-	
-    }else{
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
-    }
-	
-   }else{
-  
-    $mCrudFunctions = new CrudFunctions();
-   $string=$_POST['sel_production_id'];
-    
-	
-   if(strpos($string, "productionyes")===false){
-   if(strpos($string, "productionno")===false){
-   if(strpos($string, "generalyes")===false){
-   if(strpos($string, "generalno")===false){
-   }else{
-    $p_id=str_replace("generalno","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-	
-	if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    
-    }
-	
-   }
-   
-   }else{
-    $p_id=str_replace("generalyes","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-  
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender'  AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-    
-    }
-  
-     
-  
-   }
-   
-   }else{
-	$p_id=str_replace("productionno","",$string);
-    $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }
-  
-   
-   
-   }
-   }
-   else{
-    $p_id=str_replace("productionyes","",$string);
-   //echo $string;
-   $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' ");
-   $column =$row[0]['columns'];
-   //echo $column;
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%'  AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-    }
-   
-   
-   }
-   
-   }
+            if ($_POST['sel_production_id'] == "all") {
+
+
+                if ($_POST['gender'] == "all") {
+                    //echo $per_page;
+                    //$snt= filter_var($district, FILTER_SANITIZE_STRING);
+                    output($id, "  biodata_farmer_location_farmer_district LIKE '%$district%'  LIMIT $per_page OFFSET $offset");
+
+                } else {
+                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
+                }
+
+            } else {
+
+                $mCrudFunctions = new CrudFunctions();
+                $string = $_POST['sel_production_id'];
+
+
+                if (strpos($string, "productionyes") === false) {
+                    if (strpos($string, "productionno") === false) {
+                        if (strpos($string, "generalyes") === false) {
+                            if (strpos($string, "generalno") === false) {
+                            } else {
+                                $p_id = str_replace("generalno", "", $string);
+                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                $column = $row[0]['columns'];
+
+
+                                if ($_POST['gender'] == "all") {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                } else {
+
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+
+                                }
+
+                            }
+
+                        } else {
+                            $p_id = str_replace("generalyes", "", $string);
+                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                            $column = $row[0]['columns'];
+
+
+                            if ($_POST['gender'] == "all") {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                            } else {
+
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+
+                            }
+
+
+                        }
+
+                    } else {
+                        $p_id = str_replace("productionno", "", $string);
+                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                        $column = $row[0]['columns'];
+
+
+                        if ($_POST['gender'] == "all") {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                        } else {
+
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                        }
+
+
+                    }
+                } else {
+                    $p_id = str_replace("productionyes", "", $string);
+                    //echo $string;
+                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                    $column = $row[0]['columns'];
+                    //echo $column;
+
+                    if ($_POST['gender'] == "all") {
+                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%'  AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                    } else {
+                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                    }
+
+
+                }
+
+            }
 //////////////////////////////////////////////////////////////////// subcounty all ends
-}else{
-  $subcounty=$_POST['subcounty'];
-  $district=$_POST['district'];
-  if($_POST['parish']=="all"){
-  
-  ////////////////////////////////////////////////////////////////////// parish all starts
-   if($_POST['sel_production_id']=="all"){
-   
-   if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
-	
-	
-    }
-   
-   
-   }else{
-  
-    $mCrudFunctions = new CrudFunctions();
-   $string=$_POST['sel_production_id'];
-    
-	
-   if(strpos($string, "productionyes")===false){
-   if(strpos($string, "productionno")===false){ 
-   if(strpos($string, "generalyes")===false){
-   if(strpos($string, "generalno")===false){
-   }else{
-    $p_id=str_replace("generalno","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender'  AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }
-   
-   }
-   
-   }else{
-    $p_id=str_replace("generalyes","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-  
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%'  AND lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-    }
-  
-   }
-   
-   }else{
-	$p_id=str_replace("productionno","",$string);
-    $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%'  AND lower(biodata_farmer_gender) = '$gender'  AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset  ");
-    }
-   
-   }
-   }
-   else{
-    $p_id=str_replace("productionyes","",$string);
-   //echo $string;
-   $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' ");
-   $column =$row[0]['columns'];
-  // echo $column;
-   
-   if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender' AND ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-    }
-   
-   }
-  
-   }
+        } else {
+            $subcounty = $_POST['subcounty'];
+            $district = $_POST['district'];
+            if ($_POST['parish'] == "all") {
+
+                ////////////////////////////////////////////////////////////////////// parish all starts
+                if ($_POST['sel_production_id'] == "all") {
+
+                    if ($_POST['gender'] == "all") {
+                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' LIMIT $per_page OFFSET $offset ");
+                    } else {
+                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender' LIMIT $per_page OFFSET $offset ");
+
+
+                    }
+
+
+                } else {
+
+                    $mCrudFunctions = new CrudFunctions();
+                    $string = $_POST['sel_production_id'];
+
+
+                    if (strpos($string, "productionyes") === false) {
+                        if (strpos($string, "productionno") === false) {
+                            if (strpos($string, "generalyes") === false) {
+                                if (strpos($string, "generalno") === false) {
+                                } else {
+                                    $p_id = str_replace("generalno", "", $string);
+                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                    $column = $row[0]['columns'];
+
+
+                                    if ($_POST['gender'] == "all") {
+                                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                    } else {
+                                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                    }
+
+                                }
+
+                            } else {
+                                $p_id = str_replace("generalyes", "", $string);
+                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                $column = $row[0]['columns'];
+
+
+                                if ($_POST['gender'] == "all") {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                } else {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                                }
+
+                            }
+
+                        } else {
+                            $p_id = str_replace("productionno", "", $string);
+                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                            $column = $row[0]['columns'];
+
+
+                            if ($_POST['gender'] == "all") {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                            } else {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset  ");
+                            }
+
+                        }
+                    } else {
+                        $p_id = str_replace("productionyes", "", $string);
+                        //echo $string;
+                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                        $column = $row[0]['columns'];
+                        // echo $column;
+
+                        if ($_POST['gender'] == "all") {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                        } else {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                        }
+
+                    }
+
+                }
 ///////////////////////////////////////////////////////////////////////////////// parish all ends
-  }else{
-  $subcounty=$_POST['subcounty'];
-  $district=$_POST['district'];
-  $parish= $_POST['parish'];
-  
-   if($_POST['village']=="all"){
-   
-   //////////////////////////////////////////////////////////////////////////// village all starts
-   if($_POST['sel_production_id']=="all"){
-   
-   
-   if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' LIMIT $per_page OFFSET $offset  ");
+            } else {
+                $subcounty = $_POST['subcounty'];
+                $district = $_POST['district'];
+                $parish = $_POST['parish'];
 
-	
-    }
-   }else{
-  
-    $mCrudFunctions = new CrudFunctions();
-   $string=$_POST['sel_production_id'];
-    
-	
-   if(strpos($string, "productionyes")===false){
-   if(strpos($string, "productionno")===false){  
-   if(strpos($string, "generalyes")===false){ 
-   if(strpos($string, "generalno")===false){
-   }else{
-    $p_id=str_replace("generalno","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-   
-   
-    if($_POST['gender']=="all"){
-     output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	 output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender'  AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }
-   
-   }
-   }else{
-    $p_id=str_replace("generalyes","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-   
-    if($_POST['gender']=="all"){
-     output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	 output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender'  AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-    }
-   
-   }
-   
-   }else{
-	$p_id=str_replace("productionno","",$string);
-    $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-    
-	if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND   ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender' AND   ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                if ($_POST['village'] == "all") {
 
-	
-    }
-   
-   
-   }
-   }
-   else{
-   $p_id=str_replace("productionyes","",$string);
-  // echo $string;
-   $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' ");
-   $column =$row[0]['columns'];
-   //echo $column;
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                    //////////////////////////////////////////////////////////////////////////// village all starts
+                    if ($_POST['sel_production_id'] == "all") {
 
-    }
-   
-   }
 
-   }
-   
-   /////////////////////////////////////////////////////////////////////////////
-   }else{
-   $subcounty=$_POST['subcounty'];
-   $district=$_POST['district'];
-  $parish= $_POST['parish'];
-   $village=$_POST['village'];
-   
-   
- 
-   if($_POST['sel_production_id']=="all"){
-   
-   
-   if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%'  AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender'  LIMIT $per_page OFFSET $offset ");
-	
-    }
-   
-   
-   }else{
-  
-    $mCrudFunctions = new CrudFunctions();
-   $string=$_POST['sel_production_id'];
-    
-	
-   if(strpos($string, "productionyes")===false){
-   if(strpos($string, "productionno")===false){  
-   if(strpos($string, "generalyes")===false){ 
-   if(strpos($string, "generalno")===false){
-   }else{
-    $p_id=str_replace("generalno","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-      
-   if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
- 
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender'  AND ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-	
-    }
-   
-   }
-   }else{
-    $p_id=str_replace("generalyes","",$string);
-    $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%'  AND lower(biodata_farmer_gender) = '$gender' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-	
-    }
-   
-   }
-   
-   }else{
-	$p_id=str_replace("productionno","",$string);
-    $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' "  );
-    $column =$row[0]['columns'];
-    
-   
-    if($_POST['gender']=="all"){
-    output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND   ".$column." LIKE 'no' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender' AND   ".$column." LIKE 'no'  LIMIT $per_page OFFSET $offset ");
-	
-	
-	
-    }
-   
-   }
-   }
-   else{
-   $p_id=str_replace("productionyes","",$string);
-  // echo $string;
-   $row =$mCrudFunctions->fetch_rows("production_data","columns"," id='$p_id' ");
-   $column =$row[0]['columns'];
-   //echo $column;
-   
-   
-   if($_POST['gender']=="all"){
-   output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-    }else{
-	output($id," biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender' AND   ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-	
-	
-	
-	
-    }
-   
-   }
+                        if ($_POST['gender'] == "all") {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' LIMIT $per_page OFFSET $offset ");
+                        } else {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' LIMIT $per_page OFFSET $offset  ");
 
-   }
-   
-   }
-   
-  }
 
-}
+                        }
+                    } else {
 
-break;
+                        $mCrudFunctions = new CrudFunctions();
+                        $string = $_POST['sel_production_id'];
+
+
+                        if (strpos($string, "productionyes") === false) {
+                            if (strpos($string, "productionno") === false) {
+                                if (strpos($string, "generalyes") === false) {
+                                    if (strpos($string, "generalno") === false) {
+                                    } else {
+                                        $p_id = str_replace("generalno", "", $string);
+                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                        $column = $row[0]['columns'];
+
+
+                                        if ($_POST['gender'] == "all") {
+                                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                        } else {
+                                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                        }
+
+                                    }
+                                } else {
+                                    $p_id = str_replace("generalyes", "", $string);
+                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                    $column = $row[0]['columns'];
+
+
+                                    if ($_POST['gender'] == "all") {
+                                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                    } else {
+                                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                                    }
+
+                                }
+
+                            } else {
+                                $p_id = str_replace("productionno", "", $string);
+                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                $column = $row[0]['columns'];
+
+
+                                if ($_POST['gender'] == "all") {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND   " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                } else {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+
+
+                                }
+
+
+                            }
+                        } else {
+                            $p_id = str_replace("productionyes", "", $string);
+                            // echo $string;
+                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                            $column = $row[0]['columns'];
+                            //echo $column;
+
+                            if ($_POST['gender'] == "all") {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                            } else {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+                            }
+
+                        }
+
+                    }
+
+                    /////////////////////////////////////////////////////////////////////////////
+                } else {
+                    $subcounty = $_POST['subcounty'];
+                    $district = $_POST['district'];
+                    $parish = $_POST['parish'];
+                    $village = $_POST['village'];
+
+
+                    if ($_POST['sel_production_id'] == "all") {
+
+
+                        if ($_POST['gender'] == "all") {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' LIMIT $per_page OFFSET $offset ");
+                        } else {
+                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%'  AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender'  LIMIT $per_page OFFSET $offset ");
+
+                        }
+
+
+                    } else {
+
+                        $mCrudFunctions = new CrudFunctions();
+                        $string = $_POST['sel_production_id'];
+
+
+                        if (strpos($string, "productionyes") === false) {
+                            if (strpos($string, "productionno") === false) {
+                                if (strpos($string, "generalyes") === false) {
+                                    if (strpos($string, "generalno") === false) {
+                                    } else {
+                                        $p_id = str_replace("generalno", "", $string);
+                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                        $column = $row[0]['columns'];
+
+                                        if ($_POST['gender'] == "all") {
+                                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+
+                                        } else {
+                                            output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+
+                                        }
+
+                                    }
+                                } else {
+                                    $p_id = str_replace("generalyes", "", $string);
+                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                    $column = $row[0]['columns'];
+
+
+                                    if ($_POST['gender'] == "all") {
+                                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                                    } else {
+
+                                        output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+
+                                    }
+
+                                }
+
+                            } else {
+                                $p_id = str_replace("productionno", "", $string);
+                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                $column = $row[0]['columns'];
+
+
+                                if ($_POST['gender'] == "all") {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND   " . $column . " LIKE 'no' LIMIT $per_page OFFSET $offset ");
+                                } else {
+                                    output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  LIMIT $per_page OFFSET $offset ");
+
+
+                                }
+
+                            }
+                        } else {
+                            $p_id = str_replace("productionyes", "", $string);
+                            // echo $string;
+                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                            $column = $row[0]['columns'];
+                            //echo $column;
+
+
+                            if ($_POST['gender'] == "all") {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+                            } else {
+                                output($id, " biodata_farmer_location_farmer_district LIKE '%$district%' AND biodata_farmer_location_farmer_subcounty LIKE '%$subcounty%' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND biodata_farmer_location_farmer_village LIKE '%$village%' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        break;
 }
  
 }
@@ -543,7 +525,6 @@ function output($id,$where)
                 $phone_number = $util_obj->remove_apostrophes($row['biodata_farmer_phone_number']);
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
                 $name = strlen($name) <= 18 ? $name : substr($name, 0, 20) . "...";
-
 
                 echo "<div class=\"col-sm-12 col-md-4 col-lg-3\">
   

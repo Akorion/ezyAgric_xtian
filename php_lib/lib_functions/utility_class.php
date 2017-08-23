@@ -243,7 +243,7 @@ public function get_result_array($db,$table,$columns,$where)
     {
         $query="SELECT ".$columns." FROM ".$table;
         $db->setResultForQuery($query);
-        return $db->getFullResultArray();;
+        return $db->getFullResultArray();
     }
 
 public function getColumnsString($db,$table,$where)

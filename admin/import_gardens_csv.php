@@ -1,4 +1,5 @@
 
+
 <?php
 ini_set('upload_max_filesize', '60M');
 require_once dirname(dirname(__FILE__))."/php_lib/user_functions/crud_functions_class.php";
@@ -25,7 +26,6 @@ if ($_FILES["csv"]["size"] > 0) {
 	else
 	{   
 	    $id=$_POST["id"];
-		
 		$file_path = $_FILES["csv"]["tmp_name"];
         $handle = fopen($file_path,"r"); 
 		$handle2 = fopen($file_path,"r"); 

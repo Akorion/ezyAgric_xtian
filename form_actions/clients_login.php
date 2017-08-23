@@ -52,9 +52,15 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
         $util_obj->redirect_to( "../dashboardAll.php" );
 
 //	$util_obj->redirect_to( "../dash1.php" );
-	}else{
-//
-	$util_obj->redirect_to( "../dashboardAll.php" );
+	}
+	elseif($_SESSION["client_id"]==16){
+        $util_obj->redirect_to( "../acpudash.php" );
+    }
+    elseif ($_SESSION["client_id"] == 17){
+        $util_obj->redirect_to("../insuranceDash.php");
+    }
+	else{//
+	    $util_obj->redirect_to( "../dashboardAll.php" );
 	}
 	
 	
