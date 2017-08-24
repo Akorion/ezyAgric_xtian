@@ -486,7 +486,7 @@ switch ($_POST["token"]) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1);
-            if($_SESSION['client_id'] == 16 || $_SESSION['client_id'] == 17) $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
+            if($_SESSION['client_id'] == 16 || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
             elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
@@ -506,7 +506,7 @@ switch ($_POST["token"]) {
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
-                if($_SESSION['client_id'] == 17){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
+                if($_SESSION["account_name"] == "Insurance"){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
