@@ -90,6 +90,8 @@ $path = $_SERVER["PHP_SELF"];
                         echo "<a href=\"./dashboardAll.php\">Dashboard</a>";
                     } elseif($_SESSION["account_name"] == "Insurance"){
                         echo "<a href=\"./insuranceDash.php\">Dashboard</a>";
+                    } elseif ($_SESSION['client_id'] == 18){
+                        echo "<a href='./acpudash.php'></a>";
                     } else {
                         echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
                     } ?>
@@ -134,14 +136,15 @@ $path = $_SERVER["PHP_SELF"];
                         }
                         ?>
                         <li><a href="help.php">Help</a></li>
+                        <li><a href="index.php?logout=1">Logout</a></li>
                     </ul>
                 </li>
-                <li><a href="#" style="font-weight:800;"><?php if (isset($_SESSION["user_account"])) {
-                            $user_account = (strlen($_SESSION["user_account"]) > 20) ? substr($_SESSION["user_account"], 0, 20) . '...' : $_SESSION["user_account"];
-                            echo "Hi! " . $user_account;
-                        } ?></a>
-                </li>
-                <li><a href="index.php?logout=1">Logout</a></li>
+<!--                <li><a href="#" style="font-weight:800;">--><?php //if (isset($_SESSION["user_account"])) {
+//                            $user_account = (strlen($_SESSION["user_account"]) > 20) ? substr($_SESSION["user_account"], 0, 20) . '...' : $_SESSION["user_account"];
+//                            echo "Hi! " . $user_account;
+//                        } ?><!--</a>-->
+<!--                </li>-->
+
 
             </ul>
         </div>
