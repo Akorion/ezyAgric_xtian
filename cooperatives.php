@@ -150,196 +150,121 @@
 
 <?php include "./include/breadcrumb.php" ?>
 
-<div class="container-fluid">
-    <div class="col-md-12 col-sm-4 col-xs-12">
-        <div id="outgrower_dash" class="row" style='background-color: #F2F2F2; padding-top: 15px;'>
+<div class="h4 container" style="padding-top: 1.5em;">Cooperatives</div>
+<!--<div id="topfriends">-->
+<!--    <h3>Top 4 Most Friendable Friends</h3>-->
+<!--    <ol id="top4list">-->
+<!--        <li>Brady</li>-->
+<!--        <li>Graham</li>-->
+<!--        <li>Josh</li>-->
+<!--        <li>Sean</li>-->
+<!--    </ol>-->
+<!--</div>-->
 
+<div class="container-fluid">
+
+    <div class="col-md-12 col-sm-4 col-lg-4">
+        <div id="coopl">
+            <div id="acpcu_cooperatives_list" class="col-lg-12 row"
+                 style='height:400px; padding-top: 10px; overflow-y: auto; overflow-x: hidden;'>
+
+            </div>
         </div>
     </div>
+
+    <div class="col-lg-8">
+        <div class="col-md-12"
+             style="box-shadow: 2px 2px 2px 2px lightgray; height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <div id="cop_farmers" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            </div>
+        </div>
+    </div>
+
 </div>
-
-
 <?php
 include("include/preloader.php");
 //include("include/empty.php");
 ?>
-
-<div class="container-fluid">
-    <div class="col-md-12 col-sm-4 col-lg-6" style="box-shadow: 2px 2px 2px 2px lightgray;">
-        <div id="ph_levels" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
-            <div id="organic_matter" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
-            </div>
-        </div>
-    </div>
-    <!--    <div class="col-lg-3">-->
-    <!--        <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">-->
-    <!--            <div id="soil_composition" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-</div>
-<br><br>
-
-<div class="container-fluid">
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="macro_nutrients_nitrogen" style=" height:350px; padding-top: 10px;">
-        </div>
-    </div>
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="macro_nutrients_phosphorous" style=" height:350px; padding-top: 10px;">
-
-        </div>
-    </div>
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12" id="macro_nutrients_potassium" style=" height:350px; padding-top: 10px;">
-
-        </div>
-    </div>
-</div>
 <div>
     <br>
     <br>
 </div>
-<br><br>
+
 <?php include("include/footer_client.php"); ?>
 
-<!--piechart scripting-->
 
 <script type="text/javascript">
 
     $(document).ready(function () {
         getLoadOutGrowerDash();
-//        getLoadDataSets();
-//        organicMatter();
-        phLevels();
-        soil_texture();               //piechart for soil_texture
-//        farmersDistrictGraph();             //farmers column graph
-        macro_nutrients_nitrogen();
-        macro_nutrients_phosphorous();
-        macro_nutrients_potassium();
-        organicMatter();
+        getAjaxData();
+        FormGenderGraph('Baziriyo');
+//        hideProgressBar();
+
     });
 
     $("#search_holder").on("input", function (e) {
         getLoadDataSets();
     });
 
-    function organicMatter() {
+    //---------------------------------------- allowing the list click farmers ------------------
+    function doStuff() {
+        var lis = document.getElementById("acpcu_cooperatives_list").getElementsByTagName('li');
+        for (var i = 0; i < lis.length; i++) {
+            lis[i].addEventListener('click', consoleCop, false);
+        }
+    }
+    //---------------------------------------- setting the cooperative to check farmers ------------------
+    function consoleCop() {
+        console.log(this.innerHTML);
+        FormGenderGraph(this.innerHTML);
+    }
 
-        token = "farmers_organic_matter";
+    function FormGenderGraph(cooperative) {
+
+
+        token = "farmers_cop_table";
+        condtn = cooperative;
+//        console.log(cooperative);
         $.ajax({
             type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token
-            },
+            url: "form_actions/loadCharts.php",
+            data: {token: token, coop: condtn},
             success: function (data) {
-                $('#organic_matter').highcharts(data);
+                $("#cop_farmers").html(data);
+//                console.log(data);
             }
-        });
-        hideProgressBar();
-    }
-    function soil_texture() {
 
-        token = "farmers_soil_composition";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token
-            },
-            success: function (data) {
-
-                $('#soil_composition').highcharts(data);
-            }
         });
+
         hideProgressBar();
+
     }
+
     //-------------------------getting ajax data directly-- trial
-    function phLevels() {
-        token = "farmers_ph_levels";
+    function getAjaxData() {
+        token = "get_cooperative_list";
         $.ajax({
             type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token
-            },
+            url: "form_actions/loadCharts.php",
+            data: {token: token},
             success: function (data) {
-                $('#ph_levels').highcharts(data);
-                console.log(data);
+                $("#acpcu_cooperatives_list").html(data);
+//                console.log(data);
             }
+
         });
-        hideProgressBar();
-    }
 
-    function macro_nutrients_nitrogen() {
-
-        token = "macro_nutrients_nitrogen";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token
-            },
-            success: function (data) {
-                $('#macro_nutrients_nitrogen').highcharts(data);
-            }
-        });
-        hideProgressBar();
-    }
-
-    function macro_nutrients_phosphorous() {
-
-        token = "macro_nutrients_phosphorous";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token: token
-            },
-            success: function (data) {
-                $('#macro_nutrients_phosphorous').highcharts(data);
-                console.log(data);
-            }
-        });
-        hideProgressBar();
-    }
-
-    function macro_nutrients_potassium() {
-
-        token = "macro_nutrients_potassium";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "form_actions/loadCharts.php", //Relative or absolute path to file
-            data: {
-                token:token
-            },
-            success: function (data) {
-                $('#macro_nutrients_potassium').highcharts(data);
-            }
-        });
-        hideProgressBar();
     }
 
     function getLoadOutGrowerDash() {
-
-        token = "acpcu_outgrower_dash";
+        token = "acpcu_cooperatives";
         $.ajax({
             type: "POST",
             url: "form_actions/recordOutgrower.php",
             data: {token: token},
             success: function (data) {
-                $("#outgrower_dash").html(data);
+                $("#acpcu_cooperatives").html(data);
 
             }
 

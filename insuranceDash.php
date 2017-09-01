@@ -187,7 +187,7 @@ include("include/preloader.php");
 <br><br>
 <div class="container-fluid">
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="ace_average_acerage" style=" height:350px; padding-top: 10px;">
+        <div class="col-lg-12 row" id="ace_average_acreage" style=" height:350px; padding-top: 10px;">
 
         </div>
     </div>
@@ -221,7 +221,7 @@ include("include/preloader.php");
         aceAverageYield();
         aceCropInsured();               //piechart for ict usage
 //        farmersDistrictGraph();             //farmers column graph
-        aceAverageAcerage();
+        aceAverageAcreage();
         aceAverageYieldInsured();
         insuranceAgeGroup();
         aceAverageCostOfProdn();
@@ -284,9 +284,9 @@ include("include/preloader.php");
 
     }
 
-    function aceAverageAcerage() {
+    function aceAverageAcreage() {
 
-        token = "ace_average_acerage";
+        token = "ace_average_acreage";
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -296,7 +296,7 @@ include("include/preloader.php");
             },
             success: function (data) {
 
-                $('#ace_average_acerage').highcharts(data);
+                $('#ace_average_acreage').highcharts(data);
             }
         });
         hideProgressBar();

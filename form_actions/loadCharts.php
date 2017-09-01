@@ -9,6 +9,7 @@ require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/utility_class.
 $mCrudFunctions = new CrudFunctions();
 $json_model_obj = new JSONModel();
 $util_obj = new Utilties();
+$db = new DatabaseQueryProcessor();
 
 switch ($_POST["token"]) {
 
@@ -56,6 +57,26 @@ switch ($_POST["token"]) {
 
         break;
 
+    ///------------------------------ cooperative list ------------------------------------//
+    case  "get_cooperative_list":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+        $cooperatives = 0;
+        echo " <ol id='cooplist'> ";
+        foreach ($rows as $row) {
+            if ($mCrudFunctions->check_table_exists("soil_results_" . $row['id'])) {
+
+                $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], "DISTINCT cooperative", "1 ORDER BY cooperative");
+                foreach ($cooperatives as $coop) {
+                    echo "<a href='#'> <li onclick='doStuff()'>".$coop['cooperative']." </li></a>";
+                }
+            }
+        }
+        echo " </ol> ";
+        break;
+
     //geting loans summary : used in farmerloans.php
     case  "get_loans_data":
         session_start();
@@ -99,6 +120,7 @@ switch ($_POST["token"]) {
         ";
 
         break;
+
     //geting insurance summary : used in farmersInsured.php
     case  "farmers_insured_data":
         session_start();
@@ -161,6 +183,56 @@ switch ($_POST["token"]) {
             }
             draw_donut_chart($male, $female);
         }
+        break;
+
+    //----------------------------farmers cooperative table --------------------------------
+    case  "farmers_cop_table" :
+
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $account_name = $_SESSION['account_name'];
+        $condition = $_POST["coop"];
+
+        if ($condition != ''){
+            $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+            echo "<h4>".$_POST["coop"]." cooperative farmers </h4>";
+            echo " <table class='table table-responsive'> <thead class='bg bg-success'><th>name</th> <th>village</th> <th>Action</th></thead>";
+
+            foreach ($rows as $row) {
+                $id = $row['id'];
+                $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
+                $dataset_type = $row['dataset_type'];
+                if ($mCrudFunctions->check_table_exists("soil_results_" . $id)) {
+                  //  $ress = $db->setResultForQuery('SELECT d.*, s.* FROM soil_results_"'.$id.'" s INNER JOIN dataset_"'.$id.'" d ON s.`unique_id` = d.`unique_id` WHERE s.cooperative = "'.$condition.'" ORDER BY s.farmer_name ASC ');
+                    //$cooperatives = $db->getFullResultArray();
+                    $cooperatives = $mCrudFunctions->fetch_rows("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id", "d.*, s.`cooperative`,s.`village`,s.`ph`,s.`om_%`,s.`n_%`,s.`p_ppm`,s.`k`", "s.cooperative = '".$condition."' ORDER BY d.biodata_farmer_name ASC");
+                    foreach ($cooperatives as $coop) {
+                        $real_id = $coop['id'];
+//                        echo $real_id."<br>";
+                        $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+                        echo "<tr><td>".$coop['biodata_farmer_name']." </td> <td>".$coop['village']." </td> <td><a href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\"> <button class='btn btn-success'>View Details</button> </a></td></tr>";
+                    }
+                }
+            }
+        }else{
+            $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+            echo "<h4>".$_POST["coop"]." cooperative farmers </h4>";
+            echo " <table class='table table-responsive'> <thead class='bg bg-success'><th>name</th> <th>village</th> <th>Action</th></thead>";
+
+            foreach ($rows as $row) {
+                if ($mCrudFunctions->check_table_exists("soil_results_" . $row['id'])) {
+
+                    $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], "*", "1 ORDER BY farmer_name");
+                    foreach ($cooperatives as $coop) {
+                        echo "<a href='#'> <tr>  <td>".$coop['farmer_name']." </td> <td>".$coop['village']." </td> <td><button class='btn btn-success'>Details</button> </td></tr></a>";
+                    }
+                }
+            }
+        }
+
+        echo " </table> ";
         break;
 
     case  "ict_usage_piechart" :
@@ -409,121 +481,119 @@ switch ($_POST["token"]) {
         break;
 
     case  "farmers_ph_levels":
+
         session_start();
         $client_id = $_SESSION["client_id"];
-        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $acidic = array(); $optimal = array(); $neutral = array(); $alkaline = array(); $district = array();
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $farmers_number = array();
+        $levels = array("Very low", "Low", "Medium", "High", "Very high");
+        $medium; $high; $very_high; $low; $verylow;
 
         foreach ($rows as $row) {
 
-            if (($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) && ($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
-                $slected_rows = $mCrudFunctions->fetch_farmer_rows("soil_results_" . $row['id'],
-                    "biodata_farmer_location_farmer_district AS district,
-                     COUNT(CASE WHEN ph_level < 5.2 OR ph_level > 0 THEN 1 ELSE 0 end) AS acidic,
-                     COUNT(CASE WHEN ph_level < 6.9 OR ph_level > 5.2 THEN 1 ELSE 0 end) AS optimal,
-                     COUNT(CASE WHEN ph_level < 7 OR ph_level > 6.9 THEN 1 ELSE 0 end) AS neutral,
-                     COUNT(CASE WHEN ph_level < 14 OR ph_level > 7 THEN 1 ELSE 0 end) AS alkaline ");
+            if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
-                foreach ($slected_rows as $sel) {
-                    array_push($district, $sel['district']);
-                    array_push($acidic, $sel['acidic']);
-                    array_push($optimal, $sel['optimal']);
-                    array_push($neutral, $sel['neutral']);
-                    array_push($alkaline, $sel['alkaline']);
-                }
+                $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph <= 4.5");
+                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 4.5 AND ph <= 5.5");
+                $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 5.5 AND ph <= 6.5");
+                $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 6.5 AND ph <= 7.8");
+                $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 7.8");
+
             }
         }
-        draw_ph_level_graph($district, $acidic, $optimal, $neutral, $alkaline, "column");
-    break;
+        array_push($farmers_number, $verylow);
+        array_push($farmers_number, $low);
+        array_push($farmers_number, $medium);
+        array_push($farmers_number, $high);
+        array_push($farmers_number, $very_high);
+
+        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different PH levels");
+        break;
 
     case "macro_nutrients_nitrogen":
         session_start();
         $client_id = $_SESSION["client_id"];
-        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $low = array(); $medium = array(); $high = array(); $excessive = array(); $district = array();
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $farmers_number = array();
+        $levels = array("Very low", "Low", "Medium", "High", "Very high");
+        $medium; $high; $very_high; $low; $verylow;
 
         foreach ($rows as $row) {
 
-            if (($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) && ($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
-                $slected_rows = $mCrudFunctions->fetch_farmer_rows("soil_results_" . $row['id'],
-                    "biodata_farmer_location_farmer_district AS district,
-                     COUNT(CASE WHEN macro_nutrients_nitrogen < 10 THEN 1 ELSE 0 end) AS LOW,
-                     COUNT(CASE WHEN macro_nutrients_nitrogen < 20 OR macro_nutrients_nitrogen > 10 THEN 1 ELSE 0 end) AS MEDIUM,
-                     COUNT(CASE WHEN macro_nutrients_nitrogen < 30 OR macro_nutrients_nitrogen > 20 THEN 1 ELSE 0 end) AS HIGH,
-                     COUNT(CASE WHEN macro_nutrients_nitrogen > 30 THEN 1 ELSE 0 end) AS EXCESSIVE ");
+            if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
-                foreach ($slected_rows as $sel) {
-                    array_push($district, $sel['district']);
-                    array_push($low, $sel['LOW']);
-                    array_push($medium, $sel['MEDIUM']);
-                    array_push($high, $sel['HIGH']);
-                    array_push($excessive, $sel['EXCESSIVE']);
-                }
+                $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` <= 0.05");
+                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.05 AND `n_%` <= 0.15");
+                $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.15 AND `n_%` <= 0.25");
+                $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.25 AND `n_%` <= 0.5");
+                $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.5");
+
             }
         }
-        draw_macro_nutrients_nitrogen_graph($district, $low, $medium, $high, $excessive, "column");
-    break;
+        array_push($farmers_number, $verylow);
+        array_push($farmers_number, $low);
+        array_push($farmers_number, $medium);
+        array_push($farmers_number, $high);
+        array_push($farmers_number, $very_high);
+
+        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different nitrogen levels");
+        break;
 
     case  "macro_nutrients_phosphorous":
         session_start();
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $low = array(); $medium = array(); $high = array(); $excessive = array(); $district = array();
+        $low;
+        $medium;
+        $high;
+        $very_high;
 
         foreach ($rows as $row) {
 
-            if (($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) && ($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
-                $slected_rows = $mCrudFunctions->fetch_farmer_rows("soil_results_" . $row['id'],
-                    "biodata_farmer_location_farmer_district AS district,
-                     COUNT(CASE WHEN macro_nutrients_phosphorous < 20 THEN 1 ELSE 0 end) AS LOW,
-                     COUNT(CASE WHEN macro_nutrients_phosphorous < 40 OR macro_nutrients_phosphorous > 20 THEN 1 ELSE 0 end) AS MEDIUM,
-                     COUNT(CASE WHEN macro_nutrients_phosphorous < 100 OR macro_nutrients_phosphorous > 40 THEN 1 ELSE 0 end) AS HIGH,
-                     COUNT(CASE WHEN macro_nutrients_phosphorous > 100 THEN 1 ELSE 0 end) AS EXCESSIVE ");
+            if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
-                foreach ($slected_rows as $sel) {
-                    array_push($district, $sel['district']);
-                    array_push($low, $sel['LOW']);
-                    array_push($medium, $sel['MEDIUM']);
-                    array_push($high, $sel['HIGH']);
-                    array_push($excessive, $sel['EXCESSIVE']);
-                }
+                $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` <= 2.5");
+                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 2.5 AND `om_%` <= 0.15");
+                $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 0.15 AND `om_%` <= 3.5");
+                $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 3.5 AND `om_%` <= 4.9");
+                $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 4.9");
+
             }
         }
-        draw_macro_nutrients_phosphorous_graph($district, $low, $medium, $high, $excessive, "column");
+        draw_organic_chart($low, $medium, $high, $very_high);
         break;
 
     case  "macro_nutrients_potassium":
         session_start();
         $client_id = $_SESSION["client_id"];
-        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $low = array(); $medium = array(); $high = array(); $district = array(); $very_low = array(); $very_high = array();
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $farmers_number = array();
+        $levels = array("Very low", "Low", "Medium", "High", "Very high");
+        $medium; $high; $very_high; $low; $verylow;
 
         foreach ($rows as $row) {
 
-            if (($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) && ($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
-                $slected_rows = $mCrudFunctions->fetch_farmer_rows("soil_results_" . $row['id'],
-                    "biodata_farmer_location_farmer_district AS district,
-                     COUNT(CASE WHEN macro_nutrients_potassium < 75 THEN 1 ELSE 0 end) AS VERY_LOW,
-                     COUNT(CASE WHEN macro_nutrients_potassium < 150 OR macro_nutrients_potassium > 75 THEN 1 ELSE 0 end) AS LOW,
-                     COUNT(CASE WHEN macro_nutrients_potassium < 250 OR macro_nutrients_potassium > 150 THEN 1 ELSE 0 end) AS MEDIUM,
-                     COUNT(CASE WHEN macro_nutrients_potassium < 800 OR macro_nutrients_potassium > 250 THEN 1 ELSE 0 end) AS HIGH,
-                     COUNT(CASE WHEN macro_nutrients_potassium > 800 THEN 1 ELSE 0 end) AS VERY_HIGH ");
+            if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
-                foreach ($slected_rows as $sel) {
-                    array_push($district, $sel['district']);
-                    array_push($very_low, $sel['VERY_LOW']);
-                    array_push($low, $sel['LOW']);
-                    array_push($medium, $sel['MEDIUM']);
-                    array_push($high, $sel['HIGH']);
-                    array_push($very_high, $sel['VERY_HIGH']);
-                }
+                $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`k` <= 0.05");
+                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`k` > 0.05 AND `k` <= 0.15");
+                $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`k` > 0.15 AND `k` <= 0.25");
+                $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`k` > 0.25 AND `k` <= 0.5");
+                $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`k` > 0.5");
+
             }
         }
-        draw_macro_nutrients_potassium_graph($district, $very_low, $low, $medium, $high, $very_high, "column");
+        array_push($farmers_number, $verylow);
+        array_push($farmers_number, $low);
+        array_push($farmers_number, $medium);
+        array_push($farmers_number, $high);
+        array_push($farmers_number, $very_high);
+
+        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different potassium levels");
         break;
 
     case  "farmers_soil_composition":
@@ -531,7 +601,9 @@ switch ($_POST["token"]) {
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $sand_percentage = 0;  $clay_percentage = 0;  $silt_percentage = 0;
+        $sand_percentage = 0;
+        $clay_percentage = 0;
+        $silt_percentage = 0;
 //        $sand_sum = 0; $clay_sum = 0; $silt_sum = 0; $total_no_farmers = 0;
 
         foreach ($rows as $row) {
@@ -542,15 +614,16 @@ switch ($_POST["token"]) {
                 $silt_percentage += $mCrudFunctions->get_sum("soil_results_" . $row['id'], "soil_type_silt", 1);
             }
         }
-        draw_soil_texture_pie_chart($sand_percentage,$clay_percentage,$silt_percentage);
-    break;
+        draw_soil_texture_pie_chart($sand_percentage, $clay_percentage, $silt_percentage);
+        break;
 
     case  "ace_crop_insured":
         session_start();
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $maize = 0; $rice = 0;
+        $maize = 0;
+        $rice = 0;
 
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
@@ -558,8 +631,8 @@ switch ($_POST["token"]) {
                 $rice += $mCrudFunctions->get_count("dataset_" . $row['id'], "production_data_crop_insured LIKE 'rice'");
             }
         }
-        ace_crop_insured_pie_chart($maize,$rice);
-    break;
+        ace_crop_insured_pie_chart($maize, $rice);
+        break;
 
     case  "insurance_age_group":
         session_start();
@@ -576,7 +649,7 @@ switch ($_POST["token"]) {
                     " SUM(CASE WHEN (2017-substring(`biodata_farmer_dob`,-4,4)) < 35 OR (2017-substring(biodata_farmer_dob,-4,4)) = 35 THEN 1 ELSE 0 end) AS youth, 
                            SUM(CASE WHEN (2017-substring(biodata_farmer_dob,-4,4)) > 35 THEN 1 ELSE 0 end) AS old ");
 
-                foreach($slected_rows as $sel) {
+                foreach ($slected_rows as $sel) {
                     $youth += $sel['youth'];
                     $old += $sel['old'];
                 }
@@ -586,25 +659,65 @@ switch ($_POST["token"]) {
         break;
 
     case  "farmers_organic_matter":
-//        if (isset($_POST['gender'])) {
-            session_start();
-            $client_id = $_SESSION["client_id"];
-            $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        session_start();
+        $client_id = $_SESSION["client_id"];
 
-            $low = 0;   $moderate = 0;
-            $high = 0;  $very_high = 0;
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $farmers_number = array();
+        $levels = array("Trace", "Very low", "Low", "Medium", "High", "Very high");
+        $trace; $medium; $high; $very_high; $low; $verylow;
 
-            foreach ($rows as $row) {
-                if (($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) && ($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
-                    $low += $mCrudFunctions->get_count("soil_results_" . $row['id'], "organic_matter_level LIKE 'low'");
-                    $moderate += $mCrudFunctions->get_count("soil_results_" . $row['id'], "organic_matter_level LIKE 'moderate'");
-                    $high += $mCrudFunctions->get_count("soil_results_" . $row['id'], "organic_matter_level LIKE 'high'");
-                    $very_high += $mCrudFunctions->get_count("soil_results_" . $row['id'], "organic_matter_level LIKE 'very_high'");
-                }
+        foreach ($rows as $row) {
+
+            if (($mCrudFunctions->check_table_exists("phosporous_results_" . $row['id']))) {
+
+                $trace += (int)$mCrudFunctions->get_count("phosporous_results_" . $row['id'], "phosphorus_mg_per_kg like 'trace'");
+                $verylow += (int)$mCrudFunctions->get_count("phosporous_results_" . $row['id'], "phosphorus_mg_per_kg BETWEEN 0.3 AND 12");
+                $low+= (int)$mCrudFunctions->get_count("phosporous_results_" . $row['id'], "phosphorus_mg_per_kg >12 AND phosphorus_mg_per_kg<=22.5");
+                $medium += (int)$mCrudFunctions->get_count("phosporous_results_" . $row['id'], "phosphorus_mg_per_kg > 22.5 AND phosphorus_mg_per_kg <= 35.5");
+                $high += (int)$mCrudFunctions->get_count("phosporous_results_" . $row['id'], "phosphorus_mg_per_kg > 35.5 AND phosphorus_mg_per_kg <= 68.5");
+                $very_high += (int)$mCrudFunctions->get_count("phosporous_results_" . $row['id'], "phosphorus_mg_per_kg > 68.5");
+
             }
-            draw_organic_matter_chart($low, $moderate, $high, $very_high);
-//        }
-    break;
+        }
+        array_push($farmers_number, $trace);
+        array_push($farmers_number, $verylow);
+        array_push($farmers_number, $low);
+        array_push($farmers_number, $medium);
+        array_push($farmers_number, $high);
+        array_push($farmers_number, $very_high);
+
+        analyseSeeds($levels, $farmers_number, "column", "Average Phospherous levels from farmers' gardens");
+        break;
+
+        session_start();
+        $client_id = $_SESSION["client_id"];
+
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $farmers_number = array();
+        $levels = array("Very low", "Low", "Medium", "High", "Very high");
+        $medium; $high; $very_high; $low; $verylow;
+
+        foreach ($rows as $row) {
+
+            if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
+
+                $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "nitrogen <= 0.05");
+                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "nitrogen > 0.05 AND nitrogen <= 0.15");
+                $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "nitrogen > 0.15 AND nitrogen <= 0.25");
+                $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "nitrogen > 0.25 AND nitrogen <= 0.5");
+                $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "nitrogen > 0.5");
+
+            }
+        }
+        array_push($farmers_number, $verylow);
+        array_push($farmers_number, $low);
+        array_push($farmers_number, $medium);
+        array_push($farmers_number, $high);
+        array_push($farmers_number, $very_high);
+
+        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different nitrogen levels");
+        break;
 
 }
 
@@ -617,6 +730,30 @@ function debug_to_console($data)
     }
 }
 
+//organic matter data
+function draw_organic_chart($low, $moderate, $high, $veryhigh)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    $titleArray = array('text' => 'Distribution of organic matter levels of the farmers');
+
+    $datax = array();
+
+    $temp = array('Low', $low);
+    array_push($datax, $temp);
+
+    array_push($datax, array('Moderate', $moderate));
+    array_push($datax, array('High', $high));
+    array_push($datax, array('Very high', $veryhigh));
+
+    $dataArray = array('type' => 'pie', 'name' => 'OrganicMatter', 'data' => $datax);
+
+    $data = $json_model_obj->get_donutchart_graph_json($titleArray, $dataArray);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
+//------------------------------------------------------------------------
 function draw_donut_chart($male, $female)
 {
     $json_model_obj = new JSONModel();
@@ -787,7 +924,7 @@ function analyseRegions($type, $categories, $farmers, $males, $females, $title)
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function ace_average_yield_graph ($type, $aces, $average_yield)
+function ace_average_yield_graph($type, $aces, $average_yield)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -866,7 +1003,7 @@ function draw_ict_pie_chart($used_ict, $didnt_use_ict)
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function draw_soil_texture_pie_chart($sand,$clay,$silt)
+function draw_soil_texture_pie_chart($sand, $clay, $silt)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -890,7 +1027,7 @@ function draw_soil_texture_pie_chart($sand,$clay,$silt)
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function ace_crop_insured_pie_chart($maize,$rice)
+function ace_crop_insured_pie_chart($maize, $rice)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();

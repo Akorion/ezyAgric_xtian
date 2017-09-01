@@ -171,7 +171,7 @@
 
     <div class="col-lg-6">
         <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
-            <div id="gender_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            <div id="loan_access" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
@@ -196,7 +196,7 @@ include("include/preloader.php");
     $(document).ready(function () {
         getLoadOutGrowerDash();
         getAjaxData();
-        FormGenderGraph();
+        loanAccess();
 
     });
 
@@ -204,8 +204,8 @@ include("include/preloader.php");
         getLoadDataSets();
     });
 
-    function FormGenderGraph() {
-        token = "farmers_piechart";
+    function loanAccess() {
+        token = "loan_access";
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -215,7 +215,7 @@ include("include/preloader.php");
                 gender: ""
             },
             success: function (data) {
-                $('#gender_graph').highcharts(data);
+                $('#loan_access').highcharts(data);
             }
         });
         hideProgressBar();

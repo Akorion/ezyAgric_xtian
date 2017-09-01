@@ -26,7 +26,6 @@ if(isset($_POST['id'])&&$_POST['id']!=""){
 $id=$_POST['id'];
 $gender=$_POST['gender'];
 
-
 $dataset_r = $mCrudFunctions->fetch_rows("datasets_tb","dataset_name"," id ='$id'");
 $dataset=$dataset_r[0]["dataset_name"];
 
@@ -47,8 +46,6 @@ $count_bio++;
 
 $column=$mCrudFunctions->fetch_rows("bio_data","columns"," id='$bio_data' AND dataset_id ='$id' ")[0]["columns"];
 $value=str_replace("biodata_farmer_","",$column);
-
-
 
 if($count_bio>1 && ($count_bio-1) < sizeof($_SESSION['fields']['bio_data'])){
 
@@ -390,7 +387,6 @@ if($_POST['sel_production_id']=="all"){
 	$rows=$mCrudFunctions->fetch_rows("dataset_".$id,$total_columns,"  ".$column." LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ");
     
 	}
-	
     
 	}else{
     
@@ -411,7 +407,6 @@ if($_POST['sel_production_id']=="all"){
     $p_id=str_replace("generalyes","",$string);
     $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
     $column =$row[0]['columns'];
-    
 	
 	if($_POST['gender']=="all"){
      
@@ -425,7 +420,6 @@ if($_POST['sel_production_id']=="all"){
     
 	}
 	
-	
 	}else{
    
     if($_POST['va']=="all"){
@@ -437,12 +431,9 @@ if($_POST['sel_production_id']=="all"){
 	$rows=$mCrudFunctions->fetch_rows("dataset_".$id,$total_columns,"  lower(biodata_farmer_gender) = '$gender' AND  ".$column." LIKE 'yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'");
    
 	}
-     
-   
-     
+
     }
-  
-  
+
   
   
   }}else{
@@ -572,8 +563,7 @@ $district=$_POST['district'];
   
     $mCrudFunctions = new CrudFunctions();
    $string=$_POST['sel_production_id'];
-    
-	
+
    if(strpos($string, "productionyes")===false){
    if(strpos($string, "productionno")===false){
    if(strpos($string, "generalyes")===false){
@@ -619,7 +609,6 @@ $district=$_POST['district'];
     $p_id=str_replace("generalyes","",$string);
     $row =$mCrudFunctions->fetch_rows("general_questions","columns"," id='$p_id' "  );
     $column =$row[0]['columns'];
-    
   
     if($_POST['gender']=="all"){
     

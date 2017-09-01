@@ -504,6 +504,16 @@ class CrudFunctions
         return array_shift($row);
     }
 
+    public function get_distinct_count($table,$column, $where)
+    {
+        $mDatabaseQueryProcessor = new DatabaseQueryProcessor();
+        $query = "SELECT " .$column. " FROM " . $table . " WHERE " . $where;
+        #do the query
+        $mDatabaseQueryProcessor->setResultForQuery($query);
+        $row = $mDatabaseQueryProcessor->getResultArray();
+        return array_shift($row);
+    }
+
     public function check_table_exists($table)
     {
         $mDatabaseQueryProcessor = new DatabaseQueryProcessor();

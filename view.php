@@ -93,7 +93,6 @@ $mCrudFunctions = new CrudFunctions();
 
     <?php
 
-
     if (isset($_GET['token']) && $_GET['token'] != "") {
         $id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
         $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
@@ -122,7 +121,7 @@ $mCrudFunctions = new CrudFunctions();
         }
         echo "
   <div class=\"right print_export container\">
-  <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
+  <a href=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
   btn-fab btn-raised mdi-action-class\"></a>
 </div>";
 
@@ -325,9 +324,7 @@ $mCrudFunctions = new CrudFunctions();
 
                     $index = 0;
 
-
                     echo "<div class=\"col-md-6\">";
-
 
                     foreach ($bio_data_rows as $row) {
 
@@ -371,7 +368,6 @@ $mCrudFunctions = new CrudFunctions();
 
                     }
                     echo " </div>";
-
 
                     echo "<div class=\"col-md-6\">";
 
@@ -1035,7 +1031,6 @@ $mCrudFunctions = new CrudFunctions();
         parish = sel_parish.value;
         subcounty = sel_county.value;
         district = sel_district.value;
-
 
         age_min = document.getElementById("age_min").value;
         age_max = document.getElementById("age_max").value;

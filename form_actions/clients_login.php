@@ -53,7 +53,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 
 //	$util_obj->redirect_to( "../dash1.php" );
 	}
-	elseif($_SESSION["client_id"]==18){
+	elseif($_SESSION["account_name"]== 'Ankole Coffee Producers Cooperative Union Ltd'){
         $util_obj->redirect_to( "../acpudash.php" );
     }
     elseif ($_SESSION["account_name"] == "Insurance"){

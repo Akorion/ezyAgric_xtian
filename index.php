@@ -18,8 +18,6 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
         $time_of_activity = $util_obj->getTimeForLogs('Africa/Nairobi');
         $ip_address = $util_obj->getClientIpV4();
         $mCrudFunctions->insert_into_clients_logs_tb($client_id, $user_id, "Logged Out", $time_of_activity, $ip_address);
-
-
     }
 
     $_SESSION["client_id"] = null;
@@ -29,7 +27,6 @@ if (isset($_GET['logout']) && $_GET['logout'] == 1) {
     $_SESSION["role"] = null;
 
     unset($_SESSION["pages"]);
-
 
 } else {
 //    if (isset($_SESSION['client_id'])) {

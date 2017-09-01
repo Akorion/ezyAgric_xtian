@@ -58,6 +58,30 @@ class JSONModel
         return $response;
     }
 
+    //drawing organic matter chart
+//    public function get_organicpie_json($titleArray, $dataArray)
+//    {
+//
+//        $response = array();
+//
+//        $response['credits'] = array('enabled' => 0);
+//
+//        $response['exporting'] = array('enabled' => false);
+//
+//        $response['chart'] = array('type' => 'pie', 'option3d' => array('enabled' => true, 'alpha' => 45, 'beta' => 0));
+//        $response['plotOptions'] = array('pie' => array('innerSize' => 70, 'depth' => 45));
+//
+//        $response['title'] = $titleArray;
+//
+//        $response['tooltip'] = array("pointFormat" => '{series.name}: <b>{point.percentage:.1f}%</b>');
+//
+//        $response['series'] = array();
+//        $response['total'] = array('total'=>112);
+//        array_push($response['series'], $dataArray);
+//
+//        return $response;
+//    }
+
     public function InsuranceAgeGroup_donut_chart($title, $data)
     {
 
@@ -253,11 +277,11 @@ class JSONModel
         return $response;
     }
 
-    public function drawSeedGraph($district, $no_farmers, $type)
+    public function drawSeedGraph($district, $no_farmers, $type, $title)
     {
         $json['chart'] = array('type' => $type);
 
-        $json['title'] = array('text'=>'Farmers and their source of seeds');
+        $json['title'] = array('text'=>$title);
 
 
         $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
@@ -367,8 +391,9 @@ class JSONModel
                 'borderWidth' => 0
             ));
 
-        $json['series'] = array(array('name' => 'LOW', 'data' => $low), array('name' => 'MEDIUM', 'data' => $medium),
-            array('name'=>'HIGH', 'data'=>$high), array('name' => 'EXCESSIVE', 'data' => $excessive)
+        $json['series'] = array(
+            array('name' => 'LOW', 'data' => $low), array('name' => 'MEDIUM', 'data' => $medium),
+            array('name'=>'HIGH', 'data'=>$high), array('name' => 'VERY HIGH', 'data' => $excessive)
         );
         return $json;
     }
@@ -379,7 +404,7 @@ class JSONModel
 
         $json['title'] = array('text'=>'Average Phosphorous Levels For Farmer Gardens');
 
-        $json['xAxis'] = array('categories' => $district);
+//        $json['xAxis'] = array('categories' => $district);
 
         $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
 

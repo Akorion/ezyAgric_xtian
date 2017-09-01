@@ -86,12 +86,11 @@ $path = $_SERVER["PHP_SELF"];
         <div class="navbar-collapse collapse navbar-responsive-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><?php
-                    if ($_SESSION['client_id'] == 2) {
-                        echo "<a href=\"./dashboardAll.php\">Dashboard</a>";
-                    } elseif($_SESSION["account_name"] == "Insurance"){
+
+                    if($_SESSION["account_name"] == "Insurance"){
                         echo "<a href=\"./insuranceDash.php\">Dashboard</a>";
-                    } elseif ($_SESSION['client_id'] == 18){
-                        echo "<a href='./acpudash.php'></a>";
+                    } elseif ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd"){
+                        echo "<a href='./acpudash.php'>Dashboard</a>";
                     } else {
                         echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
                     } ?>

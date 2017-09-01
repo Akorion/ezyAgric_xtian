@@ -66,10 +66,8 @@ if ($_FILES["csv"]["size"] > 0) {
 //                        $util_obj->debug_to_console($array);
             $column_string = $util_obj->getColumnsString($db, $table, 1);
 //                        $util_obj->debug_to_console($column_string);
-
             $string = $util_obj->insertCSVintoTable($db, $table, $column_string, $handle);
 //                        $util_obj->debug_to_console($string);
-
             if ($string > 0) $util_obj->redirect_to("../admin/home.php?action=createdataset&success=1&client_id=$client_id&inserted=$string");
 		}else{
 		    $util_obj->redirect_to( "../admin/home.php?action=createdataset&success=0&flag=1" );

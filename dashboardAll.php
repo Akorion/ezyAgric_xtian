@@ -267,6 +267,7 @@ include("include/preloader.php");
         });
         hideProgressBar();
     }
+
     function ictUsageGraph(range) {
 
         token = "ict_usage_piechart";

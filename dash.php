@@ -4,10 +4,10 @@ $client_id = $_SESSION['client_id'];
 
 if (($_SESSION['client_id'] == 2) || ($_SESSION["account_name"] == 'demo')) {
     //$util_obj-
-
     header("Location: dash1.php");
 } else {
     session_abort();
+//    header("Location: dash.php");
 }
 ?>
 <?php include("include/header_client.php"); ?>
@@ -333,7 +333,7 @@ include("include/preloader.php");
                 $("#dataset_holder").html(data);
                 hideProgressBar();
                 console.log(data);
-//          hideempty();
+
             }
         });
 

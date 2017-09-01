@@ -108,7 +108,6 @@ function output($client_id, $search)
 
         }*/
 
-
         $dataset_name = substr($dataset_name, 0, 38) . '</br>' . substr($dataset_name, 38);
 
         echo "
@@ -132,7 +131,7 @@ function output($client_id, $search)
     <h6>$number <span>$type$s</span></h6>";
         if ($total_gardens > 0 && $total_acerage > 0) {
 
-            echo "<p class='row col-lg-12' style='padding: 0px 10px; font-size:13px' align='center'><b><span><td>Gardens : </td>$total_gardens </span><br/><span> Acres : $total_acerage  </span></b></p>";
+            echo "<p class='row col-lg-12' style='padding: 0px 10px; font-size:13px' align='center'><b><span><td>Total Gardens: </td>$total_gardens</span><br/><span>Total Acreage: $total_acerage</span></b></p>";
         }
 
         echo "<h6 style=\"margin-left:.5em !important;\" align='center'>$period</h6><br/>";

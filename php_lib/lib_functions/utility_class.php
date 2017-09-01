@@ -249,43 +249,45 @@ public function get_result_array($db,$table,$columns,$where)
 public function getColumnsString($db,$table,$where)
 {
 
-    $query="SELECT * FROM ".$table." WHERE ".$where ; 
+    $query = "SELECT * FROM " . $table . " WHERE " . $where;
     $db->setResultForQuery($query);
-	$fields = $db->getAllFieldsInResult();
+    $fields = $db->getAllFieldsInResult();
 
-	$values = array();	$sql_array = array();
-	foreach($fields as $key){
-		array_push($values, $key->name);
-	}
+    $values = array();
+    $sql_array = array();
+    foreach ($fields as $key) {
+        array_push($values, $key->name);
+    }
 
 //	echo sizeof($values)."<br/>";
-	for($j=1; $j<sizeof($values); $j++){
-		$sql_array[] = $values[$j];
-	}
+    for ($j = 1; $j < sizeof($values); $j++) {
+        $sql_array[] = $values[$j];
+    }
 //	$this->debug_to_console($values)."<br>";
     return $sql_array;
 }
 
-public function insertCSVintoTable($db,$table,$column_string,$handle){
-	$con = new ServerConnection();
-   $counter=0;
+public function insertCSVintoTable($db,$table,$column_string,$handle)
+{
+    $con = new ServerConnection();
+    $counter = 0;
 
-	$data_array = array();
-   while(($data = fgetcsv($handle,0,";"," ")) !== FALSE){
-	   array_push($data_array, $data);
-       $counter = sizeof($data);
-   }
+    $data_array = array();
+    while (($data = fgetcsv($handle, 0, ";", " ")) !== FALSE) {
+        array_push($data_array, $data);
+        $counter = sizeof($data);
+    }
 
 //	$this->debug_to_console($data_array)."<br>";
-	$values = array();
-	foreach($data_array as $real_data){
-		foreach($real_data as $key => $value){
-			$real_data[$key] = mysqli_real_escape_string($con->getServerConnection(), $real_data[$key]);
-		}
-		$values[] = "('" . implode("', '", $real_data). "')";
-	}
+    $values = array();
+    foreach ($data_array as $real_data) {
+        foreach ($real_data as $key => $value) {
+            $real_data[$key] = mysqli_real_escape_string($con->getServerConnection(), $real_data[$key]);
+        }
+        $values[] = "('" . implode("', '", $real_data) . "')";
+    }
 
-	$query= " INSERT INTO ".$table." (".implode(', ', $column_string).") VALUES " .implode(', ', $values);
+    $query = " INSERT INTO " . $table . " (" . implode(', ', $column_string) . ") VALUES " . implode(', ', $values);
 
 //    $this->debug_to_console($query);
     $flagx = $db->setResultForQuery($query);

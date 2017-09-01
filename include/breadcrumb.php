@@ -34,13 +34,12 @@ $path = $_SERVER["PHP_SELF"];
 	break;
 	
 	case 'dashboard.php';
-	$token=$_GET['token'];
-	$crumb .= $_SESSION["pages"][0]. "<li><a href=\"dashboard.php?token=$token\">Explore Season</a></li>";
-	$_SESSION["pages"][1]=$crumb;
-	
-	unset($_SESSION["pages"][2]);
-	unset($_SESSION["pages"][3]);
-	unset($_SESSION["pages"][4]);
+        $token = $_GET['token'];
+        $crumb .= $_SESSION["pages"][0] . "<li><a href=\"dashboard.php?token=$token\">Explore Season</a></li>";
+        $_SESSION["pages"][1] = $crumb;
+        unset($_SESSION["pages"][2]);
+        unset($_SESSION["pages"][3]);
+        unset($_SESSION["pages"][4]);
 	break;
 	
 	case 'view.php';
@@ -96,69 +95,42 @@ $path = $_SERVER["PHP_SELF"];
 	break;
 	
 	case 'va_farmers.php';
-	
-	$s=$_GET['s'];
-	$token=$_GET['token'];
-	$type=$_GET['type'];
-	$o=$_GET['o'];
-	$crumb .= $_SESSION["pages"][2];
-	
-	$crumb .=  "<li><a href=\"va_farmers.php?o=$o&s=$s&token=$token&type=$type\">VA Farmers</a></li>";
-	
-	
-	$_SESSION["pages"][3]=$crumb;
-	
+        $s = $_GET['s'];
+        $token = $_GET['token'];
+        $type = $_GET['type'];
+        $o = $_GET['o'];
+        $crumb .= $_SESSION["pages"][2];
+        $crumb .= "<li><a href=\"va_farmers.php?o=$o&s=$s&token=$token&type=$type\">VA Farmers</a></li>";
+        $_SESSION["pages"][3] = $crumb;
 	break;
-	
 	case 'va_receipts.php';
-	
-	$s=$_GET['s'];
-	$token=$_GET['token'];
-	$type=$_GET['type'];
-	$o=$_GET['o'];
-	$crumb .= $_SESSION["pages"][2];
-	
-	$crumb .=  "<li><a href=\"va_receipts.php?o=$o&s=$s&token=$token&type=$type\">VA Reciepts</a></li>";
-	
-	
-	$_SESSION["pages"][3]=$crumb;
-	
+        $s = $_GET['s'];
+        $token = $_GET['token'];
+        $type = $_GET['type'];
+        $o = $_GET['o'];
+        $crumb .= $_SESSION["pages"][2];
+        $crumb .= "<li><a href=\"va_receipts.php?o=$o&s=$s&token=$token&type=$type\">VA Reciepts</a></li>";
+        $_SESSION["pages"][3] = $crumb;
 	break;
 	
 	case 'settings.php';
-	
-	
-	$crumb .= end($_SESSION["pages"]);
-	
-	
-	$crumb .=  "<li><a href=\"settings.php\">Settings</a></li>";
+        $crumb .= end($_SESSION["pages"]);
+        $crumb .= "<li><a href=\"settings.php\">Settings</a></li>";
 	break;
 	
 	case 'logs.php';
-	
-	
-	$crumb .= end($_SESSION["pages"]);
-	
-	
-	$crumb .=  "<li><a href=\"logs.php\">System Logs</a></li>";
+        $crumb .= end($_SESSION["pages"]);
+        $crumb .= "<li><a href=\"logs.php\">System Logs</a></li>";
 	break;
 	
 	case 'system_constants.php';
-	
-	
-	$crumb .= end($_SESSION["pages"]);
-	
-	
-	$crumb .=  "<li><a href=\"system_constants.php\">Default Options</a></li>";
+        $crumb .= end($_SESSION["pages"]);
+        $crumb .= "<li><a href=\"system_constants.php\">Default Options</a></li>";
 	break;
 	
 	case 'stat_farmers.php';
-	
-	
-	$crumb .= end($_SESSION["pages"]);
-	
-	
-	$crumb .=  "<li><a href=\"stat_farmers.php\">Farmer Statistics</a></li>";
+        $crumb .= end($_SESSION["pages"]);
+        $crumb .= "<li><a href=\"stat_farmers.php\">Farmer Statistics</a></li>";
 	break;
 	
 	
