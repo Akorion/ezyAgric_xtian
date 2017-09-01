@@ -1186,11 +1186,12 @@
 //        echo"<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
 
                     echo "</div>
-    </div>
+<!--   </div>   -->
   </div>";
 
                     /////////////////////////////////////////////production data_ends
-                } elseif ($_SESSION["account_name"] == "Insurance") {
+                }
+                elseif ($_SESSION["account_name"] == "Insurance") {
 
 
 ///////////////////////////////////////////// lat_long_pic starts
@@ -1633,7 +1634,7 @@
                         $lable = $util_obj->captalizeEachWord($string);
                         if (!strpos($column, '_gps_')) {
                             echo "<h6>$lable:</h6>
-  <p class=\"align\">$value</p><hr/>";
+                                <p class=\"align\">$value</p><hr/>";
                         }
 
 
