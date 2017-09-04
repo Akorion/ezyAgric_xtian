@@ -596,7 +596,7 @@ switch ($_POST["token"]) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_acreage", 1);
-            if($_SESSION['account_name'] = 'Ankole Coffee Producers Cooperative Union Ltd' || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
+            if($_SESSION['client_id'] == 16 || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
             elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
@@ -630,10 +630,10 @@ switch ($_POST["token"]) {
                            <span class=\"fa fa-users fa-3x\"></span>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4> <a href='#'> Farmers </a> </h4>
-                         <a href='#'>Total Farmers: </a><a style=\"font-size:15px; color:blue\"><b>$farmers</b></a> <br>
+                           <h4> <a href='dash.php'> Farmers </a> </h4>
+                         <a style=\"font-size:15px; color:blue\"><b>$farmers</b></a> <br>
                            <!--span style=\"font-size:13px; color:green\">$acerage Acres</span--> 
-                            <a href='#'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                            <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
                        </div>
                    </div>
@@ -646,7 +646,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                        <h4> <a href='cooperatives.php'> Cooperatives </a> </h4>
                         
-                           <a href='#'>Total Cooperatives: </a><a style=\"font-size:15px; color:blue\"><b>" . number_format($cash_given_out) . "</b></a> <br>
+                           <a style=\"font-size:15px; color:blue\"><b>" . number_format($cash_given_out) . "</b></a> <br>
                            <!--a style=\"font-size:13px; color:green\">UGX " . number_format($cash_returned) . " returned</a-->
                            <a href='cooperatives.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
@@ -661,7 +661,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                        <h4> <a href='farmerloans.php'> Acreage </a> </h4>
                          
-                           <a href='#'>Total Acreage: </a><a style=\"font-size:15px; color:blue\"><b>" . number_format($acerage) . "</b></a> <br>
+                           <a style=\"font-size:15px; color:blue\"><b> " . number_format($acerage) . " acres </b></a> <br>
                            <!--a style=\"font-size:13px; color:green\"> " . number_format($taken_no_loans) . " farmers didnt get</a-->
                            <a href='farmerloans.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
@@ -685,6 +685,117 @@ switch ($_POST["token"]) {
 
 
         break;
+
+    case  "insurance_dash":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+
+        $farmers = 0;
+        $acreage = 0;
+        $cash_given_out = 0;
+        $cash_returned = 0;
+        $taken_loans = 0;
+        $taken_no_loans = 0;
+        $tractor_money_returned = 0;
+        $seed_taken = 0;
+        $yield = 0;
+        $insured = 0;
+        $not_insured = 0;
+        $value_of_insured_yield=0;  $premium=0; $levy=0;    $vat=0; $subsidy=0; $farmer_acreage=0;
+
+        foreach ($rows as $row) {
+
+            $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
+            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
+            if($acreage < 1){ $acreage += $mCrudFunctions->get_sum("dataset_".$row['id'], "production_data_land_size", 1); }
+
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+                $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
+            }
+
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+//                echo "the table exists";
+                $taken_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='yes'");
+            }
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+                $taken_no_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='no'");
+            }
+
+            if ($mCrudFunctions->check_table_exists("tractor_money_returned_" . $row['id'])) {
+                $tractor_money_returned = $tractor_money_returned + $mCrudFunctions->get_sum("tractor_money_returned_" . $row['id'], "tractor_money_returned", 1);
+            }
+
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+                $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
+                if($_SESSION["account_name"] == "Insurance"){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
+            }
+            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
+                $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
+            }
+        }
+
+        echo "<div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color:orange; padding:15px; border-radius:2px;color:#fff; margin-top: -20px; \">
+                           <i class=\"fa fa-leaf fa-3x\"></i>
+                       </div>
+                       <div class=\"col-md-9\">
+                           <h4> <a href='../dash.php'> Insured farmers </a> </h4>
+                         <a href='#' style=\"font-size:15px; color:blue\"><b> Total Farmers: $farmers</b></a> <br>
+                           <span style=\"font-size:13px; color:green\"><b> Total Acreage: $acreage </b></span> 
+                            <a href='../dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+
+                       </div>
+                   </div>
+                 </div>
+                 <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color:#822; padding:15px; border-radius:2px;color:#fff; margin-top: -20px;\">
+                           <i class=\"fa fa-money fa-3x\"></i>
+                       </div>
+                       <div class=\"col-md-9\">
+                       <h4> <a href='expenditure.php'> Premium </a> </h4>
+                        
+                           <a href='#' style=\"font-size:15px; color:blue\"><b>UGX " . number_format($cash_given_out) . "</b></a> <br>
+                          
+                           <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                       </div>
+                   </div>
+                 </div>
+
+                 <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color: #00a1b5; padding:15px; border-radius:2px;color:#fff; margin-top: -20px;\">
+                           <i class=\"fa fa-sitemap fa-3x\"></i>
+                       </div>
+                       <div class=\"col-md-9\">
+                       <h4> <a href='farmerloans.php'> Loans accessed </a> </h4>
+                         
+                           <a href='#' style=\"font-size:15px; color:blue\"><b> " . number_format($taken_loans) . " farmers got </b></a> <br>
+                           <a href='#' style=\"font-size:13px; color:green\"> " . number_format($taken_no_loans) . " farmers didnt get</a>
+                           <a href='farmerloans.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                       </div>
+                   </div>
+                 </div>
+
+         <!--        <div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color:orange; padding:15px; border-radius:2px;color:#fff; margin-top: -20px; \">
+                           <i class=\"fa fa-leaf fa-3x\"></i>
+                       </div>
+                       <div class=\"col-md-9\">
+                           <h4>Insured farmers</h4>
+                           <a style=\"font-size:15px; color:blue\"><b> Insured: $insured</b></a> <br>
+                           <a style=\"font-size:13px; color:green\">Not insured: $not_insured</a>
+                       </div>
+                   </div>
+                 </div> -->
+ ";
+
+
+        break;
+
 
 
 }

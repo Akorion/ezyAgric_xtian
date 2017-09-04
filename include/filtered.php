@@ -149,7 +149,6 @@
                                 $value = $util_obj->captalizeEachWord($row['biodata_farmer_location_farmer_district']);
                                 $value = str_replace(".", "", $value);
 
-
                                 if (in_array($value, $temp_array)) {
 
                                 } else {
@@ -171,7 +170,6 @@
                     </select>
                 </div>
             </div>
-
 
             <!--subcounty-->
             <div class="col-sm-2">
@@ -236,11 +234,49 @@
 
             <!--production data-->
             <div class="col-sm-2">
+                <label style=" padding-top:10px;" for="inputPassword3" class="control-label">Master Agent / ACE</label>
+                <div>
+                    <select id="sel_ace" onchange="getVAs()" class="select2_single form-control">
+                        <option value="all">all</option>
+                        <?php
+                        if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['type']) && $_GET['type'] != "") {
+
+                            $id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
+                            $table = "dataset_" . $id;
+                            $row0s = $mCrudFunctions->fetch_rows($table, " DISTINCT (biodata_farmer_organization_name) as ace", " 1 ORDER BY biodata_farmer_organization_name ASC");
+                            $temp_array = array();
+                            foreach ($row0s as $row) {
+                                $value = $util_obj->captalizeEachWord($row['ace']);
+                                $value = str_replace(".", "", $value);
+
+                                if (in_array($value, $temp_array)) {
+
+                                } else {
+                                    array_push($temp_array, $value);
+                                }
+
+                                // echo "<option value=\"$value\">$value</option>";
+                            }
+                            foreach ($temp_array as $temp) {
+                                echo "<option value=\"$temp\">$temp</option>";
+                            }
+
+                            //hidden
+                            echo "<input id=\"dataset_id_holder\" type=\"hidden\" value=\"$id\" />";
+
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <!--production data-->
+
+            <!--production data-->
+            <div class="col-sm-2">
                 <label style=" padding-top:10px;" for="inputPassword3" class="control-label">Village Agent</label>
                 <div>
                     <select id="sel_va" class="select2_single form-control">
                         <option value="all">all</option>
-
                     </select>
                 </div>
             </div>
@@ -269,18 +305,16 @@
                        style="background-color: #fff; border: 1px solid #d2d6de; border-radius: 4px;height:2em;">
             </div>
 
-
             <div class="col-sm-2 hide">
                 <label style=" padding-top:10px;" class="control-label">Date Range</label>
                 <input type="text" name="daterange" value="01/01/2015 - 01/31/2015"/>
-
             </div>
 
         </div>
 
     </div>
 </div>
-</div>
+<!-- </div>  -->
 
 <!-- script type="text/javascript">
 // $(function() {

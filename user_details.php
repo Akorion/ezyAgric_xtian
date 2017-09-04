@@ -1214,128 +1214,160 @@
                     echo "</div>";
 ////////////////////////////////////////////////// lat_long_pic endss
 
-                    $table = "bio_data";
-                    $columns = "*";
-                    $where = " dataset_id='$dataset_id' ";
+                    $table="dataset_".$dataset_id;
+                    $columns="*";
+                    $where=" id='$id' ";
                     $rows2 = $mCrudFunctions->fetch_rows($table, $columns, $where);
 
 /////////////////////////////////////////////personal data_starts
-                    echo "<div class=\"row data1\">
-                            <div class=\"col-sm-12 col-me-5 col-lg-5\">
-                            <div class=\"card\">
-                            <h5 class=\"\" style=\"\">Personal Profile</h5>";
+                    echo"<div class=\"row data1\">
+<div class=\"col-sm-12 col-me-5 col-lg-5\">
+<div class=\"card\">
+<h5 class=\"\" style=\"\">Personal Profile</h5>";
+//    echo"        <h6>Name:</h6><p class=\"align\">$name</p><hr/>";
 
+                    foreach($rows2 as $row){
+                        $name = $row['biodata_farmer_name'];
+                        $contact = $row['biodata_farmer_phone_number'];
+                        $gender = $util_obj->captalizeEachWord($row['biodata_farmer_gender']);
+                        $dob = $row['biodata_farmer_dob'];
+                        $region = $util_obj->captalizeEachWord($row['biodata_farmer_location_farmer_region']);
+                        $district = $util_obj->captalizeEachWord($row['biodata_farmer_location_farmer_district']);
+                        $subcounty = $row['biodata_farmer_location_farmer_subcounty'];
+                        $parish = $row['biodata_farmer_location_farmer_parish'];
+                        $village = $row['biodata_farmer_location_farmer_village'];
+                        $ace = $row['biodata_farmer_organization_name'];
+                        $ace_person = $row['biodata_ace_contact_person'];
+                        $ace_person_contact = $row['biodata_ace_contact'];
+                        $ace_county = $row['biodata_ace_county'];
+                        $ace_subcounty = $row['biodata_ace_subcounty'];
 
-                    foreach ($rows2 as $row) {
-                        $column = $row['columns'];
-                        $value = $rows[0][$column];
-                        $value = $util_obj->captalizeEachWord($value);
-                        $string = str_replace("biodata_farmer_", "", $column);
-                        $string = str_replace("_", " ", $string);
-                        $lable = $util_obj->captalizeEachWord($string);
-                        if ($lable != "Picture") {
+                        echo"       
+             <h6>Name:</h6><p class=\"align\">$name</p><hr/>
+             <h6>Contact:</h6><p class=\"align\">$contact</p><hr/>
+             <h6>Gender:</h6><p class=\"align\">$gender</p><hr/>
+             <h6>Date Of Birth:</h6><p class=\"align\">$dob</p><hr/>
+             <h6>Region:</h6><p class=\"align\">$region</p><hr/>
+             <h6>District:</h6><p class=\"align\">$district</p><hr/>
+             <h6>Subcounty:</h6><p class=\"align\">$subcounty</p><hr/>
+             <h6>Parish:</h6><p class=\"align\">$parish</p><hr/>
+             <h6>Village:</h6><p class=\"align\">$village</p><hr/>
+             <h6><b>ACE DETAILS</b></h6><hr/>
+             <h6>Name:</h6><p class=\"align\">$ace</p><hr/>
+             <h6>Contact Person:</h6><p class=\"align\">$ace_person</p><hr/>
+             <h6>Contact:</h6><p class=\"align\">$ace_person_contact</p><hr/>
+             <h6>County:</h6><p class=\"align\">$ace_county</p><hr/>
+             <h6>Subcounty:</h6><p class=\"align\">$ace_subcounty</p><hr/>
+                          
+             ";
 
-                            if ($lable == "Dob") {
-                                $value = str_replace("00:00:000", " ", $value);
-                                $birth_date = date_create($value);
-                                $birth_date = date_format($birth_date, "d/m/Y");
-                                echo "<h6>Date of Birth:</h6>
-  
-  <p class=\"align\">$birth_date</p><hr/>";
-                                $age = $util_obj->getAge($value, "Africa/Nairobi");
-                                echo "<h6>Age:</h6>
-  <p class=\"align\">$age</p><hr/>";
-
-                            } elseif ($lable == "Image") {
-                                echo "<h6 hidden>$lable:</h6>
-  <p class=\"align\" hidden>$value</p><hr/>";
-                            } else {
-                                echo "<h6>$lable:</h6>
-  <p class=\"align\">$value</p><hr/>";
-                            }
-                        }
+//        $value=$util_obj->captalizeEachWord($value);
+//        $string=str_replace("biodata_farmer_","",$column);
+//        $string=str_replace("_"," ",$string);
+//        $lable=$util_obj->captalizeEachWord($string);
+//        if($lable!="Picture"){
+//
+//            if($lable=="Dob"){
+//                $value=str_replace("00:00:000"," ",$value);
+//                $birth_date=date_create( $value);
+//                $birth_date=date_format($birth_date,"d/m/Y");
+//                echo"<h6>Date of Birth:</h6>
+//
+//  <p class=\"align\">$birth_date</p><hr/>";
+//                $age=$util_obj->getAge( $value,"Africa/Nairobi");
+//                echo"<h6>Age:</h6>
+//  <p class=\"align\">$age</p><hr/>";
+//
+//            }elseif ($lable == "Image"){
+//                echo"<h6 hidden>$lable:</h6>
+//  <p class=\"align\" hidden>$value</p><hr/>";
+//            }else{
+//                echo"<h6>$lable:</h6>
+//  <p class=\"align\">$value</p><hr/>";
+//            }
+//        }
 
                     }
 
-                    $table = "farmer_location";
-                    $columns = "*";
-                    $where = " dataset_id='$dataset_id' ";
-                    $rows3 = $mCrudFunctions->fetch_rows($table, $columns, $where);
+//    $table="farmer_location";
+//    $columns="*";
+//    $where=" dataset_id='$dataset_id' ";
+//    $rows3= $mCrudFunctions->fetch_rows($table,$columns,$where);
+//
+//    $va=$rows[0]['interview_particulars_va_name'];
+//    $vaphone=$rows[0]['interview_particulars_va_phone_number'];
+//    $vacode=$rows[0]['interview_particulars_va_code'];
+//    echo"<input type=\"hidden\" id=\"va\" value=\"$va\" />";
+//    echo"<input type=\"hidden\" id=\"vaphone\" value=\"$vaphone\" />";
+//    echo"<input type=\"hidden\" id=\"vacode\" value=\"$vacode\" />";
+//
+//    foreach($rows3 as $row){
+//        $column=$row['columns'];
+//        $value=$rows[0][$column];
+//        $value=$util_obj->captalizeEachWord($value);
+//        $string=str_replace("biodata_farmer_location_farmer_","",$column);
+//        $string=str_replace("_"," ",$string);
+//        $lable=$util_obj->captalizeEachWord($string);
+//        if(!strpos($column,'_gps_')){
+//            echo"<h6>$lable:</h6>
+//  <p class=\"align\">$value</p><hr/>";
+//        }
+//
+//
+//    }
 
-                    $va = $rows[0]['interview_particulars_va_name'];
-                    $vaphone = $rows[0]['interview_particulars_va_phone_number'];
-                    $vacode = $rows[0]['interview_particulars_va_code'];
-                    echo "<input type=\"hidden\" id=\"va\" value=\"$va\" />";
-                    echo "<input type=\"hidden\" id=\"vaphone\" value=\"$vaphone\" />";
-                    echo "<input type=\"hidden\" id=\"vacode\" value=\"$vacode\" />";
-
-                    foreach ($rows3 as $row) {
-                        $column = $row['columns'];
-                        $value = $rows[0][$column];
-                        $value = $util_obj->captalizeEachWord($value);
-                        $string = str_replace("biodata_farmer_location_farmer_", "", $column);
-                        $string = str_replace("_", " ", $string);
-                        $lable = $util_obj->captalizeEachWord($string);
-                        if (!strpos($column, '_gps_')) {
-                            echo "<h6>$lable:</h6>
-  <p class=\"align\">$value</p><hr/>";
-                        }
-
-
-                    }
-
-                    echo "</div>";
+                    echo"</div>";
 /////////////////////////////////////////////personal data_ends
 
 
-/////////////////////////////////////////////other data_starts
-//    echo"<div class=\"card\">
-//<h5 class=\"\">Others</h5>";
-//    $table="info_on_other_enterprise";
-//    $columns="*";
-//    $where=" dataset_id='$dataset_id' ";
-//    $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//    foreach($rows5 as $row){
-//        $column=$row['columns'];
-//        $value=$rows[0][$column];
-//        $value=$util_obj->captalizeEachWord($value);
-//        $string="information_on_other_crops_";
-//        $string=str_replace($string,"",$column);
-//        $string=str_replace("_"," ",$string);
-//        $lable=$util_obj->captalizeEachWord($string);
-//        if($value!=null){
-//            echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//        }
-//    }
-//
-//
-//    $table="general_questions";
-//    $columns="*";
-//    $where=" dataset_id='$dataset_id' ";
-//    $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//    foreach($rows6 as $row){
-//        $column=$row['columns'];
-//
-//        $value=$rows[0][$column];
-//        $value=$util_obj->captalizeEachWord($value);
-//        $string="general_questions_";
-//        $string=str_replace($string,"",$column);
-//        $string=str_replace("_"," ",$string);
-//        $lable=$util_obj->captalizeEachWord($string);
-//        if($value!=null){
-//
-//            echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//        }
-//    }
-//
-//    echo"</div>
-//</div>
-//";
-/////////////////////////////////////////////other data_ends
+///////////////////////////////////////////other data_starts
+    echo"<div class=\"card\" hidden='hidden'>
+<h5 class=\"\" hidden='hidden'>Others</h5>";
+    $table="info_on_other_enterprise";
+    $columns="*";
+    $where=" dataset_id='$dataset_id' ";
+    $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+    foreach($rows5 as $row){
+        $column=$row['columns'];
+        $value=$rows[0][$column];
+        $value=$util_obj->captalizeEachWord($value);
+        $string="information_on_other_crops_";
+        $string=str_replace($string,"",$column);
+        $string=str_replace("_"," ",$string);
+        $lable=$util_obj->captalizeEachWord($string);
+        if($value!=null){
+            echo"<h6>$lable:</h6>
+  <p class=\"align\">$value</p><hr/>";
+        }
+    }
+
+
+    $table="general_questions";
+    $columns="*";
+    $where=" dataset_id='$dataset_id' ";
+    $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+    foreach($rows6 as $row){
+        $column=$row['columns'];
+
+        $value=$rows[0][$column];
+        $value=$util_obj->captalizeEachWord($value);
+        $string="general_questions_";
+        $string=str_replace($string,"",$column);
+        $string=str_replace("_"," ",$string);
+        $lable=$util_obj->captalizeEachWord($string);
+        if($value!=null){
+
+            echo"<h6>$lable:</h6>
+  <p class=\"align\">$value</p><hr/>";
+        }
+    }
+
+    echo"</div>
+</div>
+";
+///////////////////////////////////////////other data_ends
 
 /////////////////////////////////////////////production data_starts
 
@@ -1356,8 +1388,9 @@
 
                     $rows_tractor_money_returned = $mCrudFunctions->get_sum("tractor_money_returned_" . $dataset_id, "tractor_money_returned", " farmer_id='$id' ");
 
-                    $yield = $rows_yield[0]['production_data_insured_yield_in_kgs'] == "" ? "N/A" : $rows_yield[0]['production_data_insured_yield_in_kgs'];
+                    $yield = $rows_yield[0]['production_data_average_yield_in_kgs_per_acre'] == "" ? "N/A" : $rows_yield[0]['production_data_average_yield_in_kgs_per_acre'];
                     $crop = $rows_yield[0]['production_data_crop_insured'];
+                    $crop = $util_obj->captalizeEachWord($crop);
 
                     $tractor_money_taken = $tractor_money;//$rows_tractor_money_taken[0]['tractor_money'];
                     //$cash_taken=$rows_cash[0]['cash_taken'];
@@ -1516,8 +1549,8 @@
                     }
 
                     echo "<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
-<div class=\"card prodn\">
-<h5 class=\"\">Production Data</h5>";
+<div class=\"card prodn\" hidden='hidden'>
+<h5 class=\"\" hidden='hidden'>Production Data</h5>";
 
 
                     $table = "production_data";
@@ -1551,7 +1584,8 @@
                     /////////////////////////////////////////////production data_ends
 
 
-                } else {
+                }
+                else {
 
 ///////////////////////////////////////////// lat_long_pic starts
                     echo "<div class=\"row\">

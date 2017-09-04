@@ -486,7 +486,6 @@ $mCrudFunctions = new CrudFunctions();
                 //window.alert(data);
                 $("#sel_village").html(data);
                 // $("#filter_go").click();
-
             }
         });
 
@@ -499,6 +498,7 @@ $mCrudFunctions = new CrudFunctions();
         var va_parish = document.getElementById("sel_parish").value;
         var va_village = document.getElementById("sel_village").value;
         var sel_va = document.getElementById("sel_va");
+        var ace = document.getElementById("sel_ace").value;
 
         var dataset_id = document.getElementById("dataset_id_holder");
         id = dataset_id.value;
@@ -513,7 +513,8 @@ $mCrudFunctions = new CrudFunctions();
                 va_district: va_district,
                 va_county: va_county,
                 va_parish: va_parish,
-                va_village: va_village
+                va_village: va_village,
+                ace: ace
             },
             success: function (data) {
                 //window.alert(data);
@@ -557,6 +558,7 @@ $mCrudFunctions = new CrudFunctions();
         var sel_production_filter = document.getElementById("sel_production_filter");
         var sel_gender = document.getElementById("sel_gender");
         var dataset_id = document.getElementById("dataset_id_holder");
+        var ace = document.getElementById("sel_ace").value;
 
         va = sel_va.value;
         gender = sel_gender.value;
@@ -588,6 +590,7 @@ $mCrudFunctions = new CrudFunctions();
                 parish: parish,
                 village: village,
                 gender: gender,
+                ace: ace,
                 sel_production_id: sel_production_id
             },
             success: function (data) {
@@ -748,6 +751,7 @@ $mCrudFunctions = new CrudFunctions();
             var sel_production_filter = document.getElementById("sel_production_filter");
             var sel_gender = document.getElementById("sel_gender");
             var dataset_id = document.getElementById("dataset_id_holder");
+            var ace = document.getElementById("sel_ace").value;
 
             gender = sel_gender.value;
             id = dataset_id.value;
@@ -760,6 +764,7 @@ $mCrudFunctions = new CrudFunctions();
             age_min = document.getElementById("age_min").value;
             age_max = document.getElementById("age_max").value;
             age = document.getElementById("age_").value;
+//            ace = document.getElementById("sel_ace").value;
 
             $.ajax({
                 type: "POST",
@@ -775,7 +780,7 @@ $mCrudFunctions = new CrudFunctions();
                     parish: parish,
                     village: village,
                     sel_production_id: sel_production_id,
-                    gender: gender, page: page, per_page: per_page, total_count: total_count
+                    gender: gender, page: page, per_page: per_page, total_count: total_count, ace: ace
                 },
                 success: function (data) {
                     //window.alert(data);
@@ -788,11 +793,8 @@ $mCrudFunctions = new CrudFunctions();
             });
 
         } else {
-
             getLoadData(page);
-
         }
-
     }
 
     function getVAPagination(page) {
@@ -897,6 +899,7 @@ $mCrudFunctions = new CrudFunctions();
         age_min = document.getElementById("age_min").value;
         age_max = document.getElementById("age_max").value;
         age = document.getElementById("age_").value;
+        var ace = document.getElementById("sel_ace").value;
 
         va = sel_va.value; //v2
 
@@ -913,7 +916,7 @@ $mCrudFunctions = new CrudFunctions();
                 subcounty: subcounty,
                 parish: parish,
                 village: village,
-                sel_production_id: sel_production_id, gender: gender
+                sel_production_id: sel_production_id, gender: gender, ace: ace
             },
             success: function (data) {
                 //window.alert(data);
@@ -980,7 +983,7 @@ $mCrudFunctions = new CrudFunctions();
         var sel_village = document.getElementById("sel_village");
         var sel_production_filter = document.getElementById("sel_production_filter");
         var dataset_id = document.getElementById("dataset_id_holder");
-
+        var ace = document.getElementById("sel_ace").value;
         var sel_gender = document.getElementById("sel_gender");
 
         gender = sel_gender.value;
@@ -1003,6 +1006,7 @@ $mCrudFunctions = new CrudFunctions();
                 village: village,
                 sel_production_id: sel_production_id,
                 gender: gender,
+                ace: ace,
                 search: search
             },
             success: function (data) {
@@ -1121,26 +1125,25 @@ $mCrudFunctions = new CrudFunctions();
     }
 
     $("#sel_va").change(function () {
-
         filterDataPagination(1);
-        ;
     });
 
     $("#sel_village").change(function () {
         $("#sel_va").val("all");
         filterDataPagination(1);
         getVAs();
-        ;
     });
 
     $("#sel_gender").change(function () {
         filterDataPagination(1);
         //getVAs();
     });
+
     $("#sel_production_filter").change(function () {
         filterDataPagination(1);
 
     });
+
     $("#sel_parish").change(function () {
         $("#sel_va").val("all");
         filterDataPagination(1);
@@ -1161,6 +1164,10 @@ $mCrudFunctions = new CrudFunctions();
         getVAs();
     });
 
+    $("#sel_ace").change(function () {
+        filterDataPagination(1);
+    });
+
     function predictor(farmer_id, acerage) {
 
         $("#acerage").val(acerage);
@@ -1170,6 +1177,7 @@ $mCrudFunctions = new CrudFunctions();
         herbicideInput();
         //window.alert(acerage);
     }
+
     function seedInput() {
         acerage = document.getElementById('acerage').value;
         seed_selected = document.getElementById('seed_selected').value;
@@ -1230,7 +1238,6 @@ $mCrudFunctions = new CrudFunctions();
         }
 
     }
-
 
     function recordFarmInputs() {
 
@@ -1320,7 +1327,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function recordAcerage() {
 
 
@@ -1346,7 +1352,6 @@ $mCrudFunctions = new CrudFunctions();
         });
 
     }
-
 
     function recordCashReturns() {
 
@@ -1383,20 +1388,21 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function showProgressBar() {
         $(".cssload-container").show();
     }
+
     function hideProgressBar() {
         $(".cssload-container").hide();
     }
+
     function showempty() {
         $("#empty-message").show();
     }
+
     function hideempty() {
         $("#empty-message").hide();
     }
-
 
     function UncheckButton() {
         $('#check-all').prop('checked', false);
@@ -1425,7 +1431,6 @@ $mCrudFunctions = new CrudFunctions();
         }
 //window.alert(count);
     }
-
 
     function checkAll() {
         $('#check-all').prop('checked', true);
@@ -1488,7 +1493,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function uncheckAll() {
         $(".check-panel input[type=checkbox]").each(function () {
             var checkbox = $(this);
@@ -1546,7 +1550,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function setmaxrange() {
 
         age_min = parseInt(document.getElementById("age_min").value);
@@ -1575,7 +1578,6 @@ $mCrudFunctions = new CrudFunctions();
 
     }
 
-
     function setage() {
 
         age_min = document.getElementById("age_min").value;
@@ -1596,6 +1598,7 @@ $mCrudFunctions = new CrudFunctions();
 
 
     }
+
     function attachFile(element) {
 
         if (!$(element).hasClass("selected")) {
@@ -1632,7 +1635,6 @@ $mCrudFunctions = new CrudFunctions();
             }
         )
     })
-
 
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);

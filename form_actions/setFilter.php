@@ -16,10 +16,14 @@ if (isset($_POST['va']) && isset($_POST['id'])) {
     $va_county = $_POST['va_county'];
     $va_parish = $_POST['va_parish'];
     $va_village = $_POST['va_village'];
+    $ace = $_POST['ace'];
 
-    echo $va_district;
+//    echo $va_district;
     $row0s = array();
-    if ($va_district == "all") {
+    if($ace == "all"){
+        $row0s = $mCrudFunctions->fetch_rows($table, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) AS interview_particulars_va_code  ,interview_particulars_va_name ", "  1 GROUP BY interview_particulars_va_code ORDER BY interview_particulars_va_name ASC ");
+    }
+    elseif ($va_district == "all") {
         $row0s = $mCrudFunctions->fetch_rows($table, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) AS interview_particulars_va_code  ,interview_particulars_va_name ", "  1 GROUP BY interview_particulars_va_code ORDER BY interview_particulars_va_name ASC ");
 
     } else if ($va_county == "all") {
@@ -29,13 +33,10 @@ if (isset($_POST['va']) && isset($_POST['id'])) {
         $row0s = $mCrudFunctions->fetch_rows($table, "  lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) AS interview_particulars_va_code  ,interview_particulars_va_name ", "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$va_district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$va_county' GROUP BY interview_particulars_va_code ORDER BY interview_particulars_va_name ASC ");
 
     } else if ($va_village == "all") {
-
         $row0s = $mCrudFunctions->fetch_rows($table, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) AS interview_particulars_va_code  ,interview_particulars_va_name ", "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$va_district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$va_county' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$va_parish' GROUP BY interview_particulars_va_code ORDER BY interview_particulars_va_name ASC ");
-
 
     } else {
         $row0s = $mCrudFunctions->fetch_rows($table, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) AS interview_particulars_va_code  ,interview_particulars_va_name ", "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$va_district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$va_county' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$va_parish'  AND TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$va_village'GROUP BY interview_particulars_va_code ORDER BY interview_particulars_va_name ASC ");
-
     }
 
     $f = sizeof($row0s);
@@ -53,11 +54,9 @@ if (isset($_POST['va']) && isset($_POST['id'])) {
 
     }
 
-
     $serialized = array_map('serialize', $temp_array);
     $unique = array_unique($serialized);
     $temp_array = array_intersect_key($temp_array, $unique);
-
 
     foreach ($temp_array as $temp) {
         echo "<option value=\"$temp\">$temp</option>";
@@ -65,6 +64,7 @@ if (isset($_POST['va']) && isset($_POST['id'])) {
 
 }
 $dataset_type = "";
+
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
     $dataset_type = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id='$id'")[0]['dataset_type'];
@@ -74,6 +74,7 @@ if (isset($_POST['prodution_data_id'])) {
     $id = $_POST['prodution_data_id'];
     $dataset_type = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id='$id'")[0]['dataset_type'];
 }
+
 if (isset($_POST['district']) && isset($_POST['id'])) {
 
     $table = "dataset_" . $_POST['id'];
@@ -243,7 +244,6 @@ if (isset($_POST['prodution_data']) && $_POST['prodution_data'] == 'true') {
 
             $value = $util_obj->captalizeEachWord($string);
 
-
             $rows = $mCrudFunctions->fetch_rows($table, "*", " " . $column . " LIKE 'no' OR " . $column . " LIKE 'Yes'");
             if (sizeof($rows) > 0) {
                 $no = "no";
@@ -252,7 +252,6 @@ if (isset($_POST['prodution_data']) && $_POST['prodution_data'] == 'true') {
                 echo "<option value=\"$key$yes$data_id\">$value (YES)</option>";
                 echo "<option value=\"$key$no$data_id\">$value (NO)</option>";
             }
-
         }
 
         $general_data = $mCrudFunctions->fetch_rows("general_questions", "*", " dataset_id='$id' ");
@@ -272,9 +271,7 @@ if (isset($_POST['prodution_data']) && $_POST['prodution_data'] == 'true') {
                 echo "<option value=\"$key$yes$data_id\">$value (YES)</option>";
                 echo "<option value=\"$key$no$data_id\">$value (NO)</option>";
             }
-
         }
-
 
     } else {
 
@@ -293,7 +290,6 @@ if (isset($_POST['prodution_data']) && $_POST['prodution_data'] == 'true') {
 
             $value = $util_obj->captalizeEachWord($string);
 
-
             $rows = $mCrudFunctions->fetch_rows($table, "*", " " . $column . " LIKE 'no' OR " . $column . " LIKE 'Yes'");
             if (sizeof($rows) > 0) {
                 $no = "no";
@@ -302,7 +298,6 @@ if (isset($_POST['prodution_data']) && $_POST['prodution_data'] == 'true') {
                 echo "<option value=\"$key$yes$data_id\">$value (YES)</option>";
                 echo "<option value=\"$key$no$data_id\">$value (NO)</option>";
             }
-
         }
 
         $va_farm_production_data = $mCrudFunctions->fetch_rows("va_farm_production_data", "*", " dataset_id='$id' ");
@@ -322,13 +317,8 @@ if (isset($_POST['prodution_data']) && $_POST['prodution_data'] == 'true') {
                 echo "<option value=\"$key$yes$data_id\">$value (YES)</option>";
                 echo "<option value=\"$key$no$data_id\">$value (NO)</option>";
             }
-
         }
-
-
     }
-
-
 }
 
 //Biyende.

@@ -9,8 +9,6 @@ require_once dirname(dirname(__FILE__))."/php_lib/lib_functions/pagination_class
 
 $mCrudFunctions = new CrudFunctions();
 
-
-
 if(isset($_POST['id'])&&$_POST['id']!=""){
 $origin=$_POST['origin'];
 

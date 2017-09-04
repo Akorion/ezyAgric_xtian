@@ -37,1064 +37,1067 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
     $total_count = !empty($_POST['total_count']) ? (int)$_POST['total_count'] : $total_count_default;
     $pagination_obj = new Pagination($page, $per_page, $total_count);
     $offset = $pagination_obj->getOffset();
+//    echo $offset."<br>";
+
     $gender = $_POST['gender'];
     $va = $_POST['va'];
+    $ace = $_POST['ace'];
     $va = str_replace("(", "-", $va);
     $va = str_replace(")", "", $va);
     $strings = explode('-', $va);
     $va = strtolower($strings[1]); // outputs: india
 
-    if ($_SESSION["account_name"] == $acpcu) {
-//        echo  $id;
-        if (isset($_POST['district']) && $_POST['district'] != "") {
-
-            switch ($_POST['district']) {
-                case  "all" :
-
-////////////////////////////////////////////////////////district all starts
-                    if ($_POST['sel_production_id'] == "all") {
-                        if ($_POST['gender'] == "All") {
-                            if ($_POST['va'] == "all") {
-
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                 output($id, " 1 ORDER BY farmer_name LIMIT $per_page OFFSET $offset ");
-                                echo "</table>";
-
-                            } else {
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY farmer_name LIMIT $per_page OFFSET $offset  ");
-                                echo "</table>";
-                            }
-
-                        } else {
-
-                            if ($_POST['va'] == "all") {
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                output($id, " lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                echo "</table>";
-                            } else {
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                echo "</table>";
-                            }
-                        }
-                    } else {
-
-                        $string = $_POST['sel_production_id'];
-
-                        if (strpos($string, "productionyes") === false) {
-                            if (strpos($string, "productionno") === false) {
-
-                                if (strpos($string, "generalyes") === false) {
-
-                                    if (strpos($string, "generalno") === false) {
-                                    } else {
-                                        $p_id = str_replace("generalno", "", $string);
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id'  ");
-                                        $column = $row[0]['columns'];
-
-                                        if ($_POST['gender'] == "all") {
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " " . $column . " LIKE 'no' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                                echo "</table>";
-                                            }
-
-                                        } else {
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-                                        }
-
-                                    }
-
-                                } else {
-                                    $p_id = str_replace("generalyes", "", $string);
-                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-
-
-                                    if ($_POST['gender'] == "all") {
-                                        if ($_POST['va'] == "all") {
-
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-                                    } else {
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-                                    }
-                                }
-
-                            } else {
-                                $p_id = str_replace("productionno", "", $string);
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-
-                                if ($_POST['gender'] == "all") {
-
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, "  " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, "  " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-                                } else {
-
-
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-
-                                }
-
-
-                            }
-                        } else {
-                            $p_id = str_replace("productionyes", "", $string);
-                            //echo $string;
-                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id'  ");
-                            $column = $row[0]['columns'];
-                            // echo $column;
-                            // output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-                            //echo $per_page;
-                            if ($_POST['gender'] == "all") {
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-                                }
-
-
-                            } else {
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-
-                                }
-
-                            }
-
-                        }
-
-
-                    }
-
-/////////////////////////////////////////////////////////////////////district all ends
-                    break;
-                default:
-
-                    if ($_POST['subcounty'] == "all") {
-                        $district = $_POST['district'];
-
-///////////////////////////////////////////////////////////////////// subcounty all starts
-                        if ($_POST['sel_production_id'] == "all") {
-
-
-                            if ($_POST['gender'] == "all") {
-                                //echo $per_page;
-                                //$snt= filter_var($district, FILTER_SANITIZE_STRING);
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
-                                    echo "</table>";
-
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset");
-                                    echo "</table>";
-                                }
-
-
-                            } else {
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
-                                    echo "</table>";
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-                                }
-
-                            }
-
-                        } else {
-
-                            $mCrudFunctions = new CrudFunctions();
-                            $string = $_POST['sel_production_id'];
-
-                            if (strpos($string, "productionyes") === false) {
-                                if (strpos($string, "productionno") === false) {
-                                    if (strpos($string, "generalyes") === false) {
-                                        if (strpos($string, "generalno") === false) {
-                                        } else {
-                                            $p_id = str_replace("generalno", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            } else {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                }
-
-
-                                            }
-
-                                        }
-
-                                    } else {
-                                        $p_id = str_replace("generalyes", "", $string);
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-
-
-                                        if ($_POST['gender'] == "all") {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-
-                                        } else {
-
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-
-                                        }
-
-
-                                    }
-
-                                } else {
-                                    $p_id = str_replace("productionno", "", $string);
-                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-
-
-                                    if ($_POST['gender'] == "all") {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-
-                                }
-                            } else {
-                                $p_id = str_replace("productionyes", "", $string);
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-
-                                if ($_POST['gender'] == "all") {
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    }
-
-
-                                } else {
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-                                }
-                            }
-                        }
-//////////////////////////////////////////////////////////////////// subcounty all ends
-                    } else {
-                        $subcounty = $_POST['subcounty'];
-                        $district = $_POST['district'];
-                        if ($_POST['parish'] == "all") {
-
-                            ////////////////////////////////////////////////////////////////////// parish all starts
-                            if ($_POST['sel_production_id'] == "all") {
-
-                                if ($_POST['gender'] == "all") {
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-                                } else {
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-
-                                }
-
-
-                            } else {
-
-                                $mCrudFunctions = new CrudFunctions();
-                                $string = $_POST['sel_production_id'];
-
-
-                                if (strpos($string, "productionyes") === false) {
-                                    if (strpos($string, "productionno") === false) {
-                                        if (strpos($string, "generalyes") === false) {
-                                            if (strpos($string, "generalno") === false) {
-                                            } else {
-                                                $p_id = str_replace("generalno", "", $string);
-                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                $column = $row[0]['columns'];
-
-
-                                                if ($_POST['gender'] == "all") {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    }
-
-
-                                                } else {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
-                                                        echo "</table>";
-                                                    }
-
-
-                                                }
-
-                                            }
-
-                                        } else {
-                                            $p_id = str_replace("generalyes", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            } else {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            }
-
-                                        }
-
-                                    } else {
-                                        $p_id = str_replace("productionno", "", $string);
-                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-
-
-                                        if ($_POST['gender'] == "all") {
-
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-                                        } else {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                                echo "</table>";
-                                            }
-
-
-                                        }
-
-                                    }
-                                } else {
-                                    $p_id = str_replace("productionyes", "", $string);
-                                    //echo $string;
-                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-                                    // echo $column;
-
-                                    if ($_POST['gender'] == "all") {
-
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-                                }
-
-                            }
-///////////////////////////////////////////////////////////////////////////////// parish all ends
-                        } else {
-                            $subcounty = $_POST['subcounty'];
-                            $district = $_POST['district'];
-                            $parish = $_POST['parish'];
-
-                            if ($_POST['village'] == "all") {
-
-                                //////////////////////////////////////////////////////////////////////////// village all starts......onmonday
-                                if ($_POST['sel_production_id'] == "all") {
-
-
-                                    if ($_POST['gender'] == "all") {
-
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                            echo "</table>";
-
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-                                } else {
-
-                                    $mCrudFunctions = new CrudFunctions();
-                                    $string = $_POST['sel_production_id'];
-
-
-                                    if (strpos($string, "productionyes") === false) {
-                                        if (strpos($string, "productionno") === false) {
-                                            if (strpos($string, "generalyes") === false) {
-                                                if (strpos($string, "generalno") === false) {
-                                                } else {
-                                                    $p_id = str_replace("generalno", "", $string);
-                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                    $column = $row[0]['columns'];
-
-
-                                                    if ($_POST['gender'] == "all") {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-
-                                                    } else {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " ORDER BY biodata_farmer_name LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-
-                                                    }
-
-                                                }
-                                            } else {
-                                                $p_id = str_replace("generalyes", "", $string);
-                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                $column = $row[0]['columns'];
-
-
-                                                if ($_POST['gender'] == "all") {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    }
-
-                                                } else {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    }
-
-
-                                                }
-
-                                            }
-
-                                        } else {
-                                            $p_id = str_replace("productionno", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                }
-
-                                            } else {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                }
-
-                                            }
-
-
-                                        }
-                                    } else {
-                                        $p_id = str_replace("productionyes", "", $string);
-                                        // echo $string;
-                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        //echo $column;
-
-                                        if ($_POST['gender'] == "all") {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-                                        } else {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            }
-
-
-                                        }
-
-                                    }
-
-                                }
-
-                                /////////////////////////////////////////////////////////////////////////////
-                            } else {
-                                $subcounty = $_POST['subcounty'];
-                                $district = $_POST['district'];
-                                $parish = $_POST['parish'];
-                                $village = $_POST['village'];
-
-
-                                if ($_POST['sel_production_id'] == "all") {
-
-
-                                    if ($_POST['gender'] == "all") {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-
-                                } else {
-
-                                    $mCrudFunctions = new CrudFunctions();
-                                    $string = $_POST['sel_production_id'];
-
-                                    if (strpos($string, "productionyes") === false) {
-                                        if (strpos($string, "productionno") === false) {
-                                            if (strpos($string, "generalyes") === false) {
-                                                if (strpos($string, "generalno") === false) {
-                                                } else {
-                                                    $p_id = str_replace("generalno", "", $string);
-                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                    $column = $row[0]['columns'];
-
-                                                    if ($_POST['gender'] == "all") {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-
-                                                    } else {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-                                                    }
-
-                                                }
-                                            } else {
-                                                $p_id = str_replace("generalyes", "", $string);
-                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                $column = $row[0]['columns'];
-
-
-                                                if ($_POST['gender'] == "all") {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    }
-
-
-                                                } else {
-
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    }
-
-
-                                                }
-
-                                            }
-
-                                        } else {
-                                            $p_id = str_replace("productionno", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            } else {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            }
-
-                                        }
-                                    } else {
-                                        $p_id = str_replace("productionyes", "", $string);
-                                        // echo $string;
-                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        //echo $column;
-
-
-                                        if ($_POST['gender'] == "all") {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            }
-
-
-                                        } else {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            }
-
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                    break;
-            }
-
-        }
-    }
-    else {
+//    if ($_SESSION["account_name"] == $acpcu) {
+////        echo  $id;
+//        if (isset($_POST['district']) && $_POST['district'] != "") {
+//
+//            switch ($_POST['district']) {
+//                case  "all" :
+//
+//////////////////////////////////////////////////////////district all starts
+//                    if ($_POST['sel_production_id'] == "all") {
+//                        if ($_POST['gender'] == "All") {
+//                            if ($_POST['va'] == "all") {
+//
+//                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                 output($id, " 1 ORDER BY farmer_name LIMIT $per_page OFFSET $offset ");
+//                                echo "</table>";
+//
+//                            } else {
+//                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                echo "</table>";
+//                            }
+//
+//                        } else {
+//
+//                            if ($_POST['va'] == "all") {
+//                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                output($id, " lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                echo "</table>";
+//                            } else {
+//                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                echo "</table>";
+//                            }
+//                        }
+//                    } else {
+//
+//                        $string = $_POST['sel_production_id'];
+//
+//                        if (strpos($string, "productionyes") === false) {
+//                            if (strpos($string, "productionno") === false) {
+//
+//                                if (strpos($string, "generalyes") === false) {
+//
+//                                    if (strpos($string, "generalno") === false) {
+//                                    } else {
+//                                        $p_id = str_replace("generalno", "", $string);
+//                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id'  ");
+//                                        $column = $row[0]['columns'];
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " " . $column . " LIKE 'no' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        }
+//
+//                                    }
+//
+//                                } else {
+//                                    $p_id = str_replace("generalyes", "", $string);
+//                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                    $column = $row[0]['columns'];
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//                                        if ($_POST['va'] == "all") {
+//
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//                                    } else {
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//                                    }
+//                                }
+//
+//                            } else {
+//                                $p_id = str_replace("productionno", "", $string);
+//                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                $column = $row[0]['columns'];
+//
+//                                if ($_POST['gender'] == "all") {
+//
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, "  " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, "  " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//                                } else {
+//
+//
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//
+//                                }
+//
+//
+//                            }
+//                        } else {
+//                            $p_id = str_replace("productionyes", "", $string);
+//                            //echo $string;
+//                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id'  ");
+//                            $column = $row[0]['columns'];
+//                            // echo $column;
+//                            // output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
+//                            //echo $per_page;
+//                            if ($_POST['gender'] == "all") {
+//
+//                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                }
+//
+//
+//                            } else {
+//
+//                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//
+//                    }
+//
+///////////////////////////////////////////////////////////////////////district all ends
+//                    break;
+//                default:
+//
+//                    if ($_POST['subcounty'] == "all") {
+//                        $district = $_POST['district'];
+//
+/////////////////////////////////////////////////////////////////////// subcounty all starts
+//                        if ($_POST['sel_production_id'] == "all") {
+//
+//
+//                            if ($_POST['gender'] == "all") {
+//                                //echo $per_page;
+//                                //$snt= filter_var($district, FILTER_SANITIZE_STRING);
+//                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
+//                                    echo "</table>";
+//
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset");
+//                                    echo "</table>";
+//                                }
+//
+//
+//                            } else {
+//
+//                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
+//                                    echo "</table>";
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                }
+//
+//                            }
+//
+//                        } else {
+//
+//                            $mCrudFunctions = new CrudFunctions();
+//                            $string = $_POST['sel_production_id'];
+//
+//                            if (strpos($string, "productionyes") === false) {
+//                                if (strpos($string, "productionno") === false) {
+//                                    if (strpos($string, "generalyes") === false) {
+//                                        if (strpos($string, "generalno") === false) {
+//                                        } else {
+//                                            $p_id = str_replace("generalno", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            } else {
+//
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                }
+//
+//
+//                                            }
+//
+//                                        }
+//
+//                                    } else {
+//                                        $p_id = str_replace("generalyes", "", $string);
+//                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//
+//                                        } else {
+//
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//
+//                                        }
+//
+//
+//                                    }
+//
+//                                } else {
+//                                    $p_id = str_replace("productionno", "", $string);
+//                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                    $column = $row[0]['columns'];
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//
+//
+//                                }
+//                            } else {
+//                                $p_id = str_replace("productionyes", "", $string);
+//                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                $column = $row[0]['columns'];
+//
+//                                if ($_POST['gender'] == "all") {
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    }
+//
+//
+//                                } else {
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//                                }
+//                            }
+//                        }
+////////////////////////////////////////////////////////////////////// subcounty all ends
+//                    } else {
+//                        $subcounty = $_POST['subcounty'];
+//                        $district = $_POST['district'];
+//                        if ($_POST['parish'] == "all") {
+//
+//                            ////////////////////////////////////////////////////////////////////// parish all starts
+//                            if ($_POST['sel_production_id'] == "all") {
+//
+//                                if ($_POST['gender'] == "all") {
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//                                } else {
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//
+//                                }
+//
+//
+//                            } else {
+//
+//                                $mCrudFunctions = new CrudFunctions();
+//                                $string = $_POST['sel_production_id'];
+//
+//
+//                                if (strpos($string, "productionyes") === false) {
+//                                    if (strpos($string, "productionno") === false) {
+//                                        if (strpos($string, "generalyes") === false) {
+//                                            if (strpos($string, "generalno") === false) {
+//                                            } else {
+//                                                $p_id = str_replace("generalno", "", $string);
+//                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                $column = $row[0]['columns'];
+//
+//
+//                                                if ($_POST['gender'] == "all") {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    }
+//
+//
+//                                                } else {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
+//                                                        echo "</table>";
+//                                                    }
+//
+//
+//                                                }
+//
+//                                            }
+//
+//                                        } else {
+//                                            $p_id = str_replace("generalyes", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            } else {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            }
+//
+//                                        }
+//
+//                                    } else {
+//                                        $p_id = str_replace("productionno", "", $string);
+//                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//
+//
+//                                        if ($_POST['gender'] == "all") {
+//
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                                echo "</table>";
+//                                            }
+//
+//
+//                                        }
+//
+//                                    }
+//                                } else {
+//                                    $p_id = str_replace("productionyes", "", $string);
+//                                    //echo $string;
+//                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                    $column = $row[0]['columns'];
+//                                    // echo $column;
+//
+//                                    if ($_POST['gender'] == "all") {
+//
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//
+//                                }
+//
+//                            }
+/////////////////////////////////////////////////////////////////////////////////// parish all ends
+//                        } else {
+//                            $subcounty = $_POST['subcounty'];
+//                            $district = $_POST['district'];
+//                            $parish = $_POST['parish'];
+//
+//                            if ($_POST['village'] == "all") {
+//
+//                                //////////////////////////////////////////////////////////////////////////// village all starts......onmonday
+//                                if ($_POST['sel_production_id'] == "all") {
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                            echo "</table>";
+//
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//                                } else {
+//
+//                                    $mCrudFunctions = new CrudFunctions();
+//                                    $string = $_POST['sel_production_id'];
+//
+//
+//                                    if (strpos($string, "productionyes") === false) {
+//                                        if (strpos($string, "productionno") === false) {
+//                                            if (strpos($string, "generalyes") === false) {
+//                                                if (strpos($string, "generalno") === false) {
+//                                                } else {
+//                                                    $p_id = str_replace("generalno", "", $string);
+//                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                    $column = $row[0]['columns'];
+//
+//
+//                                                    if ($_POST['gender'] == "all") {
+//
+//                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//
+//                                                    } else {
+//
+//                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " ORDER BY biodata_farmer_name LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//
+//                                                    }
+//
+//                                                }
+//                                            } else {
+//                                                $p_id = str_replace("generalyes", "", $string);
+//                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                $column = $row[0]['columns'];
+//
+//
+//                                                if ($_POST['gender'] == "all") {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    }
+//
+//                                                } else {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    }
+//
+//
+//                                                }
+//
+//                                            }
+//
+//                                        } else {
+//                                            $p_id = str_replace("productionno", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                }
+//
+//                                            } else {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                }
+//
+//                                            }
+//
+//
+//                                        }
+//                                    } else {
+//                                        $p_id = str_replace("productionyes", "", $string);
+//                                        // echo $string;
+//                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//                                        //echo $column;
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            }
+//
+//
+//                                        }
+//
+//                                    }
+//
+//                                }
+//
+//                                /////////////////////////////////////////////////////////////////////////////
+//                            } else {
+//                                $subcounty = $_POST['subcounty'];
+//                                $district = $_POST['district'];
+//                                $parish = $_POST['parish'];
+//                                $village = $_POST['village'];
+//
+//
+//                                if ($_POST['sel_production_id'] == "all") {
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//
+//
+//                                } else {
+//
+//                                    $mCrudFunctions = new CrudFunctions();
+//                                    $string = $_POST['sel_production_id'];
+//
+//                                    if (strpos($string, "productionyes") === false) {
+//                                        if (strpos($string, "productionno") === false) {
+//                                            if (strpos($string, "generalyes") === false) {
+//                                                if (strpos($string, "generalno") === false) {
+//                                                } else {
+//                                                    $p_id = str_replace("generalno", "", $string);
+//                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                    $column = $row[0]['columns'];
+//
+//                                                    if ($_POST['gender'] == "all") {
+//
+//                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//
+//                                                    } else {
+//
+//                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//                                                    }
+//
+//                                                }
+//                                            } else {
+//                                                $p_id = str_replace("generalyes", "", $string);
+//                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                $column = $row[0]['columns'];
+//
+//
+//                                                if ($_POST['gender'] == "all") {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    }
+//
+//
+//                                                } else {
+//
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    }
+//
+//
+//                                                }
+//
+//                                            }
+//
+//                                        } else {
+//                                            $p_id = str_replace("productionno", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            } else {
+//
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            }
+//
+//                                        }
+//                                    } else {
+//                                        $p_id = str_replace("productionyes", "", $string);
+//                                        // echo $string;
+//                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//                                        //echo $column;
+//
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            }
+//
+//
+//                                        } else {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>pH</th><th>Organic Matter</th><th>Nitrogen</th><th>Phosphorous</th><th>Potassium</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            }
+//
+//
+//                                        }
+//
+//                                    }
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                    break;
+//            }
+//
+//        }
+//    }
+//    else {
         if (isset($_POST['district']) && $_POST['district'] != "") {
 
             switch ($_POST['district']) {
@@ -1103,1084 +1106,1032 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 ////////////////////////////////////////////////////////district all starts
                     if ($_POST['sel_production_id'] == "all") {
                         if ($_POST['gender'] == "all") {
-                            ///v2 code interview_particulars_va_code
-                            if ($_POST['va'] == "all") {
-//                            echo "Dataset: $dt_st_name";
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                output($id, " 1 ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                echo "</table>";
+//                            if($_POST['ace'] == "all"){
+                                if ($_POST['va'] == "all") {
+    //
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+                                      output($id, " 1 ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+                                    echo "</table>";
 
-                            } else {
-//                            echo "Dataset: $dt_st_name";
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th> <th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                echo "</table>";
-                            }
-
-
-                        } else {
+                                }
+                                else {
+    //                            echo "Dataset: $dt_st_name";
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+                                      output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+                                    echo "</table>";
+                                }
+//                            }
+//                            else {
+//                                if ($_POST['va'] == "all") {
+//                                    //
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " biodata_farmer_organization_name LIKE $ace ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                }
+//                                else {
+//                                    //                            echo "Dataset: $dt_st_name";
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                    echo "</table>";
+//                                }
+//                            }
+                        }
+                        else {
                             //
                             //echo $gender;
 
                             if ($_POST['va'] == "all") {
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
                                 output($id, " lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
                             } else {
-                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
                                 output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
                             }
 
-
                         }
-
-                    } else {
-
-
-                        $string = $_POST['sel_production_id'];
-
-
-                        if (strpos($string, "productionyes") === false) {
-                            if (strpos($string, "productionno") === false) {
-
-                                if (strpos($string, "generalyes") === false) {
-
-                                    if (strpos($string, "generalno") === false) {
-                                    } else {
-                                        $p_id = str_replace("generalno", "", $string);
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id'  ");
-                                        $column = $row[0]['columns'];
-
-                                        if ($_POST['gender'] == "all") {
-
-
-                                            ///v2 code interview_particulars_va_code
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " " . $column . " LIKE 'no' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                                echo "</table>";
-                                            }
-
-                                        } else {
-                                            //
-
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-                                        }
-
-                                    }
-
-                                } else {
-                                    $p_id = str_replace("generalyes", "", $string);
-                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-
-
-                                    if ($_POST['gender'] == "all") {
-
-
-                                        ////lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-                                }
-
-                            } else {
-                                $p_id = str_replace("productionno", "", $string);
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-
-                                if ($_POST['gender'] == "all") {
-
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, "  " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, "  " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-                                } else {
-
-
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-
-                                }
-
-
-                            }
-                        } else {
-                            $p_id = str_replace("productionyes", "", $string);
-                            //echo $string;
-                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id'  ");
-                            $column = $row[0]['columns'];
-                            // echo $column;
-                            // output($id,"  ".$column." LIKE 'Yes' LIMIT $per_page OFFSET $offset ");
-                            //echo $per_page;
-                            if ($_POST['gender'] == "all") {
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-                                }
-
-
-                            } else {
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-
-                                }
-
-                            }
-
-                        }
-
 
                     }
+//                    else {
+//
+//
+//                        $string = $_POST['sel_production_id'];
+//
+//
+//                        if (strpos($string, "productionyes") === false) {
+//                            if (strpos($string, "productionno") === false) {
+//
+//                                if (strpos($string, "generalyes") === false) {
+//
+//                                    if (strpos($string, "generalno") === false) {
+//                                    } else {
+//                                        $p_id = str_replace("generalno", "", $string);
+//                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id'  ");
+//                                        $column = $row[0]['columns'];
+//
+//                                        if ($_POST['gender'] == "all") {
+//
+//
+//                                            ///v2 code interview_particulars_va_code
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " " . $column . " LIKE 'no' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//                                            //
+//
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        }
+//
+//                                    }
+//
+//                                } else {
+//                                    $p_id = str_replace("generalyes", "", $string);
+//                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                    $column = $row[0]['columns'];
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//
+//                                        if ($_POST['va'] == "all") {
+//
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//                                    } else {
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//                                    }
+//                                }
+//
+//                            } else {
+//                                $p_id = str_replace("productionno", "", $string);
+//                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                $column = $row[0]['columns'];
+//
+//                                if ($_POST['gender'] == "all") {
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, "  " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, "  " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//                                } else {
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            $p_id = str_replace("productionyes", "", $string);
+//                            //echo $string;
+//                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id'  ");
+//                            $column = $row[0]['columns'];
+//                            if ($_POST['gender'] == "all") {
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                }
+//
+//
+//                            } else {
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                }
+//                            }
+//                        }
+//                    }
 
 /////////////////////////////////////////////////////////////////////district all ends
-                    break;
-                default:
-
-                    if ($_POST['subcounty'] == "all") {
-                        $district = $_POST['district'];
-
-///////////////////////////////////////////////////////////////////// subcounty all starts
-                        if ($_POST['sel_production_id'] == "all") {
-
-
-                            if ($_POST['gender'] == "all") {
-                                //echo $per_page;
-                                //$snt= filter_var($district, FILTER_SANITIZE_STRING);
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
-                                    echo "</table>";
-
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset");
-                                    echo "</table>";
-                                }
-
-
-                            } else {
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
-                                    echo "</table>";
-                                } else {
-                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                    echo "</table>";
-                                }
-
-                            }
-
-                        } else {
-
-                            $mCrudFunctions = new CrudFunctions();
-                            $string = $_POST['sel_production_id'];
-
-
-                            if (strpos($string, "productionyes") === false) {
-                                if (strpos($string, "productionno") === false) {
-                                    if (strpos($string, "generalyes") === false) {
-                                        if (strpos($string, "generalno") === false) {
-                                        } else {
-                                            $p_id = str_replace("generalno", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            } else {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                }
-
-
-                                            }
-
-                                        }
-
-                                    } else {
-                                        $p_id = str_replace("generalyes", "", $string);
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-
-
-                                        if ($_POST['gender'] == "all") {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-
-                                        } else {
-
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-
-                                        }
-
-
-                                    }
-
-                                } else {
-                                    $p_id = str_replace("productionno", "", $string);
-                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-
-
-                                    if ($_POST['gender'] == "all") {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-
-                                }
-                            } else {
-                                $p_id = str_replace("productionyes", "", $string);
-                                //echo $string;
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-                                //echo $column;
-
-                                if ($_POST['gender'] == "all") {
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    }
-
-
-                                } else {
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-                                }
-
-
-                            }
-
-                        }
-//////////////////////////////////////////////////////////////////// subcounty all ends
-                    } else {
-                        $subcounty = $_POST['subcounty'];
-                        $district = $_POST['district'];
-                        if ($_POST['parish'] == "all") {
-
-                            ////////////////////////////////////////////////////////////////////// parish all starts
-                            if ($_POST['sel_production_id'] == "all") {
-
-                                if ($_POST['gender'] == "all") {
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-                                } else {
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    } else {
-                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                        echo "</table>";
-                                    }
-
-
-                                }
-
-
-                            } else {
-
-                                $mCrudFunctions = new CrudFunctions();
-                                $string = $_POST['sel_production_id'];
-
-
-                                if (strpos($string, "productionyes") === false) {
-                                    if (strpos($string, "productionno") === false) {
-                                        if (strpos($string, "generalyes") === false) {
-                                            if (strpos($string, "generalno") === false) {
-                                            } else {
-                                                $p_id = str_replace("generalno", "", $string);
-                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                $column = $row[0]['columns'];
-
-
-                                                if ($_POST['gender'] == "all") {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    }
-
-
-                                                } else {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
-                                                        echo "</table>";
-                                                    }
-
-
-                                                }
-
-                                            }
-
-                                        } else {
-                                            $p_id = str_replace("generalyes", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            } else {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            }
-
-                                        }
-
-                                    } else {
-                                        $p_id = str_replace("productionno", "", $string);
-                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-
-
-                                        if ($_POST['gender'] == "all") {
-
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-                                        } else {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                                echo "</table>";
-                                            }
-
-
-                                        }
-
-                                    }
-                                } else {
-                                    $p_id = str_replace("productionyes", "", $string);
-                                    //echo $string;
-                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-                                    // echo $column;
-
-                                    if ($_POST['gender'] == "all") {
-
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-                                }
-
-                            }
-///////////////////////////////////////////////////////////////////////////////// parish all ends
-                        } else {
-                            $subcounty = $_POST['subcounty'];
-                            $district = $_POST['district'];
-                            $parish = $_POST['parish'];
-
-                            if ($_POST['village'] == "all") {
-
-                                //////////////////////////////////////////////////////////////////////////// village all starts......onmonday
-                                if ($_POST['sel_production_id'] == "all") {
-
-
-                                    if ($_POST['gender'] == "all") {
-
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                            echo "</table>";
-
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-                                } else {
-
-                                    $mCrudFunctions = new CrudFunctions();
-                                    $string = $_POST['sel_production_id'];
-
-
-                                    if (strpos($string, "productionyes") === false) {
-                                        if (strpos($string, "productionno") === false) {
-                                            if (strpos($string, "generalyes") === false) {
-                                                if (strpos($string, "generalno") === false) {
-                                                } else {
-                                                    $p_id = str_replace("generalno", "", $string);
-                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                    $column = $row[0]['columns'];
-
-
-                                                    if ($_POST['gender'] == "all") {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-
-                                                    } else {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " ORDER BY biodata_farmer_name LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-
-                                                    }
-
-                                                }
-                                            } else {
-                                                $p_id = str_replace("generalyes", "", $string);
-                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                $column = $row[0]['columns'];
-
-
-                                                if ($_POST['gender'] == "all") {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    }
-
-                                                } else {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    }
-
-
-                                                }
-
-                                            }
-
-                                        } else {
-                                            $p_id = str_replace("productionno", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                }
-
-                                            } else {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                }
-
-                                            }
-
-
-                                        }
-                                    } else {
-                                        $p_id = str_replace("productionyes", "", $string);
-                                        // echo $string;
-                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        //echo $column;
-
-                                        if ($_POST['gender'] == "all") {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            }
-
-                                        } else {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            }
-
-
-                                        }
-
-                                    }
-
-                                }
-
-                                /////////////////////////////////////////////////////////////////////////////
-                            } else {
-                                $subcounty = $_POST['subcounty'];
-                                $district = $_POST['district'];
-                                $parish = $_POST['parish'];
-                                $village = $_POST['village'];
-
-
-                                if ($_POST['sel_production_id'] == "all") {
-
-
-                                    if ($_POST['gender'] == "all") {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        }
-
-
-                                    } else {
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-                                        } else {
-                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                            echo "</table>";
-
-                                        }
-
-
-                                    }
-
-
-                                } else {
-
-                                    $mCrudFunctions = new CrudFunctions();
-                                    $string = $_POST['sel_production_id'];
-
-                                    if (strpos($string, "productionyes") === false) {
-                                        if (strpos($string, "productionno") === false) {
-                                            if (strpos($string, "generalyes") === false) {
-                                                if (strpos($string, "generalno") === false) {
-                                                } else {
-                                                    $p_id = str_replace("generalno", "", $string);
-                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                    $column = $row[0]['columns'];
-
-                                                    if ($_POST['gender'] == "all") {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-
-                                                    } else {
-
-                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-
-                                                        if ($_POST['va'] == "all") {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        } else {
-                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-
-                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                            echo "</table>";
-
-                                                        }
-
-                                                    }
-
-                                                }
-                                            } else {
-                                                $p_id = str_replace("generalyes", "", $string);
-                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                                $column = $row[0]['columns'];
-
-
-                                                if ($_POST['gender'] == "all") {
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-                                                    }
-
-
-                                                } else {
-
-                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                    if ($_POST['va'] == "all") {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    } else {
-                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                        echo "</table>";
-
-                                                    }
-
-
-                                                }
-
-                                            }
-
-                                        } else {
-                                            $p_id = str_replace("productionno", "", $string);
-                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-
-
-                                            if ($_POST['gender'] == "all") {
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            } else {
-
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                                if ($_POST['va'] == "all") {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                } else {
-                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                    echo "</table>";
-                                                }
-
-
-                                            }
-
-                                        }
-                                    } else {
-                                        $p_id = str_replace("productionyes", "", $string);
-                                        // echo $string;
-                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        //echo $column;
-
-
-                                        if ($_POST['gender'] == "all") {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            }
-
-
-                                        } else {
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                            if ($_POST['va'] == "all") {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-                                            } else {
-                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Number of Gardens</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
-                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
-                                                echo "</table>";
-
-                                            }
-
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                    break;
+                break;
+
+//                default:
+//                    if ($_POST['subcounty'] == "all") {
+//                        $district = $_POST['district'];
+//
+/////////////////////////////////////////////////////////////////////// subcounty all starts
+//                        if ($_POST['sel_production_id'] == "all") {
+//
+//
+//                            if ($_POST['gender'] == "all") {
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' ORDER BY biodata_farmer_name  LIMIT $per_page OFFSET $offset");
+//                                    echo "</table>";
+//
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset");
+//                                    echo "</table>";
+//                                }
+//
+//
+//                            } else {
+//
+//                                if ($_POST['va'] == "all") {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
+//                                    echo "</table>";
+//                                } else {
+//                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                    echo "</table>";
+//                                }
+//                            }
+//
+//                        } else {
+//
+//                            $mCrudFunctions = new CrudFunctions();
+//                            $string = $_POST['sel_production_id'];
+//
+//                            if (strpos($string, "productionyes") === false) {
+//                                if (strpos($string, "productionno") === false) {
+//                                    if (strpos($string, "generalyes") === false) {
+//                                        if (strpos($string, "generalno") === false) {
+//                                        } else {
+//                                            $p_id = str_replace("generalno", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//                                            if ($_POST['gender'] == "all") {
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            } else {
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//                                            }
+//                                        }
+//
+//                                    } else {
+//                                        $p_id = str_replace("generalyes", "", $string);
+//                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//                                        }
+//                                    }
+//
+//                                } else {
+//                                    $p_id = str_replace("productionno", "", $string);
+//                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                    $column = $row[0]['columns'];
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//                                    }
+//                                }
+//                            } else {
+//                                $p_id = str_replace("productionyes", "", $string);
+//                                //echo $string;
+//                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                $column = $row[0]['columns'];
+//                                //echo $column;
+//
+//                                if ($_POST['gender'] == "all") {
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    }
+//
+//
+//                                } else {
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//                                }
+//
+//
+//                            }
+//
+//                        }
+////////////////////////////////////////////////////////////////////// subcounty all ends
+//                    }
+//                    else {
+//                        $subcounty = $_POST['subcounty'];
+//                        $district = $_POST['district'];
+//                        if ($_POST['parish'] == "all") {
+//
+//                            ////////////////////////////////////////////////////////////////////// parish all starts
+//                            if ($_POST['sel_production_id'] == "all") {
+//
+//                                if ($_POST['gender'] == "all") {
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//                                } else {
+//                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                    if ($_POST['va'] == "all") {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    } else {
+//                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                        echo "</table>";
+//                                    }
+//
+//
+//                                }
+//
+//
+//                            } else {
+//
+//                                $mCrudFunctions = new CrudFunctions();
+//                                $string = $_POST['sel_production_id'];
+//
+//
+//                                if (strpos($string, "productionyes") === false) {
+//                                    if (strpos($string, "productionno") === false) {
+//                                        if (strpos($string, "generalyes") === false) {
+//                                            if (strpos($string, "generalno") === false) {
+//                                            } else {
+//                                                $p_id = str_replace("generalno", "", $string);
+//                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                $column = $row[0]['columns'];
+//
+//
+//                                                if ($_POST['gender'] == "all") {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    }
+//
+//
+//                                                } else {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        echo "<table>" . output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ") . "</table>";
+//                                                        echo "</table>";
+//                                                    }
+//
+//
+//                                                }
+//
+//                                            }
+//
+//                                        } else {
+//                                            $p_id = str_replace("generalyes", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            } else {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            }
+//
+//                                        }
+//
+//                                    } else {
+//                                        $p_id = str_replace("productionno", "", $string);
+//                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//
+//
+//                                        if ($_POST['gender'] == "all") {
+//
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                                echo "</table>";
+//                                            }
+//
+//
+//                                        }
+//
+//                                    }
+//                                } else {
+//                                    $p_id = str_replace("productionyes", "", $string);
+//                                    //echo $string;
+//                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                    $column = $row[0]['columns'];
+//                                    // echo $column;
+//
+//                                    if ($_POST['gender'] == "all") {
+//
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//
+//                                }
+//
+//                            }
+/////////////////////////////////////////////////////////////////////////////////// parish all ends
+//                        } else {
+//                            $subcounty = $_POST['subcounty'];
+//                            $district = $_POST['district'];
+//                            $parish = $_POST['parish'];
+//
+//                            if ($_POST['village'] == "all") {
+//
+//                                //////////////////////////////////////////////////////////////////////////// village all starts......onmonday
+//                                if ($_POST['sel_production_id'] == "all") {
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                            echo "</table>";
+//
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND biodata_farmer_location_farmer_parish LIKE '%$parish%' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset  ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//                                } else {
+//
+//                                    $mCrudFunctions = new CrudFunctions();
+//                                    $string = $_POST['sel_production_id'];
+//
+//
+//                                    if (strpos($string, "productionyes") === false) {
+//                                        if (strpos($string, "productionno") === false) {
+//                                            if (strpos($string, "generalyes") === false) {
+//                                                if (strpos($string, "generalno") === false) {
+//                                                } else {
+//                                                    $p_id = str_replace("generalno", "", $string);
+//                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                    $column = $row[0]['columns'];
+//
+//
+//                                                    if ($_POST['gender'] == "all") {
+//
+//                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//
+//                                                    } else {
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " ORDER BY biodata_farmer_name LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//
+//                                                    }
+//
+//                                                }
+//                                            } else {
+//                                                $p_id = str_replace("generalyes", "", $string);
+//                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                $column = $row[0]['columns'];
+//
+//
+//                                                if ($_POST['gender'] == "all") {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    }
+//
+//                                                } else {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender'  AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    }
+//
+//
+//                                                }
+//
+//                                            }
+//
+//                                        } else {
+//                                            $p_id = str_replace("productionno", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                }
+//
+//                                            } else {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                }
+//
+//                                            }
+//
+//
+//                                        }
+//                                    } else {
+//                                        $p_id = str_replace("productionyes", "", $string);
+//                                        // echo $string;
+//                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//                                        //echo $column;
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            }
+//
+//                                        } else {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            }
+//
+//
+//                                        }
+//
+//                                    }
+//
+//                                }
+//
+//                                /////////////////////////////////////////////////////////////////////////////
+//                            } else {
+//                                $subcounty = $_POST['subcounty'];
+//                                $district = $_POST['district'];
+//                                $parish = $_POST['parish'];
+//                                $village = $_POST['village'];
+//
+//
+//                                if ($_POST['sel_production_id'] == "all") {
+//
+//
+//                                    if ($_POST['gender'] == "all") {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        }
+//
+//
+//                                    } else {
+//                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//                                        if ($_POST['va'] == "all") {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//                                        } else {
+//                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                            echo "</table>";
+//
+//                                        }
+//
+//
+//                                    }
+//
+//
+//                                } else {
+//
+//                                    $mCrudFunctions = new CrudFunctions();
+//                                    $string = $_POST['sel_production_id'];
+//
+//                                    if (strpos($string, "productionyes") === false) {
+//                                        if (strpos($string, "productionno") === false) {
+//                                            if (strpos($string, "generalyes") === false) {
+//                                                if (strpos($string, "generalno") === false) {
+//                                                } else {
+//                                                    $p_id = str_replace("generalno", "", $string);
+//                                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                    $column = $row[0]['columns'];
+//
+//                                                    if ($_POST['gender'] == "all") {
+//
+//                                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//
+//                                                    } else {
+//
+//                                                        if ($_POST['va'] == "all") {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        } else {
+//                                                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//
+//                                                            output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender'  AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                            echo "</table>";
+//
+//                                                        }
+//
+//                                                    }
+//
+//                                                }
+//                                            } else {
+//                                                $p_id = str_replace("generalyes", "", $string);
+//                                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+//                                                $column = $row[0]['columns'];
+//
+//
+//                                                if ($_POST['gender'] == "all") {
+//                                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//                                                    }
+//
+//
+//                                                } else {
+//
+//                                                    if ($_POST['va'] == "all") {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    } else {
+//                                                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                        output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village'  AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                        echo "</table>";
+//
+//                                                    }
+//
+//                                                }
+//
+//                                            }
+//
+//                                        } else {
+//                                            $p_id = str_replace("productionno", "", $string);
+//                                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                            $column = $row[0]['columns'];
+//
+//
+//                                            if ($_POST['gender'] == "all") {
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//
+//
+//                                            } else {
+//
+//                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                                if ($_POST['va'] == "all") {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                } else {
+//                                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                    output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'no'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                    echo "</table>";
+//                                                }
+//                                            }
+//                                        }
+//                                    } else {
+//                                        $p_id = str_replace("productionyes", "", $string);
+//                                        // echo $string;
+//                                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+//                                        $column = $row[0]['columns'];
+//                                        //echo $column;
+//
+//
+//                                        if ($_POST['gender'] == "all") {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            }
+//
+//
+//                                        } else {
+//                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+//
+//                                            if ($_POST['va'] == "all") {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//                                            } else {
+//                                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th><th>Contact</th><th>Enterprise</th><th>Acreage</th><th style='" . hide() . "'>Soil Testing Results</th><th>Details</th></tr></thead>";
+//                                                output($id, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = '$gender' AND   " . $column . " LIKE 'Yes' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
+//                                                echo "</table>";
+//
+//                                            }
+//
+//
+//                                        }
+//
+//                                    }
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                    break;
             }
 
         }
 //    }
 
-    }
+//    }
 }
 
 function output($id, $where)
@@ -2231,81 +2182,76 @@ function output($id, $where)
         if (sizeof($rows) == 0) {
             echo "<p style=\"font-size:1.4em; width:100%; text-align:center; color:#999; margin-top:100px\">No Data</p>";
         } else {
-            if ($_SESSION["account_name"] == $acpcu){
-                    $ress = $db->setResultForQuery('SELECT d.*, s.* FROM `soil_results_364` s INNER JOIN dataset_364 d ON s.`unique_id` = d.`unique_id` ORDER BY s.farmer_name ASC ');
-//                    if($ress){
-                        $sample_results = $db->getFullResultArray();
-//                        echo count($ress_arr);
-//                                            if($mCrudFunctions->check_table_exists('soil_results_'.$id)){
-//                        $sample_results = $mCrudFunctions->fetch_rows('soil_results_'.$id,
-//                            '*','1 ORDER BY farmer_name ASC');
-                        $i=1;
-                        foreach ($sample_results as $results){
-                            $real_id = $results['id'];
-                            $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
-                            $f_id = $results['unique_id'];
-                            echo "<tr>
-                                <td>$i</td>
-                                <td>" . $results['farmer_name'] . "</td>";
-
-                            $ph = $results['ph']; $ph_desc="";
-                            if($ph <= 4.5){ $ph_desc = "Extremely acidic"; }
-                            elseif($ph>=4.6 && $ph<=5.5){ $ph_desc = "Strongly acidic"; }
-                            elseif($ph>=5.6 && $ph<=6.0){ $ph_desc = "Moderately acidic"; }
-                            elseif($ph>=6.1 && $ph<=6.5){ $ph_desc = "Slightly acidic"; }
-                            elseif($ph>=6.6 && $ph<=7.2){ $ph_desc = "Neutral"; }
-                            elseif($ph>=7.3 && $ph<=7.8){ $ph_desc = "Slightly alkaline"; }
-                            elseif($ph>=7.9 && $ph<=8.4){ $ph_desc = "Moderately alkaline"; }
-                            elseif($ph>=8.5 && $ph<=9.0){ $ph_desc = "Strongly alkaline"; }
-                            else{$ph_desc = "Very strongly alkaline";}
-
-                            echo "<td>$ph_desc</td>";
-
-                            $om = $results['om_%'];   $om_desc="";
-                            if($om>=0 && $om<=2.5){$om_desc = "Low" ;}
-                            elseif($om>2.5 && $om<=3.5){$om_desc = "Moderate" ;}
-                            elseif($om>3.5 && $om<=4.9){$om_desc = "High" ;}
-                            else{ $om_desc = "Very High"; }
-
-                            echo "<td>$om_desc</td>";
-
-                            $nitrogen = $results['n_%'];   $nitrogen_desc="";
-                            if($nitrogen < 0.05){$nitrogen_desc = "Very low"; }
-                            elseif($nitrogen >= 0.05 && $nitrogen < 0.15){ $nitrogen_desc = "Low"; }
-                            elseif($nitrogen >= 0.15 && $nitrogen < 0.25){ $nitrogen_desc = "Medium"; }
-                            elseif($nitrogen >= 0.25 && $nitrogen < 0.5){ $nitrogen_desc = "High"; }
-                            else { $nitrogen_desc = "Very high"; }
-
-                            echo  "<td>$nitrogen_desc</td>";
-
-                            $p = $results['p_ppm']; $p_desc="";
-                            if($p>=0 && $p<=12){ $p_desc = "Very Low"; }
-                            elseif($p>=12.5 && $p<=22.5){$p_desc = "Low"; }
-                            elseif($p>=23 && $p<=35.5){$p_desc = "Medium"; }
-                            elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
-                            elseif($p >= 69){$p_desc = "Very High"; }
-
-                            echo "<td>$p_desc</td>";
-
-                            $k = $results['k']; $k_desc="";
-                            if($k>=0 && $k<0.2){ $k_desc = "Very Low"; }
-                            elseif($k>=0.2 && $k<0.3){ $k_desc = "Low"; }
-                            elseif($k>=0.3 && $k<0.7){ $k_desc = "Medium"; }
-                            elseif($k>=0.7 && $k<2.0){ $k_desc = "High"; }
-                            elseif($k>= 2.0){ $k_desc = "Very High"; }
-                            elseif($k =="trace"){ $k_desc = "trace"; }
-
-                            echo "<td>$k_desc</td>
-                                 <td>
-                                    <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a>
-                                 </td>
-                             </tr>";
-                            $i++;
-                        }
-//                    }
-//                    }
-
-                }
+//            if ($_SESSION["account_name"] == $acpcu){
+//                    $ress = $db->setResultForQuery('SELECT d.*, s.* FROM `soil_results_364` s INNER JOIN dataset_364 d ON s.`unique_id` = d.`unique_id` ORDER BY s.farmer_name ASC ');
+//                        $sample_results = $db->getFullResultArray();
+//                        $i=1;
+//                        foreach ($sample_results as $results){
+//                            $real_id = $results['id'];
+//                            $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+//                            $f_id = $results['unique_id'];
+//                            echo "<tr>
+//                                <td>$i</td>
+//                                <td>" . $results['farmer_name'] . "</td>";
+//
+//                            $ph = $results['ph']; $ph_desc="";
+//                            if($ph <= 4.5){ $ph_desc = "Extremely acidic"; }
+//                            elseif($ph>=4.6 && $ph<=5.5){ $ph_desc = "Strongly acidic"; }
+//                            elseif($ph>=5.6 && $ph<=6.0){ $ph_desc = "Moderately acidic"; }
+//                            elseif($ph>=6.1 && $ph<=6.5){ $ph_desc = "Slightly acidic"; }
+//                            elseif($ph>=6.6 && $ph<=7.2){ $ph_desc = "Neutral"; }
+//                            elseif($ph>=7.3 && $ph<=7.8){ $ph_desc = "Slightly alkaline"; }
+//                            elseif($ph>=7.9 && $ph<=8.4){ $ph_desc = "Moderately alkaline"; }
+//                            elseif($ph>=8.5 && $ph<=9.0){ $ph_desc = "Strongly alkaline"; }
+//                            else{$ph_desc = "Very strongly alkaline";}
+//
+//                            echo "<td>$ph_desc</td>";
+//
+//                            $om = $results['om_%'];   $om_desc="";
+//                            if($om>=0 && $om<=2.5){$om_desc = "Low" ;}
+//                            elseif($om>2.5 && $om<=3.5){$om_desc = "Moderate" ;}
+//                            elseif($om>3.5 && $om<=4.9){$om_desc = "High" ;}
+//                            else{ $om_desc = "Very High"; }
+//
+//                            echo "<td>$om_desc</td>";
+//
+//                            $nitrogen = $results['n_%'];   $nitrogen_desc="";
+//                            if($nitrogen < 0.05){$nitrogen_desc = "Very low"; }
+//                            elseif($nitrogen >= 0.05 && $nitrogen < 0.15){ $nitrogen_desc = "Low"; }
+//                            elseif($nitrogen >= 0.15 && $nitrogen < 0.25){ $nitrogen_desc = "Medium"; }
+//                            elseif($nitrogen >= 0.25 && $nitrogen < 0.5){ $nitrogen_desc = "High"; }
+//                            else { $nitrogen_desc = "Very high"; }
+//
+//                            echo  "<td>$nitrogen_desc</td>";
+//
+//                            $p = $results['p_ppm']; $p_desc="";
+//                            if($p>=0 && $p<=12){ $p_desc = "Very Low"; }
+//                            elseif($p>=12.5 && $p<=22.5){$p_desc = "Low"; }
+//                            elseif($p>=23 && $p<=35.5){$p_desc = "Medium"; }
+//                            elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
+//                            elseif($p >= 69){$p_desc = "Very High"; }
+//
+//                            echo "<td>$p_desc</td>";
+//
+//                            $k = $results['k']; $k_desc="";
+//                            if($k>=0 && $k<0.2){ $k_desc = "Very Low"; }
+//                            elseif($k>=0.2 && $k<0.3){ $k_desc = "Low"; }
+//                            elseif($k>=0.3 && $k<0.7){ $k_desc = "Medium"; }
+//                            elseif($k>=0.7 && $k<2.0){ $k_desc = "High"; }
+//                            elseif($k>= 2.0){ $k_desc = "Very High"; }
+//                            elseif($k =="trace"){ $k_desc = "trace"; }
+//
+//                            echo "<td>$k_desc</td>
+//                                 <td>
+//                                    <a class='btn btn-success' href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; width:50%; margin: 0;\">View Details &raquo;</a>
+//                                 </td>
+//                             </tr>";
+//                            $i++;
+//                        }
+////                    }
+////                    }
+//
+//                }
 
             $counter = 1;
             foreach ($rows as $row) {
@@ -2329,6 +2275,7 @@ function output($id, $where)
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
+                $crop = $util_obj->remove_apostrophes($row['production_data_crop_insured']);
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
                 if ($_SESSION['client_id'] == 1) {
@@ -2375,7 +2322,8 @@ function output($id, $where)
                             }
 
 //                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
-                            echo "<td>$total_gardens</td>
+                            echo "
+                                 <!--   <td>$total_gardens</td>  -->
                                     <td> $average</td>";
                         }
 
@@ -2395,20 +2343,18 @@ function output($id, $where)
                 else {
                     echo "<tr>
                            <td>$counter</td>                   
-                           <td>$name</td> <td>$age_ yrs</td>  
-                           <td>" . substr($gender, 0, 1) . "</td>";
+                           <td>$name</td> <td>$phone_number</td>  
+                           <td>$crop</td>";
 
                     $acares = array();
                     $gardens_table = "garden_" . $id;
 
                     if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
-                        //echo $uuid;
 
                         $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
 
                         if (sizeof($gardens) < 0) {
-//                            echo "<td> 0 </td>
-//                                    <td style=\"color:#888\"> 0 </td>";
+
                         } else {
                             $z = 1;
                             foreach ($gardens as $garden) {
@@ -2435,10 +2381,10 @@ function output($id, $where)
                             }
 
 //                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
-                            echo "<td><h6>$total_gardens</h6></td>
+                            echo "
+                                 <!--   <td><h6>$total_gardens</h6></td>  -->
                                     <td style=\"color:#888\"> $average</td>";
                         }
-
 
                     } else {
                         echo "<td> 0 </td>

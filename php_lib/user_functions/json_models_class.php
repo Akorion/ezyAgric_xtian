@@ -575,11 +575,11 @@ class JSONModel
     {
         $json['chart'] = array('type' => $type);
 
-        $json['title'] = array('text'=>'Average Acerage Per ACE');
+        $json['title'] = array('text'=>'Average Acreage Per ACE');
 
         $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
 
-        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Acerage'));
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Acreage'));
 
         $json['credits'] = array('enabled' => false);
 
@@ -594,7 +594,7 @@ class JSONModel
                 "pointPadding" => 0.2,
                 'borderWidth' => 0
             ));
-        $json['series'] = array(array('name' => 'Average Acerage', 'data' => $acerage_arr) );
+        $json['series'] = array(array('name' => 'Average Acreage', 'data' => $acerage_arr) );
         return $json;
     }
 

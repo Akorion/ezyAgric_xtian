@@ -13,23 +13,18 @@ if (isset($_POST['search'])) {
     $search = $_POST['search'];
     output($client_id, $search);
 } else {
-
     output($client_id, "");
-
 }
-
 
 function output($client_id, $search)
 {
     $util_obj = new Utilties();
     $mCrudFunctions = new CrudFunctions();
 
-
     $sql = "";
     if ($search != "") {
         $sql = " AND ( dataset_name LIKE '%$search%' OR dataset_type LIKE '%$search%' OR region LIKE '%$search%'   )  ";
     }
-
 
     $table = "client_datasets_v";
     $columns = "*";

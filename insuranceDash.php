@@ -338,7 +338,7 @@ include("include/preloader.php");
 
     function getLoadOutGrowerDash() {
 
-        token = "outgrower_dash";
+        token = "insurance_dash";
         $.ajax({
             type: "POST",
             url: "form_actions/recordOutgrower.php",
