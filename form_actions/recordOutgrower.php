@@ -596,7 +596,7 @@ switch ($_POST["token"]) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_acreage", 1);
-            if($_SESSION['client_id'] == 16 || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
+            if($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd" || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
             elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
