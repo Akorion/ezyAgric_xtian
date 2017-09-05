@@ -165,22 +165,22 @@ include("include/preloader.php");
 ?>
 
 <div class="container-fluid">
-    <div class="col-md-12 col-sm-4 col-lg-6" style="box-shadow: 2px 2px 2px 2px lightgray;">
+    <div class="col-md-12 col-sm-4 col-lg-4" style="box-shadow: 2px 2px 2px 2px lightgray;">
         <div id="ph_levels" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
             <div id="organic_matter" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
     </div>
-    <!--    <div class="col-lg-3">-->
-    <!--        <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">-->
-    <!--            <div id="soil_composition" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
+    <div class="col-lg-4">
+        <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
+            <div id="lime_requirement" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+            </div>
+        </div>
+    </div>
 </div>
 <br><br>
 
@@ -246,7 +246,7 @@ include("include/preloader.php");
     }
     function soil_texture() {
 
-        token = "farmers_soil_composition";
+        token = "farmers_lime_requirement";
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -256,7 +256,7 @@ include("include/preloader.php");
             },
             success: function (data) {
 
-                $('#soil_composition').highcharts(data);
+                $('#lime_requirement').highcharts(data);
             }
         });
         hideProgressBar();

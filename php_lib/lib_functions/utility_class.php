@@ -443,16 +443,25 @@ public function get_time_string($date_time)
     return date('g:i a', strtotime($date_time));
 }
 
-public function captalizeEachWord($string){
-$string= strtolower($string) ;
-$string=str_replace(".","",$string);
-$string=str_replace("_"," ",$string);
-$string=str_replace('"'," ",$string);
-return ucwords($string);
+public function captalizeEachWord($string)
+{
+    $string = strtolower($string);
+    $string = str_replace(".", "", $string);
+    $string = str_replace("_", " ", $string);
+    $string = str_replace('"', " ", $string);
+    return ucwords($string);
 }
 
+public function capitalizeName($string)
+{
+    $string_arr = explode(' ', $string);
+    $string_arr[0] = ucfirst($string_arr[0]);
+    $string_arr[1] = ucfirst($string_arr[1]);
+    return implode(' ', $string_arr);
+}
 
-public function encrypt_decrypt($action, $string){ 
+public function encrypt_decrypt($action, $string)
+{
     $output = false; 
 
     $encrypt_method = "AES-256-CBC"; 

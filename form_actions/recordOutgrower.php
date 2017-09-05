@@ -631,7 +631,7 @@ switch ($_POST["token"]) {
                        </div>
                        <div class=\"col-md-9\">
                            <h4> <a href='dash.php'> Farmers </a> </h4>
-                         <a style=\"font-size:15px; color:blue\"><b>$farmers</b></a> <br>
+                         <a style=\"font-size:15px; color:blue\"><b>Total Farmers: $farmers</b></a> <br>
                            <!--span style=\"font-size:13px; color:green\">$acerage Acres</span--> 
                             <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
@@ -646,7 +646,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                        <h4> <a href='cooperatives.php'> Cooperatives </a> </h4>
                         
-                           <a style=\"font-size:15px; color:blue\"><b>" . number_format($cash_given_out) . "</b></a> <br>
+                           <a style=\"font-size:15px; color:blue\"><b>Number of Cooperatives: " . number_format($cash_given_out) . "</b></a> <br>
                            <!--a style=\"font-size:13px; color:green\">UGX " . number_format($cash_returned) . " returned</a-->
                            <a href='cooperatives.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
@@ -659,31 +659,14 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-sitemap fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                       <h4> <a href='farmerloans.php'> Acreage </a> </h4>
+                       <h4> <a href='#'> Acreage </a> </h4>
                          
-                           <a style=\"font-size:15px; color:blue\"><b> " . number_format($acerage) . " acres </b></a> <br>
+                           <a style=\"font-size:15px; color:blue\"><b>Total Acreage: " . number_format($acerage) . "</b></a> <br>
                            <!--a style=\"font-size:13px; color:green\"> " . number_format($taken_no_loans) . " farmers didnt get</a-->
-                           <a href='farmerloans.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                           <a href='#'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>";
-
-//                 <div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
-//                   <div class=\"x_panel tile  overflow_hidden\">
-//                       <div class=\"col-md-3\" style=\"background-color:orange; padding:15px; border-radius:2px;color:#fff; margin-top: -20px; \">
-//                           <i class=\"fa fa-leaf fa-3x\"></i>
-//                       </div>
-//                       <div class=\"col-md-9\">
-//                           <h4>Insured farmers</h4>
-//                           <a style=\"font-size:15px; color:blue\"><b> Insured: $insured</b></a> <br>
-//                           <a style=\"font-size:13px; color:green\">Not insured: $not_insured</a>
-//
-//                       </div>
-//                   </div>
-//                 </div>
-// ";
-
-
         break;
 
     case  "insurance_dash":
@@ -702,13 +685,84 @@ switch ($_POST["token"]) {
         $yield = 0;
         $insured = 0;
         $not_insured = 0;
-        $value_of_insured_yield=0;  $premium=0; $levy=0;    $vat=0; $subsidy=0; $farmer_acreage=0;
+        $value_of_insured_yield=0;  $premium=0; $levy=0;    $vat=0; $subsidy=0; $farmer_acreage=0; $real_premium=0; $total_premium=0;
 
         foreach ($rows as $row) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
             if($acreage < 1){ $acreage += $mCrudFunctions->get_sum("dataset_".$row['id'], "production_data_land_size", 1); }
+
+            $results = $mCrudFunctions->fetch_rows("dataset_".$row['id'], "*", "1");
+
+            foreach ($results as $res){
+                $uuid = $util_obj->remove_apostrophes($res['meta_instanceID']);
+                $price_per_kg = $util_obj->remove_apostrophes($res['production_data_price_per_kg']);
+                $insured_yield = $util_obj->remove_apostrophes($res['production_data_insured_yield_in_kgs']);
+
+                $acares = array();   $farmer_acreage = 0;
+                $gardens_table = "garden_" . $row['id'];
+                if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
+                    $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
+
+                    if (sizeof($gardens) < 0) {
+
+                    } else {
+                        $z = 1;
+                        foreach ($gardens as $garden) {
+                            $key = $uuid . "/gardens[$z]";
+                            $data_rows = $mCrudFunctions->fetch_rows($gardens_table, "garden_gps_point_Latitude,garden_gps_point_Longitude", " PARENT_KEY_ ='$key'");
+                            if (sizeof($data_rows) == 0) {
+                                $data_rows = $mCrudFunctions->fetch_rows($gardens_table, "garden_gps_point_Latitude,garden_gps_point_Longitude", " PARENT_KEY_ ='$uuid'");
+                            }
+                            $latitudes = array();
+                            $longitudes = array();
+
+                            foreach ($data_rows as $row_) {
+                                array_push($longitudes, $row_['garden_gps_point_Longitude']);
+                                array_push($latitudes, $row_['garden_gps_point_Latitude']);
+                            }
+                            $acerage = $util_obj->get_acerage_from_geo($latitudes, $longitudes);
+                            array_push($acares, $acerage);
+                            $z++;
+                        }
+                        $total_gardens = sizeof($gardens);
+
+                        if ($total_gardens != 0) {
+                            $farmer_acreage = round(array_sum($acares)/*$total_gardens*/, 2);
+                            $value_of_insured_yield = $farmer_acreage * $price_per_kg * $insured_yield;
+                            $premium = 0.05 * $value_of_insured_yield;
+                            $levy = 0.005 * $premium;
+                            $vat = 0.18 * ($premium + $levy);
+                            if($farmer_acreage <= 5) { $subsidy = 0.5 * $premium; }
+                            else{ $subsidy = 0.3 * $premium; }
+                            $real_premium = ($premium - $subsidy) + $levy + $vat;
+                            $total_premium += $real_premium;
+                        }
+                    }
+
+                } else {
+                    $farmer_acreage = $util_obj->remove_apostrophes($row['production_data_land_size']);
+                    $value_of_insured_yield = $farmer_acreage * $price_per_kg * $insured_yield;
+                    $premium = 0.05 * $value_of_insured_yield;
+                    $levy = 0.005 * $premium;
+                    $vat = 0.18 * ($premium + $levy);
+                    if($farmer_acreage <= 5) { $subsidy = 0.5 * $premium; }
+                    else{ $subsidy = 0.3 * $premium; }
+                    $real_premium = ($premium - $subsidy) + $levy + $vat;
+                    $total_premium += $real_premium;
+                }
+                // --------------- Premium Calculation ------------------
+//                $value_of_insured_yield = $farmer_acreage * $price_per_kg * $insured_yield;
+//                $premium = 0.05 * $value_of_insured_yield;
+//                $levy = 0.005 * $premium;
+//                $vat = 0.18 * ($premium + $levy);
+//                if($farmer_acreage <= 5) { $subsidy = 0.5 * $premium; }
+//                else{ $subsidy = 0.3 * $premium; }
+//                $real_premium = ($premium - $subsidy) + $levy + $vat;
+//                $total_premium += $real_premium;
+            }
+
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
@@ -757,7 +811,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                        <h4> <a href='expenditure.php'> Premium </a> </h4>
                         
-                           <a href='#' style=\"font-size:15px; color:blue\"><b>UGX " . number_format($cash_given_out) . "</b></a> <br>
+                           <span href='#' style=\"font-size:15px; color:blue\"><b>Total Amount(UGX): " . number_format($total_premium) . "</b></span> 
                           
                            <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
@@ -796,30 +850,6 @@ switch ($_POST["token"]) {
 
         break;
 
-
-
 }
 
-/*
-if(isset($_POST["dataset_id"]) &&
- $_POST["dataset_id"]!=''
-)
-{
-
-
-   $dataset_id=$_POST["dataset_id"];
-   $array=array("test1","test2","test3");
-   //print_r($array);
-   $x=$mCrudFunctions->create_table_tb("seedss",$dataset_id,array("test1","test2","test3"));
-
-   echo "HERE".$dataset_id." ".$x;
-
-}else{
-
-   //redirect back to original page
-   echo "HERE";
-   //$util_obj->redirect_to( "../admin/home.php?action=account&success=0&input=incomplete" );
-
-}
-*/
 ?>

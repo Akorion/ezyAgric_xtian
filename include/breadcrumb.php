@@ -32,6 +32,17 @@ $path = $_SERVER["PHP_SELF"];
 	unset($_SESSION["pages"][3]);
 	unset($_SESSION["pages"][4]);
 	break;
+
+    case 'cooperatives.php';
+        $crumb .= "<li><a href=\"./cooperatives.php\">Home</a></li>";
+
+        $_SESSION["pages"][2] = $crumb;
+
+//        unset($_SESSION["pages"][1]);
+//        unset($_SESSION["pages"][2]);
+        unset($_SESSION["pages"][3]);
+        unset($_SESSION["pages"][4]);
+    break;
 	
 	case 'dashboard.php';
         $token = $_GET['token'];
@@ -43,54 +54,55 @@ $path = $_SERVER["PHP_SELF"];
 	break;
 	
 	case 'view.php';
-	$crumb .= $_SESSION["pages"][1];
-	
-	$token=$_GET['token'];
-	$type=$_GET['type'];
-	$o=$_GET['o'];
-	
-	
-	if($_GET['type']=='VA'){
-	$crumb .=  "<li><a href=\"view.php?o=$o&token=$token&type=$type\">Village Agents</a></li>";
-	}else if($_GET['type']=='Farmer'){
-	$crumb .=  "<li><a href=\"view.php?token=$token&type=$type\">Farmers</a></li>";
-	}
-	
-	$_SESSION["pages"][2]=$crumb;
-	
-	unset($_SESSION["pages"][3]);
-	unset($_SESSION["pages"][4]);
+        $crumb .= $_SESSION["pages"][1];
+
+        $token = $_GET['token'];
+        $type = $_GET['type'];
+        $o = $_GET['o'];
+
+
+        if ($_GET['type'] == 'VA') {
+            $crumb .= "<li><a href=\"view.php?o=$o&token=$token&type=$type\">Village Agents</a></li>";
+        } else if ($_GET['type'] == 'Farmer') {
+            $crumb .= "<li><a href=\"view.php?token=$token&type=$type\">Farmers</a></li>";
+        }
+
+        $_SESSION["pages"][2] = $crumb;
+
+        unset($_SESSION["pages"][3]);
+        unset($_SESSION["pages"][4]);
 	break;
+
 	case 'user_details.php';
 	
 //	o=RVNoOG0vSXU2Ykd6V2ZvUmVLQ1dDdz09&s=VmkvTkN3aUdLditMcDlKYWY2Vkozdz09&token=RWF2T2pILzZTNHY0My9NNEdTUSt2UT09&type=VA
-	
-	$s=$_GET['s'];
-	$token=$_GET['token'];
-	$type=$_GET['type'];
-	$o=$_GET['o'];
-	
-	if(strpos($_SESSION["pages"][3],"VA Farmers")){
-	
-	$crumb .= $_SESSION["pages"][3];
-	if($_GET['type']=='VA'){
-	$crumb .=  "<li><a href=\"user_details.php?o=$o&s=$s&token=$token&type=$type\">Village Profile</a></li>";
-	}else if($_GET['type']=='Farmer'){
-	$crumb .=  "<li><a href=\"user_details.php?s=$s&token=$token&type=$type\">Farmer Profile</a></li>";
-	}
-	$_SESSION["pages"][4]=$crumb;
-	
-	}else{
-	
-	$crumb .= $_SESSION["pages"][2];
-	if($_GET['type']=='VA'){
-	$crumb .=  "<li><a href=\"user_details.php?o=$o&s=$s&token=$token&type=$type\">Village Profile</a></li>";
-	}else if($_GET['type']=='Farmer'){
-	$crumb .=  "<li><a href=\"user_details.php?s=$s&token=$token&type=$type\">Farmer Profile</a></li>";
-	}
-	
-	$_SESSION["pages"][3]=$crumb;
-	}
+
+            $s = $_GET['s'];
+            $token = $_GET['token'];
+            $type = $_GET['type'];
+            $o = $_GET['o'];
+
+            if (strpos($_SESSION["pages"][3], "VA Farmers")) {
+
+                $crumb .= $_SESSION["pages"][3];
+                if ($_GET['type'] == 'VA') {
+                    $crumb .= "<li><a href=\"user_details.php?o=$o&s=$s&token=$token&type=$type\">Village Profile</a></li>";
+                } else if ($_GET['type'] == 'Farmer') {
+                    $crumb .= "<li><a href=\"user_details.php?s=$s&token=$token&type=$type\">Farmer Profile</a></li>";
+                }
+                $_SESSION["pages"][4] = $crumb;
+
+            } else {
+
+                $crumb .= $_SESSION["pages"][2];
+                if ($_GET['type'] == 'VA') {
+                    $crumb .= "<li><a href=\"user_details.php?o=$o&s=$s&token=$token&type=$type\">Village Profile</a></li>";
+                } else if ($_GET['type'] == 'Farmer') {
+                    $crumb .= "<li><a href=\"user_details.php?s=$s&token=$token&type=$type\">Farmer Profile</a></li>";
+                }
+
+                $_SESSION["pages"][3] = $crumb;
+            }
 	
 	break;
 	

@@ -809,19 +809,21 @@
 
                 }
                 elseif ($_SESSION["account_name"] == 'Ankole Coffee Producers Cooperative Union Ltd') {
-//    $f_key = $_GET['key'];
-                    $latitude = $util_obj->remove_apostrophes($rows[0]['production_data_garden_gps_Latitude']);
-                    $longitude = $util_obj->remove_apostrophes($rows[0]['production_data_garden_gps_Longitude']);
+                    $bio = $mCrudFunctions->fetch_rows("dataset_".$dataset_id, '*', 'id='.$id);
+
+                    $latitude = $util_obj->remove_apostrophes($bio[0]['production_data_garden_gps_Latitude']);
+                    $longitude = $util_obj->remove_apostrophes($bio[0]['production_data_garden_gps_Longitude']);
+                    $picture = $util_obj->remove_apostrophes($bio[0]['biodata_farmer_picture']);
 
 ///////////////////////////////////////////// lat_long_pic starts
-                    echo "<div class=\" hide row\">
+                    echo "<div class=\"row\">
 <input type=\"hidden\" id=\"latitude\" value=\"$latitude\" />
 <input type=\"hidden\" id=\"longitude\" value=\"$longitude\" />
-<div class=\" hide col-sm-4 col-md-4 col-lg-4\">
- <span class=\"img\" ><img src=\"$picture\" class=\"hide on_map\"></span>
+<div class=\" col-sm-4 col-md-4 col-lg-4\">
+ <span class=\"img\" ><img src=\"$picture\" class=\"on_map\"></span>
 </div>
 
-<div class=\"hide col-sm-5 col-md-5 col-lg-5\">
+<div class=\"col-sm-5 col-md-5 col-lg-5\">
     <h6>Garden location: <span style=\"color:#999\">$latitude , $longitude</span></h6>
 </div>";
                     echo "
@@ -837,17 +839,18 @@
                     $where = " dataset_id='$dataset_id' ";
                     $rows2 = $mCrudFunctions->fetch_rows($table, $columns, $where);
 
-                    $bio = $mCrudFunctions->fetch_rows("dataset_".$dataset_id, '*', 'id='.$id);
-                    $name = $bio[0]['biodata_farmer_name'];
+
+                    $name = $util_obj->capitalizeName($bio[0]['biodata_farmer_name']);
                     $contact = $bio[0]['biodata_farmer_phone_number'];
                     $district = $bio[0]['biodata_farmer_location_farmer_district'];
                     $subcounty = $bio[0]['biodata_farmer_location_farmer_subcounty'];
                     $parish = $bio[0]['biodata_farmer_location_farmer_parish'];
                     $village = $bio[0]['biodata_farmer_location_farmer_village'];
+                    $acreage = $bio[0]['production_data_land_size'];
 
 /////////////////////////////////////////////personal data_starts
-                    echo "<div class=\"row data1 container-fluid\">
-<div class=\"col-sm-12 col-me-5 col-lg-6\">
+                    echo "<div class=\"row data1\">
+<div class=\"col-sm-12 col-me-5 col-lg-5\">
 <div class=\"card\" >
 <h5 class=\"\" style=\"\">Personal Profile</h5>";
 
@@ -909,16 +912,13 @@
 //
 //        }
 
-                    echo "</div>
-             </div>
-             </div>
-            ";
+                    echo "</div>";
 /////////////////////////////////////////////personal data_ends
 
 
-/////////////////////////////////////////other data_starts
-//        echo"<div class=\"card\">
-//<h5 class=\"\">Others</h5>";
+///////////////////////////////////////other data_starts
+        echo"<div class=\"card\" hidden='hidden'>
+<h5 class=\"\" hidden='hidden'>Others</h5>";
 //        $table="info_on_other_enterprise";
 //        $columns="*";
 //        $where=" dataset_id='$dataset_id' ";
@@ -958,86 +958,126 @@
 ////  <p class=\"align\">$value</p><hr/>";
 //            }
 //        }
-//
-//        echo"</div>
-//</div>
-//";
-/////////////////////////////////////////////other data_ends
+        echo"</div>
+</div>
+";
+///////////////////////////////////////////other data_ends
 
 /////////////////////////////////////////////production data_starts
 
-                    $rows_seeds = $mCrudFunctions->fetch_rows("out_grower_input_v", "*", "dataset_id='$dataset_id'AND meta_id='$id' AND item_type='Seed' ");
-                    $rows_fertilizers = $mCrudFunctions->fetch_rows("out_grower_input_v", "*", "dataset_id='$dataset_id'AND meta_id='$id' AND item_type='Fertilizer' ");
-                    $rows_herbicide = $mCrudFunctions->fetch_rows("out_grower_input_v", "*", "dataset_id='$dataset_id'AND meta_id='$id' AND item_type='Herbicide' ");
-                    $cash_taken = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND  meta_id='$id' AND cash_type='cashtaken' ");
 
-                    $tractor_money = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND  meta_id='$id' AND cash_type='tractor' ");
+
+                    $rows_seeds= $mCrudFunctions->fetch_rows("out_grower_input_v","*","dataset_id='$dataset_id'AND meta_id='$id' AND item_type='Seed' ");
+                    $rows_fertilizers= $mCrudFunctions->fetch_rows("out_grower_input_v","*","dataset_id='$dataset_id'AND meta_id='$id' AND item_type='Fertilizer' ");
+                    $rows_herbicide= $mCrudFunctions->fetch_rows("out_grower_input_v","*","dataset_id='$dataset_id'AND meta_id='$id' AND item_type='Herbicide' ");
+                    $cash_taken= (int) $mCrudFunctions->get_sum("out_grower_cashinput_tb","amount"," dataset_id='$dataset_id' AND  meta_id='$id' AND cash_type='cashtaken' ");
+
+                    $tractor_money= (int) $mCrudFunctions->get_sum("out_grower_cashinput_tb","amount"," dataset_id='$dataset_id' AND  meta_id='$id' AND cash_type='tractor' ");
 
                     //$rows_tractor_money_taken= $mCrudFunctions->fetch_rows("tractormoney_".$dataset_id,"*"," farmer_id='$id' ");
+
                     $rows_yield = $mCrudFunctions->fetch_rows("dataset_" . $dataset_id, "*", " id='$id' ");
                     $acres = $rows_yield[0]['production_data_land_size'] == "" ? "N/A" : $rows_yield[0]['production_data_land_size'];
                     $unik_id = $rows_yield[0]['unique_id'];
 
                     $samples = $mCrudFunctions->fetch_rows("soil_results_" . $dataset_id, "*", " unique_id='$unik_id' ");
-                    $ph = $samples[0]['ph'];
-                    $om = $samples[0]['om_%'];
-                    $n = $samples[0]['n_%'];
-                    $p = $samples[0]['p_ppm'];
-                    $k = $samples[0]['k'];
 
-                    $rows_cash_returned = $mCrudFunctions->get_sum("cash_returned_" . $dataset_id, "cash_returned", " farmer_id='$id' ");
+                    /**** ph values and their description ***/
+                    $ph = $samples[0]['ph'];    $ph_desc="";
+                    if($ph <= 4.5){ $ph_desc = "Extremely acidic"; }
+                    elseif($ph>=4.6 && $ph<=5.5){ $ph_desc = "Strongly acidic"; }
+                    elseif($ph>=5.6 && $ph<=6.0){ $ph_desc = "Moderately acidic"; }
+                    elseif($ph>=6.1 && $ph<=6.5){ $ph_desc = "Slightly acidic"; }
+                    elseif($ph>=6.6 && $ph<=7.2){ $ph_desc = "Neutral"; }
+                    elseif($ph>=7.3 && $ph<=7.8){ $ph_desc = "Slightly alkaline"; }
+                    elseif($ph>=7.9 && $ph<=8.4){ $ph_desc = "Moderately alkaline"; }
+                    elseif($ph>=8.5 && $ph<=9.0){ $ph_desc = "Strongly alkaline"; }
+                    else{$ph_desc = "Very strongly alkaline";}
 
-                    $rows_tractor_money_returned = $mCrudFunctions->get_sum("tractor_money_returned_" . $dataset_id, "tractor_money_returned", " farmer_id='$id' ");
+                    /** organic matter values and their decsription / meaning **/
+                    $om = $samples[0]['om_%'];  $om_desc="";
+                    if($om>=0 && $om<=2.5){$om_desc = "Low" ;}
+                    elseif($om>2.5 && $om<=3.5){$om_desc = "Moderate" ;}
+                    elseif($om>3.5 && $om<=4.9){$om_desc = "High" ;}
+                    else{ $om_desc = "Very High"; }
 
-                    $yield = $rows_yield[0]['qty'] == "" ? "N/A" : $rows_yield[0]['qty'] . "KGS";
+                    /** nitrogen values and their meanings **/
+                    $n = $samples[0]['n_%'];    $nitrogen_desc="";
+                    if($n < 0.05){$nitrogen_desc = "Very low"; }
+                    elseif($n >= 0.05 && $n < 0.15){ $nitrogen_desc = "Low"; }
+                    elseif($n >= 0.15 && $n < 0.25){ $nitrogen_desc = "Medium"; }
+                    elseif($n >= 0.25 && $n < 0.5){ $nitrogen_desc = "High"; }
+                    else { $nitrogen_desc = "Very high"; }
 
-                    $tractor_money_taken = $tractor_money;//$rows_tractor_money_taken[0]['tractor_money'];
+                    /** phosphorous values and their meanings **/
+                    $p = $samples[0]['p_ppm'];  $p_desc="";
+                    if($p>=0 && $p<=12){ $p_desc = "Very Low"; }
+                    elseif($p>=12.5 && $p<=22.5){$p_desc = "Low"; }
+                    elseif($p>=23 && $p<=35.5){$p_desc = "Medium"; }
+                    elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
+                    elseif($p >= 69){$p_desc = "Very High"; }
+
+                    /** potassium values and their meanings **/
+                    $k = $samples[0]['k'];  $k_desc="";
+                    if($k>=0 && $k<0.2){ $k_desc = "Very Low"; }
+                    elseif($k>=0.2 && $k<0.3){ $k_desc = "Low"; }
+                    elseif($k>=0.3 && $k<0.7){ $k_desc = "Medium"; }
+                    elseif($k>=0.7 && $k<2.0){ $k_desc = "High"; }
+                    elseif($k>= 2.0){ $k_desc = "Very High"; }
+                    elseif($k =="trace"){ $k_desc = "trace"; }
+
+                    $rows_cash_returned= $mCrudFunctions->get_sum("cash_returned_".$dataset_id,"cash_returned"," farmer_id='$id' ");
+
+                    $rows_tractor_money_returned= $mCrudFunctions->get_sum("tractor_money_returned_".$dataset_id,"tractor_money_returned"," farmer_id='$id' ");
+
+                    $yield=$rows_yield[0]['qty']==""?"N/A": $rows_yield[0]['qty'];
+
+                    $tractor_money_taken=$tractor_money;//$rows_tractor_money_taken[0]['tractor_money'];
                     //$cash_taken=$rows_cash[0]['cash_taken'];
 
-                    $rows_tractor_money_owed = number_format((int)$tractor_money_taken - (int)$rows_tractor_money_returned);
-                    $cash_owed = number_format((int)$cash_taken - (int)$rows_cash_returned);
-                    $cash_taken = number_format($cash_taken);
-                    $rows_cash_returned = number_format($rows_cash_returned);
+                    $rows_tractor_money_owed= number_format((int)$tractor_money_taken-(int)$rows_tractor_money_returned);
+                    $cash_owed= number_format((int)$cash_taken-(int)$rows_cash_returned);
+                    $cash_taken=number_format($cash_taken);
+                    $rows_cash_returned=number_format($rows_cash_returned);
 
-                    $rows_tractor_money_returned = number_format($rows_tractor_money_returned);
-                    $tractor_money_taken = number_format($tractor_money_taken);
+                    $rows_tractor_money_returned=number_format($rows_tractor_money_returned);
+                    $tractor_money_taken=number_format($tractor_money_taken);
 
+//        echo "
+//  <div class=\" col-sm-12 col-md-7 col-lg-7\">
+//    <div class=\"card prodn\">
+//  <h5 class=\"\">Outgrower profile</h5>
+//  <div class=\"caption\">
+//
+//   <h6>Acreage:</h6>
+//   <p id=\"total\">N/A</p><hr/>
+//   <h6>Crop:</h6>
+//   <p id=\"enterprise_\">Coffee</p><hr/>
+//   <h6>Yield:</h6>
+//  <p>$yield KGS</p><hr/>
+//  <h6>VA</h6>
+//  <p id=\"va_\">N/A</p><hr/>
+//  <h6>Cash Taken:</h6>
+//  <p>UGX $cash_taken</p><hr/>
+//  <!--<h6>Cash Paid:</h6>
+//   <p>UGX $rows_cash_returned</p><hr/>
+//  <h6>Cash Owed To Farmer:</h6>
+//  <p>UGX $cash_owed</p><hr/>
+//  -->
+//   <h6>Tractor Amount:</h6>
+//   <p>UGX $tractor_money_taken</p><hr/>
+//  <!--
+//   <h6>Tractor Amount Paid:</h6>
+//   <p>UGX $rows_tractor_money_returned</p><hr/>
+//
+//   <h6>Tractor Amount Owed To Farmer:</h6>
+//   <p>UGX $rows_tractor_money_owed</p><hr/>-->
+//  </div>
+//
+//  </div>
+//</div>";
 
-                    echo "
-  <div class=\" col-sm-12 col-md-7 col-lg-6\">
-    <div class=\"card prodn\">
-  <h5 class=\"\">Outgrower profile</h5>
-  <div class=\"caption\">
-  
-   <h6>Acreage:</h6>
-   <p>$acres</p><hr/>
-   <h6>Crop:</h6>
-   <p id=\"enterprise_\">Coffee</p><hr/>
-   <h6>Yield:</h6>
-  <p>$yield </p><hr/>
-  <h6>VA</h6>
-  <p id=\"va_\">N/A</p><hr/>
-  <h6>Cash Taken:</h6>
-  <p>UGX $cash_taken</p><hr/>
-  <!--<h6>Cash Paid:</h6>
-   <p>UGX $rows_cash_returned</p><hr/>
-  <h6>Cash Owed To Farmer:</h6>
-  <p>UGX $cash_owed</p><hr/>  
-  -->
-   <h6>Tractor Amount:</h6>
-   <p>UGX $tractor_money_taken</p><hr/>
-  <!-- 
-   <h6>Tractor Amount Paid:</h6>
-   <p>UGX $rows_tractor_money_returned</p><hr/>
-   
-   <h6>Tractor Amount Owed To Farmer:</h6>
-   <p>UGX $rows_tractor_money_owed</p><hr/>-->
-  </div>
-
-  </div>
-</div>";
-
-                    if (sizeof($rows_seeds) > 0) {
+                    if( sizeof($rows_seeds)>0){
                         echo "
   <div class=\" col-sm-12 col-md-2 col-lg-2\">
     <div class=\"card\">
@@ -1051,14 +1091,14 @@
           </tr>
         </thead>
         <tbody>";
-                        $ss = 0;
-                        foreach ($rows_seeds as $seed) {
+                        $ss=0;
+                        foreach( $rows_seeds as $seed){
                             $ss++;
-                            $reciept = $seed['reciept_url'];
-                            $type = $seed['item'];
-                            $qty = $seed['qty'];
-                            $units = $seed['units'];
-                            echo "<tr class='open-image' data-target='images/va_receipt/$reciept'>
+                            $reciept=$seed['reciept_url'];
+                            $type=$seed['item'];
+                            $qty=$seed['qty'];
+                            $units=$seed['units'];
+                            echo"<tr class='open-image' data-target='images/va_receipt/$reciept'>
 		   <td ><a >$ss</a></td>
             <td >$type</td>
             <td>$qty $units</td>
@@ -1066,14 +1106,14 @@
 
                         }
 
-                        echo "</tbody>
+                        echo"</tbody>
       </table>
   </div>
 </div>";
 
                     }
 
-                    if (sizeof($rows_herbicide) > 0) {
+                    if( sizeof($rows_herbicide)>0){
                         echo "
   <div class=\" col-sm-12 col-md-2 col-lg-2\">
     <div class=\"card\">
@@ -1087,15 +1127,15 @@
           </tr>
         </thead>
         <tbody>";
-                        $ss = 0;
-                        foreach ($rows_herbicide as $herbicide) {
+                        $ss=0;
+                        foreach( $rows_herbicide as $herbicide){
                             $ss++;
-                            $reciept = $fertilizer['reciept_url'];
-                            $type = $herbicide['item'];
-                            $qty = $herbicide['qty'];
-                            $units = $herbicide['units'];
+                            $reciept=$fertilizer['reciept_url'];
+                            $type=$herbicide['item'];
+                            $qty=$herbicide['qty'];
+                            $units=$herbicide['units'];
 
-                            echo "<tr class='open-image' data-target='images/va_receipt/$reciept'>
+                            echo"<tr class='open-image' data-target='images/va_receipt/$reciept'>
 		    <td  ><a >$ss</a></td>
             <td >$type</td>
             <td >$qty $units</td>
@@ -1103,7 +1143,7 @@
 
                         }
 
-                        echo "</tbody>
+                        echo"</tbody>
       </table>
 
   </div>
@@ -1111,7 +1151,7 @@
 
                     }
 
-                    if (sizeof($rows_fertilizers) > 0) {
+                    if( sizeof($rows_fertilizers)>0){
                         echo "
   <div class=\" col-sm-12 col-md-2 col-lg-2\">
     <div class=\"card\">
@@ -1125,14 +1165,14 @@
           </tr>
         </thead>
         <tbody>";
-                        $ss = 0;
-                        foreach ($rows_fertilizers as $fertilizer) {
+                        $ss=0;
+                        foreach( $rows_fertilizers as $fertilizer){
                             $ss++;
-                            $reciept = $fertilizer['reciept_url'];
-                            $type = $fertilizer['item'];
-                            $qty = $fertilizer['qty'];
-                            $units = $fertilizer['units'];
-                            echo "<tr class='open-image' data-target='images/va_receipt/$reciept'>
+                            $reciept=$fertilizer['reciept_url'];
+                            $type=$fertilizer['item'];
+                            $qty=$fertilizer['qty'];
+                            $units=$fertilizer['units'];
+                            echo"<tr class='open-image' data-target='images/va_receipt/$reciept'>
 		   <td ><a >$ss</a></td>
             <td  >$type</td>
             <td  >$qty $units</td>
@@ -1140,7 +1180,7 @@
 
                         }
 
-                        echo "</tbody>
+                        echo"</tbody>
       </table>
 
   </div>
@@ -1148,17 +1188,18 @@
 
                     }
 
-                    echo "<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
+                    echo"<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
 <div class=\"card prodn\">
 <h5 class=\"\">Production Data</h5>";
-
                     echo "
-        <h6><b> Soil Properties </b></h6><p>Values</p><hr/>
-        <h6 class=\"trim\">pH Value:</h6><p>$ph</p><hr/>
-        <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p><hr/>
-        <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p><hr/>
-        <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p><hr/>
-        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p><hr/>        
+        <h6>Acreage:</h6><p id=\"total\">$acreage</p><hr/>
+        <h6>Crop:</h6><p id=\"enterprise_\">Coffee</p><hr/>
+        <h6><b> Soil Properties </b></h6><p><b>Values</b></p>&nbsp;<b>Description</b><hr/>
+        <h6 class=\"trim\">pH Value:</h6><p>$ph</p>&nbsp;$ph_desc<hr/>
+        <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p>&nbsp;$om_desc<hr/>
+        <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p>&nbsp;$nitrogen_desc<hr/>
+        <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p>&nbsp;$p_desc<hr/>
+        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/>        
         ";
 
 //        $table="production_data";
@@ -1185,8 +1226,8 @@
 
 //        echo"<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
 
-                    echo "</div>
-<!--   </div>   -->
+                    echo"</div>
+    </div>
   </div>";
 
                     /////////////////////////////////////////////production data_ends
@@ -1678,54 +1719,54 @@
 /////////////////////////////////////////////personal data_ends
 
 
-/////////////////////////////////////////////other data_starts
-//  echo"<div class=\"card\">
-//<h5 class=\"\">Others</h5>";
-//  $table="info_on_other_enterprise";
-//  $columns="*";
-//  $where=" dataset_id='$dataset_id' ";
-//  $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//  foreach($rows5 as $row){
-//   $column=$row['columns'];
-//  $value=$rows[0][$column];
-//  $value=$util_obj->captalizeEachWord($value);
-//  $string="information_on_other_crops_";
-//   $string=str_replace($string,"",$column);
-//  $string=str_replace("_"," ",$string);
-//  $lable=$util_obj->captalizeEachWord($string);
-//  if($value!=null){
-//   echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//  }
-//  }
-//
-//
-//  $table="general_questions";
-//  $columns="*";
-//  $where=" dataset_id='$dataset_id' ";
-//  $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//  foreach($rows6 as $row){
-//   $column=$row['columns'];
-//
-//  $value=$rows[0][$column];
-//   $value=$util_obj->captalizeEachWord($value);
-//  $string="general_questions_";
-//   $string=str_replace($string,"",$column);
-//  $string=str_replace("_"," ",$string);
-//  $lable=$util_obj->captalizeEachWord($string);
-//  if($value!=null){
-//
-//   echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//  }
-//  }
-//
-//  echo"</div>
-//</div>
-//";
-/////////////////////////////////////////////other data_ends
+///////////////////////////////////////////other data_starts
+  echo"<div class=\"card\">
+<h5 class=\"\">Others</h5>";
+  $table="info_on_other_enterprise";
+  $columns="*";
+  $where=" dataset_id='$dataset_id' ";
+  $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+  foreach($rows5 as $row){
+   $column=$row['columns'];
+  $value=$rows[0][$column];
+  $value=$util_obj->captalizeEachWord($value);
+  $string="information_on_other_crops_";
+   $string=str_replace($string,"",$column);
+  $string=str_replace("_"," ",$string);
+  $lable=$util_obj->captalizeEachWord($string);
+  if($value!=null){
+   echo"<h6>$lable:</h6>
+  <p class=\"align\">$value</p><hr/>";
+  }
+  }
+
+
+  $table="general_questions";
+  $columns="*";
+  $where=" dataset_id='$dataset_id' ";
+  $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+  foreach($rows6 as $row){
+   $column=$row['columns'];
+
+  $value=$rows[0][$column];
+   $value=$util_obj->captalizeEachWord($value);
+  $string="general_questions_";
+   $string=str_replace($string,"",$column);
+  $string=str_replace("_"," ",$string);
+  $lable=$util_obj->captalizeEachWord($string);
+  if($value!=null){
+
+   echo"<h6>$lable:</h6>
+  <p class=\"align\">$value</p><hr/>";
+  }
+  }
+
+  echo"</div>
+</div>
+";
+///////////////////////////////////////////other data_ends
 
 /////////////////////////////////////////////production data_starts
 
