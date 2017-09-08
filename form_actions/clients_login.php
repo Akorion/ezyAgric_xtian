@@ -59,7 +59,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
     elseif ($_SESSION["account_name"] == "Insurance"){
         $util_obj->redirect_to("../insuranceDash.php");
     }
-	else{//
+	else{
 	    $util_obj->redirect_to( "../dashboardAll.php" );
 	}
 	

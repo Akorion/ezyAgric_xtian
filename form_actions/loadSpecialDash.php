@@ -35,7 +35,6 @@ function output($client_id, $search)
   <div class=\"clearfix\"></div>
 </div>";
 
-
     foreach ($rows as $row) {
         $dataset_name = $row['dataset_name'];
         $dataset_type = $row['dataset_type'];
@@ -75,9 +74,7 @@ function output($client_id, $search)
 
             }       //echo "no data";
 
-
             $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
-
             $dataset_name = strlen($dataset_name) > 40 ? substr($dataset_name, 0, 39) . "..." : $dataset_name;// = substr($dataset_name,0,38).'</br>'.substr($dataset_name,38);
 
             echo "

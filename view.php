@@ -787,8 +787,6 @@ $mCrudFunctions = new CrudFunctions();
                     $("#filtered_data").html(data);
                     getPagination(page);
                     hideProgressBar();
-
-
                 }
             });
 

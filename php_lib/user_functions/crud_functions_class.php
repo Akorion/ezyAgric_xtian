@@ -668,17 +668,10 @@ class CrudFunctions
                             $total_gardens_ = $total_gardens_ + $total_gardens;
                             //$average=round(array_sum($acares)/$total_gardens,3);
                         }
-
-
                     }
-
                 }
-
-
             }
-
         }
-
 
         $total_acerage_bundle[0] = $total_acerage_;
         $total_acerage_bundle[1] = $total_gardens_;

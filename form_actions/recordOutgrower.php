@@ -485,13 +485,13 @@ switch ($_POST["token"]) {
         foreach ($rows as $row) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
-            $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1);
-            if($_SESSION['client_id'] == 16 || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
-            elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
+            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
+            if($acreage < 1){ $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1); }
+            if($_SESSION['client_id'] == 5) { $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
+
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
             }
-
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 //                echo "the table exists";
                 $taken_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='yes'");
@@ -520,8 +520,8 @@ switch ($_POST["token"]) {
                        </div>
                        <div class=\"col-md-9\">
                            <h4> <a href='dash.php'> Out Grower Farmers </a> </h4>
-                         <a style=\"font-size:15px; color:blue\"><b>$farmers</b></a> <br>
-                           <span style=\"font-size:13px; color:green\">$acerage Acres</span> 
+                         <a style=\"font-size:15px; color:blue\"><b>Total Farmers: $farmers</b></a> <br>
+                           <span style=\"font-size:13px; color:green\">Total Acreage: $acreage</span> 
                             <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
                        </div>
@@ -600,7 +600,7 @@ switch ($_POST["token"]) {
             elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-                $cash_given_out += $mCrudFunctions->get_distinct_count("soil_results_" . $row['id'], " COUNT(DISTINCT cooperative)", 1);
+                $cash_given_out += $mCrudFunctions->get_distinct_count("soil_results_" . $row['id'], " COUNT(DISTINCT(TRIM(`cooperative`)))", "1 ");
             }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {

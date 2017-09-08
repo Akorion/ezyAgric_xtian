@@ -119,6 +119,7 @@ switch ($_POST["token"]) {
         ";
 
         break;
+
     //geting insurance summary : used in farmersInsured.php
     case  "farmers_insured_data":
         session_start();
@@ -503,7 +504,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different PH levels");
+        analyseSeeds($levels, $farmers_number, "column", "Ph levels of Farmers Gardens");
         break;
 
     case "macro_nutrients_nitrogen":
@@ -533,7 +534,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different nitrogen levels");
+        analyseSeeds($levels, $farmers_number, "line", "Nitrogen Levels of Farmers' Gardens");
         break;
 
     case  "macro_nutrients_phosphorous":
@@ -588,7 +589,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        analyseSeeds($levels, $farmers_number, "column", "Number of farmers with different potassium levels");
+        analyseSeeds($levels, $farmers_number, "column", "Potassium levels of Farmers' Gardens");
         break;
 
     case  "farmers_lime_requirement":
@@ -596,32 +597,45 @@ switch ($_POST["token"]) {
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $require = 0; $dont_require = 0;
+        $farmers_number = array();
+        $recommendations  = array("Lime", "CAN", "CAN_ASN", "Urea");
+        $lime=0;    $can=0;    $can_asn=0; $urea=0;
 
         foreach ($rows as $row) {
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
-                $require += $mCrudFunctions->get_count("soil_results_" . $row['id'], "ph <= 5.2");
-                $dont_require += $mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 5.2");
+                $lime += $mCrudFunctions->get_count("soil_results_" . $row['id'], "ph <= 5.2");
+                $can += $mCrudFunctions->get_count("soil_results_" . $row['id'], "ph < 5.3");
+                $can_asn += $mCrudFunctions->get_count("soil_results_" . $row['id'], "ph >= 5.3 AND ph <= 6.5");
+                $urea += $mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 6.5");
             }
         }
-        draw_soil_texture_pie_chart($require, $dont_require);
-        break;
+        array_push($farmers_number, $lime);
+        array_push($farmers_number, $can);
+        array_push($farmers_number, $can_asn);
+        array_push($farmers_number, $urea);
+
+//        analyseSeeds($recommendations, $farmers_number, "column", "Farmers With Fertilizer Recommendations");
+        fertilizer_chart($lime,$can,$can_asn,$urea);
+    break;
 
     case  "ace_crop_insured":
         session_start();
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $maize = 0;
-        $rice = 0;
+//        $farmers_number = array();
+//        $regions = array("Eastern", "Northern", "Western");
+        $east = 0; $north = 0; $west = 0;
 
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-                $maize += $mCrudFunctions->get_count("dataset_" . $row['id'], "production_data_crop_insured LIKE 'maize'");
-                $rice += $mCrudFunctions->get_count("dataset_" . $row['id'], "production_data_crop_insured LIKE 'rice'");
+                $east += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_farmer_location_farmer_region LIKE 'eastern'");
+                $north += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_farmer_location_farmer_region LIKE 'northern'");
+                $west += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_farmer_location_farmer_region LIKE 'western'");
             }
         }
-        ace_crop_insured_pie_chart($maize, $rice);
+
+        ace_crop_insured_pie_chart($east, $north, $west);
         break;
 
     case  "insurance_age_group":
@@ -677,7 +691,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        analyseSeeds($levels, $farmers_number, "column", "Average Phosphorous levels from farmers' gardens");
+        analyseSeeds($levels, $farmers_number, "line", "Average Phosphorous levels from farmers' gardens");
         break;
 }
 
@@ -981,22 +995,42 @@ function draw_soil_texture_pie_chart($sand, $clay)
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function ace_crop_insured_pie_chart($maize, $rice)
+function ace_crop_insured_pie_chart($east, $north, $west)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
 
-    $titleArray = array('text' => 'Proportions of Crops Insured');
+    $titleArray = array('text' => 'Regional Distribution of Farmers Insured');
 
     $datax = array();
 
-    array_push($datax, array('Maize', $maize));
-    array_push($datax, array('Rice', $rice));
+    array_push($datax, array('Eastern', $east));
+    array_push($datax, array('Northern', $north));
+    array_push($datax, array('Western', $west));
 
-    $dataArray = array('type' => 'pie', 'name' => 'Crop Insured', 'data' => $datax);
+    $dataArray = array('type' => 'pie', 'name' => 'Region', 'data' => $datax);
 
     $data = $json_model_obj->get_piechart_graph_json($titleArray, $dataArray);
     $util_obj->deliver_response(200, 1, $data);
 }
 
+function fertilizer_chart($lime,$can,$can_asn,$urea)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    $titleArray = array('text' => 'Farmers With Fertilizer Recommendations');
+
+    $datax = array();
+
+    array_push($datax, array('Lime', $lime));
+    array_push($datax, array('CAN', $can));
+    array_push($datax, array('CAN_ASN', $can_asn));
+    array_push($datax, array('Urea', $urea));
+
+    $dataArray = array('type' => 'pie', 'name' => 'Farmers', 'data' => $datax);
+
+    $data = $json_model_obj->get_piechart_graph_json($titleArray, $dataArray);
+    $util_obj->deliver_response(200, 1, $data);
+}
 ?>

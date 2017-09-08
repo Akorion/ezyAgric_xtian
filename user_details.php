@@ -494,17 +494,23 @@
                         $string = str_replace("_", " ", $string);
                         $lable = $util_obj->captalizeEachWord($string);
                         if ($lable != "Picture") {
-
                             if ($lable == "Dob") {
-                                $value = str_replace("00:00:000", " ", $value);
+                                $value = $util_obj->remove_apostrophes($value);
+                                $dob = explode('-',$value);
+                                if(strlen($dob[2]) == 2){
+                                    $dob[2] = '19'.$dob[2];
+                                    $value = implode('-',$dob);
+                                }
+
+//                                $value = str_replace("00:00:000", " ", $value);
                                 $birth_date = date_create($value);
                                 $birth_date = date_format($birth_date, "d/m/Y");
                                 echo "<h6>Date of Birth:</h6>
   
   <p class=\"align\">$birth_date</p><hr/>";
-                                $age = $util_obj->getAge($value, "Africa/Nairobi");
-                                echo "<h6>Age:</h6>
-  <p class=\"align\">$age</p><hr/>";
+//                                $age = $util_obj->getAge($value, "Africa/Nairobi");
+//                                echo "<h6>Age:</h6>
+//  <p class=\"align\">$age</p><hr/>";
 
                             } else {
                                 echo "<h6>$lable:</h6>
@@ -545,54 +551,54 @@
 /////////////////////////////////////////////personal data_ends
 
 
-/////////////////////////////////////////////other data_starts
-//  echo"<div class=\"card\">
-//<h5 class=\"\">Others</h5>";
-//  $table="info_on_other_enterprise";
-//  $columns="*";
-//  $where=" dataset_id='$dataset_id' ";
-//  $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//  foreach($rows5 as $row){
-//   $column=$row['columns'];
-//  $value=$rows[0][$column];
-//  $value=$util_obj->captalizeEachWord($value);
-//  $string="information_on_other_crops_";
-//   $string=str_replace($string,"",$column);
-//  $string=str_replace("_"," ",$string);
-//  $lable=$util_obj->captalizeEachWord($string);
-//  if($value!=null){
-//   echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//  }
-//  }
-//
-//
-//  $table="general_questions";
-//  $columns="*";
-//  $where=" dataset_id='$dataset_id' ";
-//  $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//  foreach($rows6 as $row){
-//   $column=$row['columns'];
-//
-//  $value=$rows[0][$column];
-//   $value=$util_obj->captalizeEachWord($value);
-//  $string="general_questions_";
-//   $string=str_replace($string,"",$column);
-//  $string=str_replace("_"," ",$string);
-//  $lable=$util_obj->captalizeEachWord($string);
-//  if($value!=null){
-//
-//   echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//  }
-//  }
-//
-//  echo"</div>
-//</div>
-//";
-/////////////////////////////////////////////other data_ends
+///////////////////////////////////////////other data_starts
+  echo"<div class=\"card\">
+<h5 class=\"\">Others</h5>";
+  $table="info_on_other_enterprise";
+  $columns="*";
+  $where=" dataset_id='$dataset_id' ";
+  $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+  foreach($rows5 as $row){
+   $column=$row['columns'];
+  $value=$rows[0][$column];
+  $value=$util_obj->captalizeEachWord($value);
+  $string="information_on_other_crops_";
+   $string=str_replace($string,"",$column);
+  $string=str_replace("_"," ",$string);
+  $lable=$util_obj->captalizeEachWord($string);
+  if($value!=null){
+   echo"<h6>$lable:</h6>
+  <p class=\"align\">$value</p><hr/>";
+  }
+  }
+
+
+  $table="general_questions";
+  $columns="*";
+  $where=" dataset_id='$dataset_id' ";
+  $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+  foreach($rows6 as $row){
+   $column=$row['columns'];
+
+  $value=$rows[0][$column];
+   $value=$util_obj->captalizeEachWord($value);
+  $string="general_questions_";
+   $string=str_replace($string,"",$column);
+  $string=str_replace("_"," ",$string);
+  $lable=$util_obj->captalizeEachWord($string);
+  if($value!=null){
+
+   echo"<h6>$lable:</h6>
+  <p class=\"align\">$value</p><hr/>";
+  }
+  }
+
+  echo"</div>
+</div>
+";
+///////////////////////////////////////////other data_ends
 
 /////////////////////////////////////////////production data_starts
 
@@ -606,14 +612,14 @@
 
                     //$rows_tractor_money_taken= $mCrudFunctions->fetch_rows("tractormoney_".$dataset_id,"*"," farmer_id='$id' ");
 
-                    $rows_yield = $mCrudFunctions->fetch_rows("out_grower_produce_tb", "*", " dataset_id='$dataset_id' AND  meta_id='$id' ");
+                    $rows_yield = $mCrudFunctions->fetch_rows("dataset_".$dataset_id, "*", "id='$id' ");
 
 
                     $rows_cash_returned = $mCrudFunctions->get_sum("cash_returned_" . $dataset_id, "cash_returned", " farmer_id='$id' ");
 
                     $rows_tractor_money_returned = $mCrudFunctions->get_sum("tractor_money_returned_" . $dataset_id, "tractor_money_returned", " farmer_id='$id' ");
 
-                    $yield = $rows_yield[0]['qty'] == "" ? "N/A" : $rows_yield[0]['qty'];
+                    $yield = $rows_yield[0]['maize_production_data_maize_harvested'] == "" ? "N/A" : $rows_yield[0]['maize_production_data_maize_harvested'];
 
                     $tractor_money_taken = $tractor_money;//$rows_tractor_money_taken[0]['tractor_money'];
                     //$cash_taken=$rows_cash[0]['cash_taken'];

@@ -1,4 +1,3 @@
-
 <style type="text/css">
     th, thead {
         height: 2em !important;
@@ -2287,12 +2286,13 @@ function output($id, $where)
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
                 if ($_SESSION['client_id'] == 1) {
+                    $crop = "Maize";
                     echo "<tr>";
                     echo "
                       <td>$counter</td> 
-                      <td style='line-height:12pt; align:center'>$name</td>
-                      <td style='line-height:12pt; align:center'>$age_</td>
-                      <td>" . substr($gender, 0, 1) . "</td>";
+                      <td>$name</td>
+                      <td style='line-height:12pt; align:center'>$phone_number</td>
+                      <td>$crop</td>";
 //                    <td style='line-height:12pt; align:center'>$district</td>
 
                     $acares = array();
@@ -2330,8 +2330,7 @@ function output($id, $where)
                             }
 
 //                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
-                            echo "<td>$total_gardens</td>
-                                    <td> $average</td>";
+                            echo "<td> $average</td>";
                         }
 
                     } //<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
@@ -2421,15 +2420,16 @@ function output($id, $where)
                             }
 
 //                            $_gardens = $total_gardens == 1 ? " Garden" : " Number of Gardens";
-                            echo "
-                                 <!--   <td><h6>$total_gardens</h6></td>  -->
-                                    <td style=\"color:#888\"> $average</td>";
+                            echo "<td style=\"color:#888\"> $average</td>";
                         }
 
 
                     } else {
-                        echo "<td> 0 </td>
-                              <td style=\"color:#888\"> 0 </td>";
+                        $maize_prodn_land = $util_obj->remove_apostrophes($row['maize_production_data_maize_production_land']);
+                        $prodn_land = $util_obj->remove_apostrophes($row['production_data_land_size']);
+
+                        $average = $maize_prodn_land != ""? $maize_prodn_land : $prodn_land;
+                        echo "<td style=\"color:#888\"> $average </td>";
                     }//<i class=\"fa fa-navicon fa-1x\" aria-hidden=\"true\"></i>
 
                     $count = $counter - 1;
