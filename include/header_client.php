@@ -134,7 +134,7 @@ $path = $_SERVER["PHP_SELF"];
                         }
                         ?>
                         <li><a href="help.php">Help</a></li>
-                        <li><a href="../index.php?logout=1">Logout</a></li>
+                        <li><a href="./index.php?logout=1">Logout</a></li>
                     </ul>
                 </li>
 <!--                <li><a href="#" style="font-weight:800;">--><?php //if (isset($_SESSION["user_account"])) {
