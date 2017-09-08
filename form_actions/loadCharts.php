@@ -534,7 +534,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        analyseSeeds($levels, $farmers_number, "line", "Nitrogen Levels of Farmers' Gardens");
+        line_chart_analyze_results($levels, $farmers_number, "line", "Nitrogen Levels of Farmers' Gardens");
         break;
 
     case  "macro_nutrients_phosphorous":
@@ -691,7 +691,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        analyseSeeds($levels, $farmers_number, "line", "Average Phosphorous levels from farmers' gardens");
+        line_chart_analyze_results($levels, $farmers_number, "line", "Average Phosphorous levels from farmers' gardens");
         break;
 }
 
@@ -885,6 +885,19 @@ function analyseSeeds($source, $farmers, $type, $title)
     $util_obj->deliver_response(200, 1, $data);
 }
 
+function line_chart_analyze_results($source, $farmers, $type, $title)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    //converting a string array into an array of integers
+    $array_int = array_map(create_function('$value', 'return (int)$value;'), $farmers);
+
+
+    $data = $json_model_obj->drawLineGraph($source, $array_int, $type, $title);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
 function analyseRegions($type, $categories, $farmers, $males, $females, $title)
 {
     $json_model_obj = new JSONModel();
@@ -1024,8 +1037,8 @@ function fertilizer_chart($lime,$can,$can_asn,$urea)
     $datax = array();
 
     array_push($datax, array('Lime', $lime));
-    array_push($datax, array('CAN', $can));
-    array_push($datax, array('CAN_ASN', $can_asn));
+    array_push($datax, array('Calcium Ammonium Nitrate', $can));
+    array_push($datax, array('Calcium Ammonium Nitrate & Ammonium Sulphate Nitrate', $can_asn));
     array_push($datax, array('Urea', $urea));
 
     $dataArray = array('type' => 'pie', 'name' => 'Farmers', 'data' => $datax);

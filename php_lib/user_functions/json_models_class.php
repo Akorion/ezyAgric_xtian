@@ -25,9 +25,11 @@ class JSONModel
                 'cursor' => 'pointer',
                 'depth' => 30,
                 'dataLabels' => array(
-                    'enabled' => true,
-                    'format' => '{point.name}'
-                )));
+                    'enabled' => false,
+//                    'format' => '{point.name}'
+                ),
+                'showInLegend' => true
+            ));
 
         $response['series'] = array();
         array_push($response['series'], $dataArray);
@@ -57,30 +59,6 @@ class JSONModel
 
         return $response;
     }
-
-    //drawing organic matter chart
-//    public function get_organicpie_json($titleArray, $dataArray)
-//    {
-//
-//        $response = array();
-//
-//        $response['credits'] = array('enabled' => 0);
-//
-//        $response['exporting'] = array('enabled' => false);
-//
-//        $response['chart'] = array('type' => 'pie', 'option3d' => array('enabled' => true, 'alpha' => 45, 'beta' => 0));
-//        $response['plotOptions'] = array('pie' => array('innerSize' => 70, 'depth' => 45));
-//
-//        $response['title'] = $titleArray;
-//
-//        $response['tooltip'] = array("pointFormat" => '{series.name}: <b>{point.percentage:.1f}%</b>');
-//
-//        $response['series'] = array();
-//        $response['total'] = array('total'=>112);
-//        array_push($response['series'], $dataArray);
-//
-//        return $response;
-//    }
 
     public function InsuranceAgeGroup_donut_chart($title, $data)
     {
@@ -283,6 +261,33 @@ class JSONModel
 
         $json['title'] = array('text'=>$title);
 
+        $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>',
+            "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['series'] = array(array('name' => 'Number of farmers', 'colorByPoint' => 'true' ,'data' => $no_farmers));
+        return $json;
+    }
+
+    public function drawLineGraph($district, $no_farmers, $type, $title)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>$title);
 
         $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
 
@@ -302,7 +307,7 @@ class JSONModel
                 "pointPadding" => 0.2,
                 'borderWidth' => 0
             ));
-        $json['series'] = array(array('name' => 'Number of farmers', 'data' => $no_farmers));
+        $json['series'] = array(array('name' => 'Number of farmers' ,'data' => $no_farmers));
         return $json;
     }
 
@@ -497,7 +502,7 @@ class JSONModel
 
         $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
 
-        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Average Yield (/Kg)'));
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Average Yield (Kg)'));
 
         $json['credits'] = array('enabled' => false);
 
@@ -512,7 +517,7 @@ class JSONModel
                 "pointPadding" => 0.2,
                 'borderWidth' => 0
             ));
-        $json['series'] = array(array('name' => 'Average Yield Per Acre(/Kg)', 'data' => $yield_arr) );
+        $json['series'] = array(array('name' => 'Average Yield Per Acre(Kg)', 'colorByPoint' => 'true' , 'data' => $yield_arr) );
         return $json;
 
     }
@@ -525,7 +530,7 @@ class JSONModel
 
         $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
 
-        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Average Prodn Cost (/Shs)'));
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Average Prodn Cost (Shs)'));
 
         $json['credits'] = array('enabled' => false);
 
@@ -540,7 +545,7 @@ class JSONModel
                 "pointPadding" => 0.2,
                 'borderWidth' => 0
             ));
-        $json['series'] = array(array('name' => 'Average Cost Of Production Per Acre(/Shs)', 'data' => $cost_of_prodn_arr) );
+        $json['series'] = array(array('name' => 'Average Cost Of Production Per Acre(Shs)', 'colorByPoint' => 'true' , 'data' => $cost_of_prodn_arr) );
         return $json;
     }
 
@@ -548,11 +553,11 @@ class JSONModel
     {
         $json['chart'] = array('type' => $type);
 
-        $json['title'] = array('text'=>'Average Yield Insured Per ACE');
+        $json['title'] = array('text'=>'Average Insured Yield Per ACE');
 
         $json['xAxis'] = array('categories' => $aces, 'crosshair' => true);
 
-        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Yield Insured (/Kg)'));
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Insured Yield (Kg)'));
 
         $json['credits'] = array('enabled' => false);
 
@@ -567,7 +572,7 @@ class JSONModel
                 "pointPadding" => 0.2,
                 'borderWidth' => 0
             ));
-        $json['series'] = array(array('name' => 'Average Yield Insured(/Kg)', 'data' => $yield_insured_arr) );
+        $json['series'] = array(array('name' => 'Average Insured Yield (Kg)', 'data' => $yield_insured_arr) );
         return $json;
     }
 
