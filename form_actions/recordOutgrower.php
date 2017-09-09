@@ -624,20 +624,7 @@ switch ($_POST["token"]) {
             }
         }
 
-        echo "<div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
-                   <div class=\"x_panel tile  overflow_hidden\">
-                       <div class=\"col-md-3\" style=\"background-color:#3a3; padding:10px; border-radius:2px;color:#fff; margin-top: -20px;\">
-                           <span class=\"fa fa-users fa-3x\"></span>
-                       </div>
-                       <div class=\"col-md-9\">
-                           <h4> <a href='dash.php'> Farmers </a> </h4>
-                         <a style=\"font-size:15px; color:blue\"><b>Total Farmers: $farmers</b></a> <br>
-                           <!--span style=\"font-size:13px; color:green\">$acerage Acres</span--> 
-                            <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
-
-                       </div>
-                   </div>
-                 </div>
+        echo "
                  <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
                    <div class=\"x_panel tile  overflow_hidden\">
                        <div class=\"col-md-3\" style=\"background-color:#822; padding:15px; border-radius:2px;color:#fff; margin-top: -20px;\">
@@ -652,6 +639,21 @@ switch ($_POST["token"]) {
                        </div>
                    </div>
                  </div>
+                 
+                 <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color:#3a3; padding:10px; border-radius:2px;color:#fff; margin-top: -20px;\">
+                           <span class=\"fa fa-users fa-3x\"></span>
+                       </div>
+                       <div class=\"col-md-9\">
+                           <h4> <a href='dash.php'> Farmers </a> </h4>
+                         <a style=\"font-size:15px; color:blue\"><b>Total Farmers: $farmers</b></a> <br>
+                           <!--span style=\"font-size:13px; color:green\">$acerage Acres</span--> 
+                            <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+
+                       </div>
+                   </div>
+                 </div>              
 
                  <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
                    <div class=\"x_panel tile  overflow_hidden\">

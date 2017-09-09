@@ -40,7 +40,8 @@ public function getJsonArrayFromUrl($url,$format){
 	
     }
 
-public function get_url_content($url) {
+public function get_url_content($url)
+{
 	$ch = curl_init();
 	curl_setopt($ch,CURLOPT_URL,$url);
 	curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
@@ -50,11 +51,12 @@ public function get_url_content($url) {
 	return $content;
 }
 
-public function redirect_to( $location = NULL ) {
-		if ($location != NULL) {
-			header("Location: {$location}");
-			exit;
-		}
+public function redirect_to( $location = NULL )
+{
+    if ($location != NULL) {
+        header("Location: {$location}");
+        exit;
+    }
 }
 
 public function getHostIp() {
@@ -298,9 +300,11 @@ public function insertCSVintoTable($db,$table,$column_string,$handle)
     }
 }
 
-public function get_acerage_from_geo($latitudes,$longitudes){
+public function get_acerage_from_geo($latitudes,$longitudes)
+{
 
-    if (sizeof($latitudes) > 0 && sizeof($longitudes)) {
+    if (sizeof($latitudes) > 0 && sizeof($longitudes))
+    {
         $first_lat = $latitudes[0];
         $first_long = $longitudes[0];
 
@@ -377,8 +381,8 @@ public function validate_ip($ip)
     return true;
 }
 
-
-function getClientIpV4() {
+function getClientIpV4()
+{
 		//Just get the headers if we can or else use the SERVER global
 		if ( function_exists( 'apache_request_headers' ) ) {
 			$headers = apache_request_headers();
@@ -398,7 +402,8 @@ function getClientIpV4() {
 	return $the_ip;
 }	
 	
-public function createTableFromCSV($db,$handle,$table){
+public function createTableFromCSV($db,$handle,$table)
+{
 
        $data = fgetcsv($handle,0,";"," ");
 	   $columns= sizeof($data);

@@ -298,7 +298,7 @@ class JSONModel
         $json['exporting'] = array('enabled' => false);
 
         $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
-            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Farmer(s)</b></td></tr>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.2f} Farmer(s)</b></td></tr>',
             "footerFormat" => '</table>', "shared" => true,
             "useHTML" => true);
 
@@ -308,6 +308,50 @@ class JSONModel
                 'borderWidth' => 0
             ));
         $json['series'] = array(array('name' => 'Number of farmers' ,'data' => $no_farmers));
+        return $json;
+    }
+
+    public function coopsPhGraph($district, $no_farmers, $type, $title)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>$title);
+
+        $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => '<b>Cooperatives</b>', 'align' => 'high'), 'labels'=> array('overflow' => 'justify'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+//        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+//            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} Cooperative(s)</b></td></tr>',
+//            "footerFormat" => '</table>', "shared" => true,
+//            "useHTML" => true);
+        $json['tooltip'] = array('valueSuffix' => '');
+
+        $json['plotOptions'] = array(
+            'bar' => array('dataLabels' => array('enabled' => true))
+//            "column" => array(
+//                "pointPadding" => 0.2,
+//                'borderWidth' => 0
+//            )
+        );
+
+//        $json['legend'] = array(
+//            'layout' => 'vertical',
+//            'align' => 'right',
+//            'verticalAlign' => 'top',
+//            'x' => -40,
+//            'y' => 80,
+//            'floating' => true,
+//            'borderWidth' => 1,
+//            'backgroundColor' => '#FFFFFF',
+//            'shadow' => false
+//        );
+
+        $json['series'] = array(array('name' => 'Number of Cooperatives' , 'colorByPoint' => 'true' ,'data' => $no_farmers));
         return $json;
     }
 

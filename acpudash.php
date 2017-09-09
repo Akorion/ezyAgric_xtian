@@ -165,35 +165,43 @@ include("include/preloader.php");
 ?>
 
 <div class="container-fluid">
+    <div class="col-lg-4 col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
+        <div id="ph_coops" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
+
+        </div>
+    </div>
     <div class="col-md-12 col-sm-4 col-lg-4" style="box-shadow: 2px 2px 2px 2px lightgray;">
         <div id="ph_levels" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
-            <div id="organic_matter" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
-            <div id="lime_requirement" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
-            </div>
+    <div class="col-lg-4 col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
+        <div class="col-lg-12 row" id="macro_nutrients_phosphorous" style=" height:300px; padding-top: 10px;">
+
         </div>
     </div>
 </div>
-<br><br>
+<br>
 
 <div class="container-fluid">
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="macro_nutrients_nitrogen" style=" height:350px; padding-top: 10px;">
-        </div>
-    </div>
-    <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
-        <div class="col-lg-12 row" id="macro_nutrients_phosphorous" style=" height:350px; padding-top: 10px;">
+    <div class="col-lg-4 col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
+        <div id="lime_requirement" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
 
         </div>
     </div>
+    <div class="col-lg-4 col-md-12" style="box-shadow: 1px 1px 1px 1px lightgray;">
+        <div id="macro_nutrients_nitrogen" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
+        <div id="organic_matter" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
+
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="container-fluid">
     <div class="col-lg-4" style="box-shadow: 1px 1px 1px 1px lightgray;">
         <div class="col-lg-12" id="macro_nutrients_potassium" style=" height:350px; padding-top: 10px;">
 
@@ -215,6 +223,7 @@ include("include/preloader.php");
         getLoadOutGrowerDash();
 //        getLoadDataSets();
 //        organicMatter();
+        coopsPhLevels();
         phLevels();
         soil_texture();               //piechart for soil_texture
 //        farmersDistrictGraph();             //farmers column graph
@@ -262,6 +271,24 @@ include("include/preloader.php");
         hideProgressBar();
     }
     //-------------------------getting ajax data directly-- trial
+
+    function coopsPhLevels() {
+        token = "coops_ph_levels";
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "form_actions/loadCharts.php", //Relative or absolute path to file
+            data: {
+                token: token
+            },
+            success: function (data) {
+                $('#ph_coops').highcharts(data);
+//                console.log(data);
+            }
+        });
+        hideProgressBar();
+    }
+
     function phLevels() {
         token = "farmers_ph_levels";
         $.ajax({
@@ -273,7 +300,7 @@ include("include/preloader.php");
             },
             success: function (data) {
                 $('#ph_levels').highcharts(data);
-                console.log(data);
+//                console.log(data);
             }
         });
         hideProgressBar();

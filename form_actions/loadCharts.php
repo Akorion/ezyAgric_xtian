@@ -691,8 +691,44 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $high);
         array_push($farmers_number, $very_high);
 
-        line_chart_analyze_results($levels, $farmers_number, "line", "Average Phosphorous levels from farmers' gardens");
+        analyseSeeds($levels, $farmers_number, "column", "Phosphorous levels from farmers' gardens");
         break;
+
+    case  "coops_ph_levels":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $farmers_number = array();
+        $levels = array("Very low", "Low", "Medium", "High", "Very high");
+        $medium=0; $high=0; $very_high=0; $low=0; $verylow=0;
+
+        $ph = array();  $coops = array();
+
+        foreach ($rows as $row) {
+
+            if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
+                $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], "DISTINCT(trim(`cooperative`)) as coops, round(AVG(`ph`),2)as ph ", "1 GROUP BY TRIM(cooperative) ASC");
+                foreach ($cooperatives as $coop_dst){
+                    $ph = $coop_dst['ph'];
+
+                    if($ph <= 4.5) { $verylow += 1; }
+                    elseif ($ph > 4.5 && $ph <= 5.5) { $low+= 1; }
+                    elseif ($ph > 5.5 && $ph <= 6.5) { $medium += 1; }
+                    elseif ($ph > 6.5 && $ph <= 7.8) { $high += 1; }
+                    else{ $very_high += 1; }
+                }
+            }
+        }
+        array_push($farmers_number, $verylow);
+        array_push($farmers_number, $low);
+        array_push($farmers_number, $medium);
+        array_push($farmers_number, $high);
+        array_push($farmers_number, $very_high);
+
+        coops_ph_levels($levels, $farmers_number, "bar", "Average Ph levels of Cooperatives");
+
+    break;
 }
 
 function debug_to_console($data)
@@ -882,6 +918,19 @@ function analyseSeeds($source, $farmers, $type, $title)
 
 
     $data = $json_model_obj->drawSeedGraph($source, $array_int, $type, $title);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
+function coops_ph_levels($source, $farmers, $type, $title)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    //converting a string array into an array of integers
+    $array_int = array_map(create_function('$value', 'return (int)$value;'), $farmers);
+
+
+    $data = $json_model_obj->coopsPhGraph($source, $array_int, $type, $title);
     $util_obj->deliver_response(200, 1, $data);
 }
 
