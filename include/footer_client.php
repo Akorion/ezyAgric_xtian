@@ -53,6 +53,9 @@
    <!-- Select2 -->
     <script src="js/select2/dist/js/select2.full.min.js"></script>
 
+    <!-- Datatables -->
+    <script src="js/dataTables.min.js"></script>
+
     <script type="text/javascript">
 $(function() {
     $('input[name="daterange"]').daterangepicker();

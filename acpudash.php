@@ -300,7 +300,8 @@ include("include/preloader.php");
             },
             success: function (data) {
                 $('#ph_levels').highcharts(data);
-//                console.log(data);
+//                $('#ph_levels').html(data);
+                console.log(data);
             }
         });
         hideProgressBar();

@@ -56,6 +56,10 @@ $path = $_SERVER["PHP_SELF"];
     <link href="js/select2/dist/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="datepicker/css/bootstrap-datepicker3.css">
+
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="css/dataTables.min.css" >
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>

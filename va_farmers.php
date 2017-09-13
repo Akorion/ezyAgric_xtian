@@ -1398,7 +1398,6 @@ function escapeJavaScriptText($string)
 
         var target = $(this).parent().find(".attach-file");
 
-
         target.html("<i class='fa fa-paperclip fa-spin'></i> attaching... ");
         //target.addClass("info");
         target.addClass("active");

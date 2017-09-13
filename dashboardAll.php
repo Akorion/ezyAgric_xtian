@@ -282,6 +282,7 @@ include("include/preloader.php");
             success: function (data) {
 
                 $('#ict_usage_graph').highcharts(data);
+                console.log('show sth here ............');
             }
         });
         hideProgressBar();
@@ -299,7 +300,7 @@ include("include/preloader.php");
             },
             success: function (data) {
                 $('#farmers_regions').highcharts(data);
-//                console.log(data);
+                console.log('show sth here ............');
 //                if (data.series.length == 3){
 //                    $('#season').html("<div align='justify'> Season1 Season2 Season3</div>");
 //                }

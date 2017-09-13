@@ -1,5 +1,6 @@
 <?php
 #includes
+session_start();
 require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/json_models_class.php";
 require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/crud_functions_class.php";
 require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/database_query_processor_class.php";
@@ -26,14 +27,12 @@ $strings = explode('-', $va);
 //echo "<br>"; // new line
 $va = strtolower($strings[1]); //
 
-
 $age_min = !empty($_POST['age_min']) ? (int)$_POST['age_min'] : 0;
 $age = !empty($_POST['age']) ? (int)$_POST['age'] : 0;
 $age_max = !empty($_POST['age_max']) ? (int)$_POST['age_max'] : 0;
 $ageFilter = "";
 //floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25)
 if ($age != "" && $age != 0) {
-
     $ageFilter = " floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25)=$age  AND ";
 }
 
@@ -48,14 +47,13 @@ if ($age_min > 0 && $age_max == 0) {
 //header('Content-type: application/json');
 $vasql = " AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'";
 $data = array();
-if (isset($_POST['id']) && isset($_POST['district'])
-    && isset($_POST['country']) && isset($_POST['parish'])
-    && isset($_POST['village']) && isset($_POST['production'])
-) {
+if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country']) && isset($_POST['parish']) && isset($_POST['village']) && isset($_POST['production']))
+{
 
     $district = $_POST['district'];
     $subcounty = $_POST['country'];
     $parish = $_POST['parish'];
+    $id = $_POST['id'];
 
 ///////////////////////////////////////districts
     if ($_POST['district'] == "all") {
@@ -74,6 +72,11 @@ if (isset($_POST['id']) && isset($_POST['district'])
                     $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_farmer_gender) = 'female' ");
 
                     $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_farmer_gender) = 'male'  ");
+                    $total_farmers = $female + $male;
+                    if($total_farmers < 1){
+                        if($_SESSION['account_name'] == 'Ankole Coffee Producers Cooperative Union Ltd'){ $total_farmers = (int)$mCrudFunctions->get_count("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id", "1"); }
+                        $total_farmers = (int)$mCrudFunctions->get_count($table, "1");
+                    }
 
                 } else {
                     $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_farmer_gender) = 'female' " . $vasql);
@@ -90,7 +93,6 @@ if (isset($_POST['id']) && isset($_POST['district'])
                 } else {
                     $female = 100;
                 }
-
             }
 
         } else {
@@ -249,7 +251,7 @@ if (isset($_POST['id']) && isset($_POST['district'])
         }
 
 //echo $female;
-        draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+        draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
 
 
     } else
@@ -270,7 +272,11 @@ if (isset($_POST['id']) && isset($_POST['district'])
                         $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male'");
 
                         $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female'");
-
+                        $total_farmers = $female + $male;
+                        if($total_farmers < 1){
+                            if($_SESSION['account_name'] == 'Ankole Coffee Producers Cooperative Union Ltd'){ $total_farmers = (int)$mCrudFunctions->get_count("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id", "1"); }
+                            $total_farmers = (int)$mCrudFunctions->get_count($table, "1");
+                        }
 
                     } else {
                         $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
@@ -448,7 +454,7 @@ if (isset($_POST['id']) && isset($_POST['district'])
             }
 
 
-            draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+            draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
 
 
         } else
@@ -639,7 +645,7 @@ if (isset($_POST['id']) && isset($_POST['district'])
                     }
                 }
 
-                draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
 
 
             } else
@@ -835,10 +841,12 @@ if (isset($_POST['id']) && isset($_POST['district'])
                         }
                     }
 
-                    draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                    draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
 
 
-                } else {
+                }
+                 else
+                    {
 
 //echo "off";
                     $table = "dataset_" . $_POST['id'];
@@ -1014,27 +1022,21 @@ if (isset($_POST['id']) && isset($_POST['district'])
                         }
                     }
 
-                    draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                    draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
 
 
                 }
 
-} else {
+}
+else {
     $util_obj->deliver_response(200, 0, null);
 }
 
 
-function draw_pie_chart($male, $female, $json_model_obj, $util_obj)
+function draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj)
 {
 
-//$titleArray=array();
     $titleArray = array('text' => 'Gender Analysis');
-
-    //$total = $male + $female;
-
-    //$per_male = ($male / $total) * 100;
-
-    //$per_female = ($female / $total) * 100;;
 
     $datax = array();
 
@@ -1042,6 +1044,7 @@ function draw_pie_chart($male, $female, $json_model_obj, $util_obj)
     array_push($datax, $temp);
 
     array_push($datax, array('Female', $female));
+    array_push($datax, array('Total Farmers',$total_farmers));
 
 //array_push($datax,array('name'=>'Female','y'=>$per_female,'sliced'=>true,'selected'=>true));
     $dataArray = array('type' => 'pie', 'name' => 'Gender', 'data' => $datax);
