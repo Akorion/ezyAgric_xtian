@@ -1,9 +1,3 @@
-<!--<style>-->
-<!--    .graph_box{-->
-<!--        padding: 10px; -moz-box-shadow: 0 0 5px #999; -webkit-box-shadow: 0 0 5px #999; box-shadow: 0 0 5px #999;-->
-<!--    }-->
-<!--</style>-->
-
 <?php
 #includes
 require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/json_models_class.php";
@@ -69,25 +63,17 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
         $cooperatives = 0;
+        echo " <ol id='cooplist'> ";
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("soil_results_" . $row['id'])) {
-                $id = $row['id'];
-                $cooperatives = $mCrudFunctions->fetch_rows("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id", " DISTINCT(TRIM(s.`cooperative`)) as coops,COUNT(*) as farmers,round(AVG(ph),2) as ph", "1 GROUP BY TRIM(s.cooperative)");
+
+                $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], " DISTINCT(TRIM(`cooperative`)) as coops ", "1 ORDER BY TRIM(cooperative) ASC");
                 foreach ($cooperatives as $coop) {
-                    $coops = $coop['coops'];
-                    $farmers = $coop['farmers'];
-                    $lbl_farmers = $farmers > 1 ? $farmers." farmers": $farmers." farmer";
-                    echo "                
-                            <div class='graph_box'>
-                                <h4><strong>$coops</strong></h4>
-                                $lbl_farmers &nbsp;&nbsp;&nbsp;&nbsp; Average ph: ".$coop['ph']." &nbsp; 
-                                <a href='#' class='btn btn-sm btn-success'><span style='color: white;' onclick='doStuff()'>$coops</span></a>  
-                            </div>                                             
-                        <br>
-                        ";
+                    echo "<a href='#'> <li onclick='doStuff()'>".$coop['coops']." </li></a>";
                 }
             }
         }
+        echo " </ol> ";
         break;
 
     //geting loans summary : used in farmerloans.php
@@ -630,7 +616,7 @@ switch ($_POST["token"]) {
 
 //        analyseSeeds($recommendations, $farmers_number, "column", "Farmers With Fertilizer Recommendations");
         fertilizer_chart($lime,$can,$can_asn,$urea);
-    break;
+        break;
 
     case  "ace_crop_insured":
         session_start();
@@ -742,7 +728,7 @@ switch ($_POST["token"]) {
 
         coops_ph_levels($levels, $farmers_number, "bar", "Average Ph levels of Cooperatives");
 
-    break;
+        break;
 }
 
 function debug_to_console($data)
@@ -1110,9 +1096,3 @@ function fertilizer_chart($lime,$can,$can_asn,$urea)
     $util_obj->deliver_response(200, 1, $data);
 }
 ?>
-
-<!--<script type="text/javascript">-->
-<!--    $(document).ready(function () {-->
-<!--        $('#dt_example').DataTable();-->
-<!--    });-->
-<!--</script>-->
