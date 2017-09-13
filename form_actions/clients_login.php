@@ -40,8 +40,18 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 	$_SESSION["account_name"]=$username;;
 	$_SESSION["client_id"]=$client_id;
 	$_SESSION["user_id"]=0;
-	
-	if($_SESSION["client_id"]==2){
+        if($_SESSION["client_id"]==15){
+
+            $user_id=$_SESSION["user_id"];
+            $client_id=$_SESSION["client_id"];
+            $time_of_activity= $util_obj->getTimeForLogs('Africa/Nairobi');
+            $ip_address=$util_obj->getClientIpV4();
+            $mCrudFunctions->insert_into_clients_logs_tb($client_id, $user_id, "Logged In", $time_of_activity, $ip_address);
+
+            $util_obj->redirect_to( "../dairyDashboard.php" );
+
+//	$util_obj->redirect_to( "../dash1.php" );
+        }elseif($_SESSION["client_id"]==2){
 	
 	$user_id=$_SESSION["user_id"];
 	$client_id=$_SESSION["client_id"];

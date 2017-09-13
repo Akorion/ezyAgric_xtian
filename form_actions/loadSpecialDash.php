@@ -20,6 +20,13 @@ function output($client_id, $search)
     $util_obj = new Utilties();
     $mCrudFunctions = new CrudFunctions();
 
+    $url = " ";     //seting the destination of open dataset action
+    if ($client_id == 15){
+        $url = "loadFarmDash.php";
+    }else{
+        $url = "dashboard.php";
+    }
+
     $sql = "";
     if ($search != "") {
         $sql = " AND ( dataset_name LIKE '%$search%' OR dataset_type LIKE '%$search%' OR region LIKE '%$search%'   )  ";
@@ -35,6 +42,7 @@ function output($client_id, $search)
   <div class=\"clearfix\"></div>
 </div>";
 
+
     foreach ($rows as $row) {
         $dataset_name = $row['dataset_name'];
         $dataset_type = $row['dataset_type'];
@@ -45,11 +53,10 @@ function output($client_id, $search)
         $table = "dataset_" . $dataset_id;
         $records = $mCrudFunctions->fetch_rows($table, " * ", 1);
 
-        $farmer_district = $records[0]['biodata_farmer_location_farmer_district'];
-        $va_district = $records[0]['biodata_location_va_district'];
-
+        $district = $records[0]['biodata_farmer_location_farmer_district'];
+        $va_district = $records[0]['va_location_va_district'];
         $number = sizeof($records);
-        $type = "Farmer";
+//        $type = "";
         $s = $number == 1 ? "" : "s";
         $ern = "ern";
         if ($dataset_type == "Farmer") {
@@ -69,12 +76,14 @@ function output($client_id, $search)
                     $total_gardens = $total_acerage_gardens[1];
                     $mCrudFunctions->insert_into_total_acerage_tb($dataset_id, $total_gardens, $total_acerage);
                 }
-//                echo " data";
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-            }       //echo "no data";
+            }
+
 
             $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
+            $type = $util_obj->encrypt_decrypt("encrypt", $dataset_type);
+
             $dataset_name = strlen($dataset_name) > 40 ? substr($dataset_name, 0, 39) . "..." : $dataset_name;// = substr($dataset_name,0,38).'</br>'.substr($dataset_name,38);
 
             echo "
@@ -88,7 +97,7 @@ function output($client_id, $search)
                     <h2 style='color: black;'> <br/>
                       <br/>
                       $dataset_name</h2>
-                    <h5 style='background-color: #388ac4; color: white;'>$farmer_district District</h5>
+                    <h5 style='background-color: #388ac4; color: white;'>$district District</h5>
                   </div>
                 </div>
                 <div class='col-xs-12'>
@@ -96,48 +105,49 @@ function output($client_id, $search)
                     <span style='font-size:15px;'>$period</span>
 
                     <h6>
-                    <a href='dashboard.php?token=$key' class='btn btn-success btn-sm'>
+                    <a href='$url?token=$key&category=$type' class='btn btn-success btn-sm'>
                     Open</a></h6>
                   </div>
                 </div>
               </div>
             </div>
             ";
+        } elseif($dataset_type == "VA") {
+
+            $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
+            $type = $util_obj->encrypt_decrypt("encrypt", $dataset_type);
+
+            $dataset_name = strlen($dataset_name) > 40 ? substr($dataset_name, 0, 39) . "..." : $dataset_name;// = substr($dataset_name,0,38).'</br>'.substr($dataset_name,38);
+
+
+            echo "
+             <div class='col-md-3 col-sm-4 col-xs-12 text-center'>
+              <div class='x_panel'>
+                <div class='col-xs-12'>
+                  <div class='panel-title'>
+                    <div style='' class='col-lg-12'>
+                        <span class='fa fa-folder-open' style='font-size: 40px; margin-top: -12px; color: #0D47A1;'>	</span>
+                    </div>
+                    <h2 style='color: black;'> <br/>
+                      <br/>
+                      $dataset_name</h2>
+                    <h5 style='background-color: #388ac4; color: white;'>$va_district District</h5>
+                  </div>
+                </div>
+                <div class='col-xs-12'>
+                  <div class='content'>
+                    <span style='font-size:15px;'>$period</span>
+
+                    <h6>
+                    <a href='$url?token=$key&category=$type' class='btn btn-success btn-sm'>
+                    Open</a></h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            ";
+
         }
-//        else {
-//
-//            $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
-//
-//            $dataset_name = strlen($dataset_name) > 40 ? substr($dataset_name, 0, 39) . "..." : $dataset_name;// = substr($dataset_name,0,38).'</br>'.substr($dataset_name,38);
-//
-//            echo "
-//             <div class='col-md-3 col-sm-4 col-xs-12 text-center'>
-//              <div class='x_panel'>
-//                <div class='col-xs-12'>
-//                  <div class='panel-title'>
-//                    <div style='' class='col-lg-12'>
-//                        <span class='fa fa-folder-open' style='font-size: 40px; margin-top: -12px; color: #0D47A1;'>	</span>
-//                    </div>
-//                    <h2 style='color: black;'> <br/>
-//                      <br/>
-//                      $dataset_name</h2>
-//                    <h5 style='background-color: #388ac4; color: white;'>$va_district District</h5>
-//                  </div>
-//                </div>
-//                <div class='col-xs-12'>
-//                  <div class='content'>
-//                    <span style='font-size:15px;'>$period</span>
-//
-//                    <h6>
-//                    <a href='dashboard.php?token=$key' class='btn btn-success btn-sm'>
-//                    Open</a></h6>
-//                  </div>
-//                </div>
-//              </div>
-//            </div>
-//            ";
-//
-//        }
 
         /*
 
@@ -175,6 +185,8 @@ function output($client_id, $search)
           </div>";*/
 
     }
+
+
 }
 
 ?>

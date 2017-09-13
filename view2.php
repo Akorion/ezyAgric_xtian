@@ -93,7 +93,6 @@ $mCrudFunctions = new CrudFunctions();
 
     <?php
 
-
     if (isset($_GET['token']) && $_GET['token'] != "") {
         $id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
         $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
@@ -102,30 +101,22 @@ $mCrudFunctions = new CrudFunctions();
         $dataset_type = $dataset[0]["dataset_type"];
 
         echo "<div class=\"row hide\">
-<div  class=\"col-md-12\">
-<p class=\"text-center\">
-<span><h3 style=\"color:#3F51B5;display:block; text-align:center; top:-5px; margin:0\">$dataset_name</h3></span></p>
-<input id=\"dataset_type\" type=\"hidden\" value=\"$dataset_type\"/>
-<input id=\"dataset_id_container\" type=\"hidden\" value=\"$id\"/>
-</div>
-</div>
-";
-        if ($dataset_type == "Farmer") {
-            include("include/filtered.php");
+                <div  class=\"col-md-12\">
+                <p class=\"text-center\">
+                <span><h3 style=\"color:#3F51B5;display:block; text-align:center; top:-5px; margin:0\">$dataset_name</h3></span></p>
+                <input id=\"dataset_type\" type=\"hidden\" value=\"$dataset_type\"/>
+                <input id=\"dataset_id_container\" type=\"hidden\" value=\"$id\"/>
+                </div>
+                </div>
+                ";
+        // if ($dataset_type == "Farmer") {
+        include("include/dairyFilter.php");
 
-        } else {
-            include("include/va_filtered.php");
-            $origin = $_GET['o'];
-            echo "<input id=\"origin\" type=\"hidden\" value=\"$origin\"/>";
-
-        }
         echo "
-  <div class=\"right print_export container\">
-  <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
-  btn-fab btn-raised mdi-action-class\"></a>
-</div>";
-
-        /*<a hred=\"#export\" data-toggle=\"model\"  data-target=\"#export\" class=\"btn btn-success btn-fab btn-raised mdi-action-class\" onclick=\"Export2Csv();\" ></a>*/
+          <div class=\"right print_export container\">
+              <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
+              btn-fab btn-raised mdi-action-class\"></a>
+          </div>";
 
         include("include/preloader.php");
         include("include/empty.php");
@@ -151,142 +142,6 @@ $mCrudFunctions = new CrudFunctions();
 <div id="hidden_form_container">
 </div>
 
-<!-- Modal add extra casg -->
-<div class="modal fade" id="cash" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Record Cash Returned</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline">
-                    <label class="control-label col-sm-6">Enter Cash Returned</label>&nbsp;
-                    <div class="form-group">
-                        <input id="cash_returned" text="number" name="" class="form-control col-sm-6"
-                               placeholder="Cash Returned">
-                    </div>
-                    </br>
-
-                    <label class="control-label col-sm-6">Enter Tractor Money Returned</label>&nbsp;
-                    <div class="form-group">
-                        <input id="tractor_money_returned" text="number" name="" class="form-control col-sm-6"
-                               placeholder="Tractor Money">
-                    </div>
-                </form>
-
-
-            </div>
-            <div class="modal-footer">
-                <button id="dismiss_c" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                <button onclick="recordCashReturns();" type="button" class="btn btn-success">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal produce -->
-<div class="modal fade" id="inputs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Record Farm Inputs</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline">
-                    <label class="control-label col-sm-4">Seed Taken</label>
-                    <div class="form-group">
-                        <select id="seed_selected" onchange="seedInput();" class="form-control col-sm-6">
-                            <option value="">Select Seed</option>
-                            <option value="1">Hybrid Maize Seed</option>
-                        </select>
-                        <input id="seed_taken" type="text" name="" class="form-control" placeholder="Seed Quantity">
-                    </div>
-                    </br>
-
-                    <label class="control-label col-sm-4">Fertilizer Taken</label>
-
-                    <div class="form-group">
-                        <select id="fertilizer_selected" onchange="fertilizerInput();" class="form-control col-sm-8">
-                            <option value="">Select Fertilizer</option>
-                            <option value="0">DAP</option>
-                            <option value="1">Foliar</option>
-                        </select>
-                        <input id="fertilizer_taken" type="text" name="" class="form-control" placeholder="Quantity">
-                    </div>
-                    </br>
-
-
-                    <label class="control-label col-sm-4">Herbicide Taken</label>
-
-                    <div class="form-group">
-                        <select id="herbicide_selected" onchange="herbicideInput();" class="form-control col-sm-8">
-                            <option value="">Select Herbicide</option>
-                            <option value="0">Greenfire</option>
-                            <option value="1">Weedround</option>
-                            <option value="2">Weedall</option>
-                            <option value="3">Weedmaster granular</option>
-                            <option value="4">24D</option>
-
-                        </select>
-                        <input id="herbicide_taken" type="text" name="" class="form-control" placeholder="Quantity">
-                    </div>
-                    </br>
-
-                    <label class="control-label col-sm-4">Cash Taken</label>
-                    <div class="form-group">
-                        <input id="cash_taken" text="number" name="" class="form-control col-sm-8"
-                               placeholder="Cash Taken">
-                    </div>
-                    <br>
-
-                    <label class="control-label col-sm-4">Tractor Money</label>
-                    <div class="form-group">
-                        <input id="tractor_taken" text="number" name="" class="form-control col-sm-8"
-                               placeholder="Tractor Money">
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="dismiss" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                <button onclick="recordFarmInputs();" type="button" class="btn btn-success">Save</button>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal add extra casg -->
-<div class="modal fade" id="yield" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Record Farmer's Yield</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline">
-                    <!--<label class="control-label">Projected Yield</label>&nbsp;
-                    <div class="form-group">
-                      <input text="number" name="" readonly value="3.45" class="form-control" placeholder="Actual Yield">
-                    </div></br>-->
-                    <label class="control-label">Enter Actual Yield</label>&nbsp;
-                    <div class="form-group">
-                        <input id="yield_value" text="number" name="" class="form-control" placeholder="Actual Yield"/>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="dismiss_y" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                <button onclick="recordFarmYields();" type="button" class="btn btn-success">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal adding export fields -->
 <div class="modal fade" id="export" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -477,20 +332,23 @@ $mCrudFunctions = new CrudFunctions();
         var sel_county = document.getElementById("sel_county");
         var sel_parish = document.getElementById("sel_parish");
         var dataset_id = document.getElementById("dataset_id_holder");
+
         id = dataset_id.value;
         subcounty = sel_county.value;
         district = sel_district.value;
         parish = sel_parish.value;
+
         $.ajax({
             type: "POST",
-            url: "form_actions/setFilter.php",
-            data: {id: id, village_district: district, village_subcounty: subcounty, parish: parish},
+            url: "form_actions/setDairyFilter.php",
+            data: {id: id, village_district: district, village_subcounty: subcounty, village_parish: parish},
             success: function (data) {
                 //window.alert(data);
                 $("#sel_village").html(data);
-                // $("#filter_go").click();
 
             }
+        }).error(function (data) {
+            console.log("Error: ", data);
         });
 
     }
@@ -509,7 +367,7 @@ $mCrudFunctions = new CrudFunctions();
 
         $.ajax({
             type: "POST",
-            url: "form_actions/setFilter.php",
+            url: "form_actions/setDairyFilter.php",
             data: {
                 id: id,
                 va: va,
@@ -537,7 +395,7 @@ $mCrudFunctions = new CrudFunctions();
         district = sel_district.value;
         $.ajax({
             type: "POST",
-            url: "form_actions/setFilter.php",
+            url: "form_actions/setDairyFilter.php",
             data: {id: id, parish_district: district, parish_subcounty: subcounty},
             success: function (data) {
                 //window.alert(data);
@@ -557,7 +415,7 @@ $mCrudFunctions = new CrudFunctions();
         var sel_county = document.getElementById("sel_county");
         var sel_parish = document.getElementById("sel_parish");
         var sel_village = document.getElementById("sel_village");
-        var sel_production_filter = document.getElementById("sel_production_filter");
+//        var sel_production_filter = document.getElementById("sel_production_filter");
         var sel_gender = document.getElementById("sel_gender");
         var dataset_id = document.getElementById("dataset_id_holder");
 
@@ -565,7 +423,7 @@ $mCrudFunctions = new CrudFunctions();
         gender = sel_gender.value;
 
         id = dataset_id.value;
-        sel_production_id = sel_production_filter.value;
+//        sel_production_id = sel_production_filter.value;
         village = sel_village.value;
         parish = sel_parish.value;
         subcounty = sel_county.value;
@@ -590,8 +448,8 @@ $mCrudFunctions = new CrudFunctions();
                 subcounty: subcounty,
                 parish: parish,
                 village: village,
-                gender: gender,
-                sel_production_id: sel_production_id
+                gender: gender
+//                sel_production_id: sel_production_id
             },
             success: function (data) {
 
@@ -632,13 +490,13 @@ $mCrudFunctions = new CrudFunctions();
         var sel_county = document.getElementById("sel_county");
         var sel_parish = document.getElementById("sel_parish");
         var sel_village = document.getElementById("sel_village");
-        var sel_production_filter = document.getElementById("sel_production_filter");
+//        var sel_production_filter = document.getElementById("sel_production_filter");
         var sel_gender = document.getElementById("sel_gender");
         var dataset_id = document.getElementById("dataset_id_holder");
 
         gender = sel_gender.value;
         id = dataset_id.value;
-        sel_production_id = sel_production_filter.value;
+//        sel_production_id = sel_production_filter.value;
         village = sel_village.value;
         parish = sel_parish.value;
         subcounty = sel_county.value;
@@ -657,8 +515,8 @@ $mCrudFunctions = new CrudFunctions();
                 subcounty: subcounty,
                 parish: parish,
                 village: village,
-                gender: gender,
-                sel_production_id: sel_production_id
+                gender: gender
+//                sel_production_id: sel_production_id
             },
             success: function (data) {
                 //window.alert(data);
@@ -675,9 +533,10 @@ $mCrudFunctions = new CrudFunctions();
         var dataset_id = document.getElementById("dataset_id_holder");
         id = dataset_id.value;
         district = sel_district.value;
+
         $.ajax({
             type: "POST",
-            url: "form_actions/setFilter.php",
+            url: "form_actions/setDairyFilter.php",
             data: {id: id, district: district},
             success: function (data) {
                 //window.alert(data);
@@ -693,14 +552,14 @@ $mCrudFunctions = new CrudFunctions();
         dataset_type = document.getElementById("dataset_type").value;
         if (dataset_type == "Farmer") {
 
-            getProductionFilter();
+            //getProductionFilter();
             getSubCounties();
             getVAs();
             filterData();
             getPagination(1);
 
         } else {
-            getProductionFilter();
+            //getProductionFilter();
 
             getVADATA();
 
@@ -710,22 +569,22 @@ $mCrudFunctions = new CrudFunctions();
 
     });
 
-    function getProductionFilter() {
-        dataset_type = document.getElementById("dataset_type").value;
-        var dataset_id = document.getElementById("dataset_id_holder");
-        id = dataset_id.value;
-        $.ajax({
-            type: "POST",
-            url: "form_actions/setFilter.php",
-            data: {prodution_data_id: id, prodution_data: "true", dataset_type: dataset_type},
-            success: function (data) {
-                // window.alert(data);
-                $("#sel_production_filter").html(data);
-
-            }
-        });
-
-    }
+    //    function getProductionFilter() {
+    //        dataset_type = document.getElementById("dataset_type").value;
+    //        var dataset_id = document.getElementById("dataset_id_holder");
+    //        id = dataset_id.value;
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "form_actions/setDairyFilter.php",
+    //            data: {prodution_data_id: id, prodution_data: "true", dataset_type: dataset_type},
+    //            success: function (data) {
+    //                // window.alert(data);
+    //                $("#sel_production_filter").html(data);
+    //
+    //            }
+    //        });
+    //
+    //    }
 
     function filterDataPagination(page) {
 
@@ -740,7 +599,7 @@ $mCrudFunctions = new CrudFunctions();
             per_page = sel_per_page.value;
 
 
-            var sel_va = document.getElementById("sel_va");
+            // var sel_va = document.getElementById("sel_va");
 
             va = sel_va.value; //v2
 
@@ -748,13 +607,13 @@ $mCrudFunctions = new CrudFunctions();
             var sel_county = document.getElementById("sel_county");
             var sel_parish = document.getElementById("sel_parish");
             var sel_village = document.getElementById("sel_village");
-            var sel_production_filter = document.getElementById("sel_production_filter");
+//            var sel_production_filter = document.getElementById("sel_production_filter");
             var sel_gender = document.getElementById("sel_gender");
             var dataset_id = document.getElementById("dataset_id_holder");
 
             gender = sel_gender.value;
             id = dataset_id.value;
-            sel_production_id = sel_production_filter.value;
+//            sel_production_id = sel_production_filter.value;
             village = sel_village.value;
             parish = sel_parish.value;
             subcounty = sel_county.value;
@@ -766,7 +625,7 @@ $mCrudFunctions = new CrudFunctions();
 
             $.ajax({
                 type: "POST",
-                url: "form_actions/getFarmers.php",
+                url: "form_actions/getDairyFarmers.php",
                 data: {
                     id: id,
                     va: va,//
@@ -777,7 +636,7 @@ $mCrudFunctions = new CrudFunctions();
                     subcounty: subcounty,
                     parish: parish,
                     village: village,
-                    sel_production_id: sel_production_id,
+//                    sel_production_id: sel_production_id,
                     gender: gender, page: page, per_page: per_page, total_count: total_count
                 },
                 success: function (data) {
@@ -883,7 +742,7 @@ $mCrudFunctions = new CrudFunctions();
         var sel_county = document.getElementById("sel_county");
         var sel_parish = document.getElementById("sel_parish");
         var sel_village = document.getElementById("sel_village");
-        var sel_production_filter = document.getElementById("sel_production_filter");
+//        var sel_production_filter = document.getElementById("sel_production_filter");
         var dataset_id = document.getElementById("dataset_id_holder");
 
         var sel_gender = document.getElementById("sel_gender");
@@ -891,7 +750,7 @@ $mCrudFunctions = new CrudFunctions();
         gender = sel_gender.value;
 
         id = dataset_id.value;
-        sel_production_id = sel_production_filter.value;
+//        sel_production_id = sel_production_filter.value;
         village = sel_village.value;
         parish = sel_parish.value;
         subcounty = sel_county.value;
@@ -905,7 +764,7 @@ $mCrudFunctions = new CrudFunctions();
 
         $.ajax({
             type: "POST",
-            url: "form_actions/getFarmers.php",
+            url: "form_actions/getDairyFarmers.php",
             data: {
                 id: id,
                 va: va,//v2
@@ -916,7 +775,8 @@ $mCrudFunctions = new CrudFunctions();
                 subcounty: subcounty,
                 parish: parish,
                 village: village,
-                sel_production_id: sel_production_id, gender: gender
+//                sel_production_id: sel_production_id,
+                gender: gender
             },
             success: function (data) {
                 //window.alert(data);
@@ -981,7 +841,7 @@ $mCrudFunctions = new CrudFunctions();
         var sel_county = document.getElementById("sel_county");
         var sel_parish = document.getElementById("sel_parish");
         var sel_village = document.getElementById("sel_village");
-        var sel_production_filter = document.getElementById("sel_production_filter");
+//        var sel_production_filter = document.getElementById("sel_production_filter");
         var dataset_id = document.getElementById("dataset_id_holder");
 
         var sel_gender = document.getElementById("sel_gender");
@@ -989,7 +849,7 @@ $mCrudFunctions = new CrudFunctions();
         gender = sel_gender.value;
 
         id = dataset_id.value;
-        sel_production_id = sel_production_filter.value;
+//        sel_production_id = sel_production_filter.value;
         village = sel_village.value;
         parish = sel_parish.value;
         subcounty = sel_county.value;
@@ -1004,7 +864,7 @@ $mCrudFunctions = new CrudFunctions();
                 subcounty: subcounty,
                 parish: parish,
                 village: village,
-                sel_production_id: sel_production_id,
+//                sel_production_id: sel_production_id,
                 gender: gender,
                 search: search
             },
@@ -1023,13 +883,13 @@ $mCrudFunctions = new CrudFunctions();
         var sel_county = document.getElementById("sel_county");
         var sel_parish = document.getElementById("sel_parish");
         var sel_village = document.getElementById("sel_village");
-        var sel_production_filter = document.getElementById("sel_production_filter");
+//        var sel_production_filter = document.getElementById("sel_production_filter");
         var sel_gender = document.getElementById("sel_gender");
         var dataset_id = document.getElementById("dataset_id_holder");
 
         gender = sel_gender.value;
         id = dataset_id.value;
-        sel_production_id = sel_production_filter.value;
+//        sel_production_id = sel_production_filter.value;
         village = sel_village.value;
         parish = sel_parish.value;
         subcounty = sel_county.value;
@@ -1072,8 +932,8 @@ $mCrudFunctions = new CrudFunctions();
         newInput5.value = village;
         newInput6 = document.createElement('input');
         newInput6.type = 'hidden';
-        newInput6.name = 'sel_production_id';
-        newInput6.value = sel_production_id;
+//        newInput6.name = 'sel_production_id';
+//        newInput6.value = sel_production_id;
         newInput7 = document.createElement('input');
         newInput7.type = 'hidden';
         newInput7.name = 'gender';
@@ -1141,10 +1001,10 @@ $mCrudFunctions = new CrudFunctions();
         filterDataPagination(1);
         //getVAs();
     });
-    $("#sel_production_filter").change(function () {
-        filterDataPagination(1);
-
-    });
+    //    $("#sel_production_filter").change(function () {
+    //        filterDataPagination(1);
+    //
+    //    });
     $("#sel_parish").change(function () {
         $("#sel_va").val("all");
         filterDataPagination(1);
