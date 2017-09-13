@@ -146,6 +146,9 @@
     .move_data {
         margin-left: 2em !important;
     }
+    .graph_box{
+        padding: 10px; -moz-box-shadow: 0 0 5px #999; -webkit-box-shadow: 0 0 5px #999; box-shadow: 0 0 5px #999;
+    }
 </style>
 
 <?php include "./include/breadcrumb.php" ?>
@@ -198,8 +201,11 @@ include("include/preloader.php");
         getLoadOutGrowerDash();
         getAjaxData();
         FormGenderGraph('Baziriyo');
+
+
+//            $('#dt_example').DataTable();
 //        hideProgressBar();
-        $('#example').DataTable();
+//        $('#dt_example').DataTable();
     });
 
     $("#search_holder").on("input", function (e) {
@@ -230,6 +236,9 @@ include("include/preloader.php");
             data: {token: token, coop: condtn},
             success: function (data) {
                 $("#cop_farmers").html(data);
+
+
+                    $('#dt_example').DataTable();
 //                console.log(data);
             }
 

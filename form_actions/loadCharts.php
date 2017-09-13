@@ -5,7 +5,6 @@ require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/crud_function
 require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/database_query_processor_class.php";
 require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/utility_class.php";
 
-
 $mCrudFunctions = new CrudFunctions();
 $json_model_obj = new JSONModel();
 $util_obj = new Utilties();
@@ -63,17 +62,25 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
         $cooperatives = 0;
-        echo " <ol id='cooplist'> ";
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("soil_results_" . $row['id'])) {
-
-                $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], " DISTINCT(TRIM(`cooperative`)) as coops ", "1 ORDER BY TRIM(cooperative) ASC");
+                $id = $row['id'];
+                $cooperatives = $mCrudFunctions->fetch_rows("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id", " DISTINCT(TRIM(s.`cooperative`)) as coops,COUNT(*) as farmers,round(AVG(ph),2) as ph", "1 GROUP BY TRIM(s.cooperative)");
                 foreach ($cooperatives as $coop) {
-                    echo "<a href='#'> <li onclick='doStuff()'>".$coop['coops']." </li></a>";
+                    $coops = $coop['coops'];
+                    $farmers = $coop['farmers'];
+                    $lbl_farmers = $farmers > 1 ? $farmers." farmers": $farmers." farmer";
+                    echo "                
+                            <div class='graph_box'>
+                                <h4><strong>$coops</strong></h4>
+                                $lbl_farmers &nbsp;&nbsp;&nbsp;&nbsp; Average ph: ".$coop['ph']." &nbsp; 
+                                <a href='#' class='btn btn-sm btn-success'><span style='color: white;' onclick='doStuff()'>$coops</span></a>  
+                            </div>                                             
+                        <br>
+                        ";
                 }
             }
         }
-        echo " </ol> ";
         break;
 
     //geting loans summary : used in farmerloans.php
@@ -191,38 +198,40 @@ switch ($_POST["token"]) {
         $account_name = $_SESSION['account_name'];
         $condition = $_POST["coop"];
 
-        if ($condition != ''){
+        if ($condition != '') {
             $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-            echo "<h4>".$_POST["coop"]." cooperative farmers </h4>";
-            echo " <table class='table table-responsive'> <thead class='bg bg-success'><th>name</th> <th>village</th> <th>Action</th></thead>";
+            echo "<h4>" . $_POST["coop"] . " cooperative farmers </h4>";
+            echo " <table class='table table-responsive' id='dt_example'> <thead class='bg bg-success'><th>#</th><th>name</th> <th>village</th> <th>Action</th></thead>";
 
             foreach ($rows as $row) {
                 $id = $row['id'];
                 $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
                 $dataset_type = $row['dataset_type'];
                 if ($mCrudFunctions->check_table_exists("soil_results_" . $id)) {
-                    $cooperatives = $mCrudFunctions->fetch_rows("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id", "d.*, s.`cooperative`,s.`village`,s.`ph`,s.`om_%`,s.`n_%`,s.`p_ppm`,s.`k`", "s.cooperative = '".$condition."' ORDER BY d.biodata_farmer_name ASC");
+                    $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $id . " s INNER JOIN dataset_" . $id . " d ON s.unique_id = d.unique_id", "d.*, s.`cooperative`,s.`village`,s.`ph`,s.`om_%`,s.`n_%`,s.`p_ppm`,s.`k`", "s.cooperative = '" . $condition . "' ORDER BY d.biodata_farmer_name ASC");
+                    $count = 1;
                     foreach ($cooperatives as $coop) {
                         $real_id = $coop['id'];
                         $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
                         $name = $util_obj->capitalizeName($coop['biodata_farmer_name']);
-                        echo "<tr><td>".$name." </td> <td>".$coop['village']." </td> <td><a href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\"> <button class='btn btn-success'>View Details</button> </a></td></tr>";
+                        echo "<tr><td>".$count."</td><td>" . $name . " </td> <td>" . $coop['village'] . " </td> <td><a href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\"> <button class='btn btn-success'>View Details</button> </a></td></tr>";
+                        $count++;
                     }
                 }
             }
-        }else{
+        } else {
             $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-            echo "<h4>".$_POST["coop"]." cooperative farmers </h4>";
-            echo " <table class='table table-responsive'> <thead class='bg bg-success'><th>name</th> <th>village</th> <th>Action</th></thead>";
+            echo "<h4>" . $_POST["coop"] . " cooperative farmers </h4>";
+            echo " <table class='table table-responsive' id='dt_example'> <thead class='bg bg-success'><th>name</th> <th>village</th> <th>Action</th></thead>";
 
             foreach ($rows as $row) {
                 if ($mCrudFunctions->check_table_exists("soil_results_" . $row['id'])) {
 
                     $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], "*", "1 ORDER BY farmer_name");
                     foreach ($cooperatives as $coop) {
-                        echo "<a href='#'> <tr>  <td>".$coop['farmer_name']." </td> <td>".$coop['village']." </td> <td><button class='btn btn-success'>Details</button> </td></tr></a>";
+                        echo "<a href='#'> <tr>  <td>" . $coop['farmer_name'] . " </td> <td>" . $coop['village'] . " </td> <td><button class='btn btn-success'>Details</button> </td></tr></a>";
                     }
                 }
             }
@@ -484,14 +493,18 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
         $farmers_number = array();
         $levels = array("Very low", "Low", "Medium", "High", "Very high");
-        $medium; $high; $very_high; $low; $verylow;
+        $medium;
+        $high;
+        $very_high;
+        $low;
+        $verylow;
 
         foreach ($rows as $row) {
 
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
                 $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph <= 4.5");
-                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 4.5 AND ph <= 5.5");
+                $low += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 4.5 AND ph <= 5.5");
                 $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 5.5 AND ph <= 6.5");
                 $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 6.5 AND ph <= 7.8");
                 $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "ph > 7.8");
@@ -514,14 +527,18 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
         $farmers_number = array();
         $levels = array("Very low", "Low", "Medium", "High", "Very high");
-        $medium; $high; $very_high; $low; $verylow;
+        $medium;
+        $high;
+        $very_high;
+        $low;
+        $verylow;
 
         foreach ($rows as $row) {
 
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
                 $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` <= 0.05");
-                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.05 AND `n_%` <= 0.15");
+                $low += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.05 AND `n_%` <= 0.15");
                 $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.15 AND `n_%` <= 0.25");
                 $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.25 AND `n_%` <= 0.5");
                 $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`n_%` > 0.5");
@@ -552,7 +569,7 @@ switch ($_POST["token"]) {
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
                 $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` <= 2.5");
-                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 2.5 AND `om_%` <= 0.15");
+                $low += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 2.5 AND `om_%` <= 0.15");
                 $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 0.15 AND `om_%` <= 3.5");
                 $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 3.5 AND `om_%` <= 4.9");
                 $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "`om_%` > 4.9");
@@ -569,14 +586,18 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
         $farmers_number = array();
         $levels = array("Very low", "Low", "Medium", "High", "Very high");
-        $medium; $high; $very_high; $low; $verylow;
+        $medium;
+        $high;
+        $very_high;
+        $low;
+        $verylow;
 
         foreach ($rows as $row) {
 
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
 
                 $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "k <= 0.05");
-                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "k > 0.05 AND k <= 0.15");
+                $low += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "k > 0.05 AND k <= 0.15");
                 $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "k > 0.15 AND k <= 0.25");
                 $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "k > 0.25 AND k <= 0.5");
                 $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "k > 0.5");
@@ -598,8 +619,11 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
         $farmers_number = array();
-        $recommendations  = array("Lime", "CAN", "CAN_ASN", "Urea");
-        $lime=0;    $can=0;    $can_asn=0; $urea=0;
+        $recommendations = array("Lime", "CAN", "CAN_ASN", "Urea");
+        $lime = 0;
+        $can = 0;
+        $can_asn = 0;
+        $urea = 0;
 
         foreach ($rows as $row) {
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
@@ -615,7 +639,7 @@ switch ($_POST["token"]) {
         array_push($farmers_number, $urea);
 
 //        analyseSeeds($recommendations, $farmers_number, "column", "Farmers With Fertilizer Recommendations");
-        fertilizer_chart($lime,$can,$can_asn,$urea);
+        fertilizer_chart($lime, $can, $can_asn, $urea);
         break;
 
     case  "ace_crop_insured":
@@ -625,7 +649,9 @@ switch ($_POST["token"]) {
 
 //        $farmers_number = array();
 //        $regions = array("Eastern", "Northern", "Western");
-        $east = 0; $north = 0; $west = 0;
+        $east = 0;
+        $north = 0;
+        $west = 0;
 
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
@@ -669,7 +695,12 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
         $farmers_number = array();
         $levels = array("Trace", "Very low", "Low", "Medium", "High", "Very high");
-        $trace; $medium; $high; $very_high; $low; $verylow;
+        $trace;
+        $medium;
+        $high;
+        $very_high;
+        $low;
+        $verylow;
 
         foreach ($rows as $row) {
 
@@ -677,7 +708,7 @@ switch ($_POST["token"]) {
 
                 $trace += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm like 'trace'");
                 $verylow += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm BETWEEN 0.3 AND 12");
-                $low+= (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm >12 AND p_ppm<=22.5");
+                $low += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm >12 AND p_ppm<=22.5");
                 $medium += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm > 22.5 AND p_ppm <= 35.5");
                 $high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm > 35.5 AND p_ppm <= 68.5");
                 $very_high += (int)$mCrudFunctions->get_count("soil_results_" . $row['id'], "p_ppm > 68.5");
@@ -701,22 +732,33 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
         $farmers_number = array();
         $levels = array("Very low", "Low", "Medium", "High", "Very high");
-        $medium=0; $high=0; $very_high=0; $low=0; $verylow=0;
+        $medium = 0;
+        $high = 0;
+        $very_high = 0;
+        $low = 0;
+        $verylow = 0;
 
-        $ph = array();  $coops = array();
+        $ph = array();
+        $coops = array();
 
         foreach ($rows as $row) {
 
             if (($mCrudFunctions->check_table_exists("soil_results_" . $row['id']))) {
                 $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $row['id'], "DISTINCT(trim(`cooperative`)) as coops, round(AVG(`ph`),2)as ph ", "1 GROUP BY TRIM(cooperative) ASC");
-                foreach ($cooperatives as $coop_dst){
+                foreach ($cooperatives as $coop_dst) {
                     $ph = $coop_dst['ph'];
 
-                    if($ph <= 4.5) { $verylow += 1; }
-                    elseif ($ph > 4.5 && $ph <= 5.5) { $low+= 1; }
-                    elseif ($ph > 5.5 && $ph <= 6.5) { $medium += 1; }
-                    elseif ($ph > 6.5 && $ph <= 7.8) { $high += 1; }
-                    else{ $very_high += 1; }
+                    if ($ph <= 4.5) {
+                        $verylow += 1;
+                    } elseif ($ph > 4.5 && $ph <= 5.5) {
+                        $low += 1;
+                    } elseif ($ph > 5.5 && $ph <= 6.5) {
+                        $medium += 1;
+                    } elseif ($ph > 6.5 && $ph <= 7.8) {
+                        $high += 1;
+                    } else {
+                        $very_high += 1;
+                    }
                 }
             }
         }
@@ -1076,7 +1118,7 @@ function ace_crop_insured_pie_chart($east, $north, $west)
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function fertilizer_chart($lime,$can,$can_asn,$urea)
+function fertilizer_chart($lime, $can, $can_asn, $urea)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -1095,4 +1137,5 @@ function fertilizer_chart($lime,$can,$can_asn,$urea)
     $data = $json_model_obj->get_piechart_graph_json($titleArray, $dataArray);
     $util_obj->deliver_response(200, 1, $data);
 }
+
 ?>

@@ -146,6 +146,7 @@
     .move_data {
         margin-left: 2em !important;
     }
+
 </style>
 
 <?php include "./include/breadcrumb.php" ?>

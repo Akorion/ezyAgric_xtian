@@ -817,8 +817,8 @@
                 elseif ($_SESSION["account_name"] == 'Ankole Coffee Producers Cooperative Union Ltd') {
                     $bio = $mCrudFunctions->fetch_rows("dataset_".$dataset_id, '*', 'id='.$id);
 
-                    $latitude = $util_obj->remove_apostrophes($bio[0]['production_data_garden_gps_Latitude']);
-                    $longitude = $util_obj->remove_apostrophes($bio[0]['production_data_garden_gps_Longitude']);
+                    $latitude = $util_obj->remove_apostrophes($bio[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
+                    $longitude = $util_obj->remove_apostrophes($bio[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
                     $picture = $util_obj->remove_apostrophes($bio[0]['biodata_farmer_picture']);
 
 ///////////////////////////////////////////// lat_long_pic starts
@@ -826,7 +826,7 @@
 <input type=\"hidden\" id=\"latitude\" value=\"$latitude\" />
 <input type=\"hidden\" id=\"longitude\" value=\"$longitude\" />
 <div class=\" col-sm-4 col-md-4 col-lg-4\">
- <span class=\"img\" ><img src=\"$picture\" class=\"on_map\"></span>
+ <span class=\"hide img\" ><img src=\"$picture\" class=\"on_map\"></span>
 </div>
 
 <div class=\"col-sm-5 col-md-5 col-lg-5\">
