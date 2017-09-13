@@ -295,7 +295,7 @@ $mCrudFunctions = new CrudFunctions();
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Choose fileds to include in exported data</h4>
+                <h4 class="modal-title" id="myModalLabel">Choose fields to include in exported data</h4>
             </div>
             <div class="modal-body">
                 <div class="">
@@ -332,7 +332,6 @@ $mCrudFunctions = new CrudFunctions();
                         $column = $row['columns'];
 
                         $id__ = "bio_data_" . $row['id'];
-
 
                         $column = str_replace("biodata_", "", $column);
                         $column = str_replace("_", " ", $column);

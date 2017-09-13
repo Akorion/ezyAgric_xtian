@@ -165,8 +165,7 @@
 
     <div class="col-md-12 col-sm-4 col-lg-4">
         <div id="coopl">
-            <div id="acpcu_cooperatives_list" class="col-lg-12 row"
-                 style='height:400px; padding-top: 10px; overflow-y: auto; overflow-x: hidden;'>
+            <div id="acpcu_cooperatives_list" class="col-lg-12 row" style='height:400px; padding-top: 10px; overflow-y: auto; overflow-x: hidden;'>
 
             </div>
         </div>
@@ -200,7 +199,7 @@ include("include/preloader.php");
         getAjaxData();
         FormGenderGraph('Baziriyo');
 //        hideProgressBar();
-
+        $('#example').DataTable();
     });
 
     $("#search_holder").on("input", function (e) {
@@ -209,7 +208,7 @@ include("include/preloader.php");
 
     //---------------------------------------- allowing the list click farmers ------------------
     function doStuff() {
-        var lis = document.getElementById("acpcu_cooperatives_list").getElementsByTagName('li');
+        var lis = document.getElementById("acpcu_cooperatives_list").getElementsByTagName('span');
         for (var i = 0; i < lis.length; i++) {
             lis[i].addEventListener('click', consoleCop, false);
         }
@@ -221,7 +220,6 @@ include("include/preloader.php");
     }
 
     function FormGenderGraph(cooperative) {
-
 
         token = "farmers_cop_table";
         condtn = cooperative;
@@ -256,6 +254,8 @@ include("include/preloader.php");
         });
 
     }
+
+
 
     function getLoadOutGrowerDash() {
         token = "acpcu_cooperatives";
