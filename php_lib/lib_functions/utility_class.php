@@ -429,6 +429,7 @@ public function createTableFromCSV($db,$handle,$table)
 		 if(($i+1) != $columns){ $query .=","; }
    
 	    }
+//         $query .= ", unique_id NULL VARCHAR(50)";
          $query .= ")";
        }
     return $db->setResultForQuery($query);

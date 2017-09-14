@@ -862,10 +862,10 @@
 
                     echo "
         <h6>Name:</h6> <p class=\"align\">$name</p><hr/>
-        <h6>Contact:</h6> <p class=\"align\">$contact</p><hr/>
+   <!--     <h6>Contact:</h6> <p class=\"align\">$contact</p><hr/>  -->
         <h6>District:</h6> <p class=\"align\">$district</p><hr/>
         <h6>Subcounty:</h6> <p class=\"align\">$subcounty</p><hr/>
-        <h6>Parish:</h6> <p class=\"align\">$parish</p><hr/>
+    <!--    <h6>Parish:</h6> <p class=\"align\">$parish</p><hr/>  -->
         <h6>Village:</h6> <p class=\"align\">$village</p><hr/>
         ";
 //    foreach ($rows2 as $row) {
@@ -989,7 +989,7 @@
                     $samples = $mCrudFunctions->fetch_rows("soil_results_" . $dataset_id, "*", " unique_id='$unik_id' ");
 
                     /**** ph values and their description ***/
-                    $ph = $samples[0]['ph'];    $ph_desc="";
+                    $ph = $samples[0]['ph'];    $ph_desc=""; $ph_requiremt=""; $n_requiremt="";
                     if($ph <= 4.5){ $ph_desc = "Extremely acidic"; }
                     elseif($ph>=4.6 && $ph<=5.5){ $ph_desc = "Strongly acidic"; }
                     elseif($ph>=5.6 && $ph<=6.0){ $ph_desc = "Moderately acidic"; }
@@ -999,6 +999,13 @@
                     elseif($ph>=7.9 && $ph<=8.4){ $ph_desc = "Moderately alkaline"; }
                     elseif($ph>=8.5 && $ph<=9.0){ $ph_desc = "Strongly alkaline"; }
                     else{$ph_desc = "Very strongly alkaline";}
+
+                    if($ph<= 5.2){ $ph_requiremt = "Apply Calcium Ammonium Nitrate for the first 2years and Ammonium Sulphate Nitrate in the third year"; }
+                    elseif($ph>=5.3 && $ph<= 6.5){ $ph_requiremt = "Apply Calcium Ammonium Nitrate and Ammonium Sulphate Nitrate in alternate years"; }
+                    else{ $ph_requiremt = "Apply Sulphate of Ammonia or Urea"; }
+
+                    if($ph<=5.2){ $n_requiremt = "Liming is required"; }
+                    else{ $n_requiremt = "No Liming required"; }
 
                     /** organic matter values and their decsription / meaning **/
                     $om = $samples[0]['om_%'];  $om_desc="";
@@ -1016,21 +1023,31 @@
                     else { $nitrogen_desc = "Very high"; }
 
                     /** phosphorous values and their meanings **/
-                    $p = $samples[0]['p_ppm'];  $p_desc="";
+                    $p = $samples[0]['p_ppm'];  $p_desc=""; $p_requiremt="";
                     if($p>=0 && $p<=12){ $p_desc = "Very Low"; }
                     elseif($p>=12.5 && $p<=22.5){$p_desc = "Low"; }
                     elseif($p>=23 && $p<=35.5){$p_desc = "Medium"; }
                     elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
                     elseif($p >= 69){$p_desc = "Very High"; }
 
+                    if($p_desc == "Very High"){ $p_requiremt = "No further addition"; }
+                    elseif($p_desc == "High"){ $p_requiremt = "Apply 30g of MOP in a planting hole"; }
+                    elseif($p_desc == "Medium"){ $p_requiremt = "Apply 50-60g of SSP in a planting hole"; }
+                    elseif( ($p_desc == "Low") || ($p_desc == "Very Low")){ $p_requiremt = "Apply 100g of SSP in a planting hole"; }
+
                     /** potassium values and their meanings **/
-                    $k = $samples[0]['k'];  $k_desc="";
+                    $k = $samples[0]['k'];  $k_desc=""; $k_requiremt="";
                     if($k>=0 && $k<0.2){ $k_desc = "Very Low"; }
                     elseif($k>=0.2 && $k<0.3){ $k_desc = "Low"; }
                     elseif($k>=0.3 && $k<0.7){ $k_desc = "Medium"; }
                     elseif($k>=0.7 && $k<2.0){ $k_desc = "High"; }
                     elseif($k>= 2.0){ $k_desc = "Very High"; }
                     elseif($k =="trace"){ $k_desc = "trace"; }
+
+                    if($k<=0.25){$k_requiremt = "Apply 100g of MOP in a planting hole"; }
+                    elseif($k>0.25 && $k<=0.75){ $k_requiremt = "Apply 50-60g of MOP in a planting hole"; }
+                    elseif($k>=0.8 && $k<=1.9){ $k_requiremt = "Apply 30g of MOP in a planting hole"; }
+                    else{$k_requiremt = "No further addition"; }
 
                     $rows_cash_returned= $mCrudFunctions->get_sum("cash_returned_".$dataset_id,"cash_returned"," farmer_id='$id' ");
 
@@ -1195,7 +1212,7 @@
                     }
 
                     echo"<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
-<div class=\"card prodn\">
+<div class=\"card prodn\" style='font-family: Arial'>
 <h5 class=\"\">Production Data</h5>";
                     echo "
         <h6>Acreage:</h6><p id=\"total\">$acreage</p><hr/>
@@ -1205,7 +1222,12 @@
         <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p>&nbsp;$om_desc<hr/>
         <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p>&nbsp;$nitrogen_desc<hr/>
         <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p>&nbsp;$p_desc<hr/>
-        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/>        
+        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/>    
+        <h6><b> Recommendations</b></h6><hr/>
+        <h6 class='trim'>pH:</h6><p>$n_requiremt</p><hr/>
+       <h6 class='trim'>Nitrogen Requirement:</h6><p>$ph_requiremt</p><hr/>  
+        <h6 class='trim'>Potassium Requirement:</h6><p>$k_requiremt</p><hr/>
+        <h6 class='trim'>Phosphorous Requirement:</h6><p>$p_requiremt</p><hr/>
         ";
 
 //        $table="production_data";

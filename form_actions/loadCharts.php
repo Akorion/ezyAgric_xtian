@@ -209,12 +209,12 @@ switch ($_POST["token"]) {
                 $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
                 $dataset_type = $row['dataset_type'];
                 if ($mCrudFunctions->check_table_exists("soil_results_" . $id)) {
-                    $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $id . " s INNER JOIN dataset_" . $id . " d ON s.unique_id = d.unique_id", "d.*, s.`cooperative`,s.`village`,s.`ph`,s.`om_%`,s.`n_%`,s.`p_ppm`,s.`k`", "s.cooperative = '" . $condition . "' ORDER BY d.biodata_farmer_name ASC");
+                    $cooperatives = $mCrudFunctions->fetch_rows("soil_results_" . $id . " s INNER JOIN dataset_" . $id . " d ON s.unique_id = d.unique_id", "d.id,s.farmer_name,s.cooperative,s.village", "s.cooperative = '" . $condition . "' ORDER BY s.farmer_name ASC");
                     $count = 1;
                     foreach ($cooperatives as $coop) {
                         $real_id = $coop['id'];
                         $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
-                        $name = $util_obj->capitalizeName($coop['biodata_farmer_name']);
+                        $name = $util_obj->capitalizeName($coop['farmer_name']);
                         echo "<tr><td>".$count."</td><td>" . $name . " </td> <td>" . $coop['village'] . " </td> <td><a href=\"user_details.php?s=$dataset_&token=$real_id&type=$dataset_type\"> <button class='btn btn-success'>View Details</button> </a></td></tr>";
                         $count++;
                     }

@@ -593,11 +593,14 @@ switch ($_POST["token"]) {
         $not_insured = 0;
 
         foreach ($rows as $row) {
+            $type = $row['dataset_type'];
+            $dataset_id = $row['id'];
+            $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_acreage", 1);
             if($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd" || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
-            elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
+//            elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $cash_given_out += $mCrudFunctions->get_distinct_count("soil_results_" . $row['id'], " COUNT(DISTINCT(TRIM(`cooperative`)))", "1 ");
@@ -646,10 +649,10 @@ switch ($_POST["token"]) {
                            <span class=\"fa fa-users fa-3x\"></span>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4> <a href='dash.php'> Farmers </a> </h4>
+                           <h4> <a href='view.php?token=$key&type=$type'> Farmers </a> </h4>
                          <a style=\"font-size:15px; color:blue\"><b>Total Farmers: $farmers</b></a> <br>
                            <!--span style=\"font-size:13px; color:green\">$acerage Acres</span--> 
-                            <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                            <a href='view.php?token=$key&type=$type'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
                        </div>
                    </div>
@@ -690,6 +693,9 @@ switch ($_POST["token"]) {
         $value_of_insured_yield=0;  $premium=0; $levy=0;    $vat=0; $subsidy=0; $farmer_acreage=0; $real_premium=0; $total_premium=0;
 
         foreach ($rows as $row) {
+            $type = $row['dataset_type'];
+            $dataset_id = $row['id'];
+            $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
@@ -797,10 +803,10 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-leaf fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4> <a href='../dash.php'> Insured farmers </a> </h4>
+                           <h4> <a href='view.php?token=$key&type=$type'> Insured farmers </a> </h4>
                          <a href='#' style=\"font-size:15px; color:blue\"><b> Total Farmers: $farmers</b></a> <br>
                            <span style=\"font-size:13px; color:green\"><b> Total Acreage: $acreage </b></span> 
-                            <a href='../dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                            <a href='view.php?token=$key&type=$type'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
                        </div>
                    </div>

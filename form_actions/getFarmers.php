@@ -2228,7 +2228,7 @@ function output($id, $where)
     $dataset_type = $dataset[0]["dataset_type"];
 
     $table = "dataset_" . $id;
-    $columns = "* , (DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25) as actualAgeInYrs , floor(DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),DATE(biodata_farmer_dob))/365.25) as ageInYrs ";
+    $columns = "*";
 
     $age_min = !empty($_POST['age_min']) ? (int)$_POST['age_min'] : 0;
     $age = !empty($_POST['age']) ? (int)$_POST['age'] : 0;
@@ -2349,7 +2349,7 @@ function output($id, $where)
                 elseif ($_SESSION["account_name"] == $acpcu){
                     if($mCrudFunctions->check_table_exists('soil_results_'.$id)){
                         $sample_results = $mCrudFunctions->fetch_rows("soil_results_".$id." s INNER JOIN dataset_".$id." d ON s.unique_id = d.unique_id",
-                            "d.*, s.`cooperative`,s.`village`,s.`ph`,s.`om_%`,s.`n_%`,s.`p_ppm`,s.`k`", "1 ORDER BY d.biodata_farmer_name ASC");
+                            "d.*,s.`ph`,s.`n_%`,s.`p_ppm`,s.`k`,s.`om_%`", "1 ORDER BY trim(d.biodata_farmer_name) ASC");
 
                         $i=1;
                         foreach ($sample_results as $results){
