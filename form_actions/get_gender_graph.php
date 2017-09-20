@@ -251,7 +251,7 @@ if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country'])
         }
 
 //echo $female;
-        draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
+        draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
     } else
@@ -454,7 +454,7 @@ if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country'])
             }
 
 
-            draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
+            draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
         } else
@@ -645,7 +645,7 @@ if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country'])
                     }
                 }
 
-                draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
+                draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
             } else
@@ -841,7 +841,7 @@ if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country'])
                         }
                     }
 
-                    draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
+                    draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
                 }
@@ -1022,7 +1022,7 @@ if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country'])
                         }
                     }
 
-                    draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj);
+                    draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
                 }
@@ -1033,7 +1033,7 @@ else {
 }
 
 
-function draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_obj)
+function draw_pie_chart($male, $female, $json_model_obj, $util_obj)
 {
 
     $titleArray = array('text' => 'Gender Analysis');
@@ -1044,7 +1044,7 @@ function draw_pie_chart($male, $female,$total_farmers, $json_model_obj, $util_ob
     array_push($datax, $temp);
 
     array_push($datax, array('Female', $female));
-    array_push($datax, array('Total Farmers',$total_farmers));
+//    array_push($datax, array('Total Farmers',$total_farmers));
 
 //array_push($datax,array('name'=>'Female','y'=>$per_female,'sliced'=>true,'selected'=>true));
     $dataArray = array('type' => 'pie', 'name' => 'Gender', 'data' => $datax);

@@ -294,7 +294,7 @@ public function insertCSVintoTable($db,$table,$column_string,$handle)
 //    $this->debug_to_console($query);
     $flagx = $db->setResultForQuery($query);
     if (!$flagx) {
-        return mysqli_error($con->getServerConnection());
+        return "Insertion failed, ".mysqli_error($con->getServerConnection());
     } else {
         return $counter;
     }
@@ -429,8 +429,8 @@ public function createTableFromCSV($db,$handle,$table)
 		 if(($i+1) != $columns){ $query .=","; }
    
 	    }
-//         $query .= ", unique_id NULL VARCHAR(50)";
-         $query .= ")";
+//            $query .= ", unique_id VARCHAR(50) NULL";
+         $query .= " )";
        }
     return $db->setResultForQuery($query);
 }

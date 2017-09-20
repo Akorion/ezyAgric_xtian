@@ -847,6 +847,7 @@
 
 
                     $name = $util_obj->capitalizeName($bio[0]['biodata_farmer_name']);
+                    $gender = $util_obj->capitalizeName($bio[0]['biodata_farmer_gender']);
                     $contact = $bio[0]['biodata_farmer_phone_number'];
                     $district = $bio[0]['biodata_farmer_location_farmer_district'];
                     $subcounty = $bio[0]['biodata_farmer_location_farmer_subcounty'];
@@ -862,7 +863,7 @@
 
                     echo "
         <h6>Name:</h6> <p class=\"align\">$name</p><hr/>
-   <!--     <h6>Contact:</h6> <p class=\"align\">$contact</p><hr/>  -->
+        <h6>Gender:</h6> <p class=\"align\">$gender</p><hr/>  
         <h6>District:</h6> <p class=\"align\">$district</p><hr/>
         <h6>Subcounty:</h6> <p class=\"align\">$subcounty</p><hr/>
     <!--    <h6>Parish:</h6> <p class=\"align\">$parish</p><hr/>  -->
@@ -1232,7 +1233,7 @@
 
 //        $table="production_data";
 //        $columns="*";
-//        $where=" dataset_id='$dataset_id' ";
+//        $where=" dataset_id='$dataset_id' ";load
 //        $rows4= $mCrudFunctions->fetch_rows($table,$columns,$where);
 //        $enterprise="";
 //        foreach($rows4 as $row){

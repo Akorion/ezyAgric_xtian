@@ -570,10 +570,10 @@
                 var female = data.series[0].data[1][1];
 
                     $('#total_farmers').html(male+female);
-                    if($('#total_farmers').val() < 1){
-                        var ttl_farmers = data.series[0].data[2][1];
-                        $('#total_farmers').html(ttl_farmers);
-                    }
+//                    if($('#total_farmers').val() < 1){
+//                        var ttl_farmers = data.series[0].data[2][1];
+//                        $('#total_farmers').html(ttl_farmers);
+//                    }
 //                console.log(male+female);
 
             }
