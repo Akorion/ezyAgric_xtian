@@ -77,7 +77,7 @@ if ($_FILES["csv"]["size"] > 0) {
 //            if($size > 2) {
 //                echo basename($file);
             mysqli_query($con->getServerConnection(), '
-                LOAD DATA LOCAL INFILE "'.$file.'" IGNORE INTO TABLE '.$table.'
+                LOAD DATA LOCAL INFILE "'.$file.'" INTO TABLE '.$table.'
                     FIELDS TERMINATED BY \';\'
                     LINES TERMINATED BY \'\\r\\n\' STARTING BY \'\'
                     IGNORE 1 LINES
