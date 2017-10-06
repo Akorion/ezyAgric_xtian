@@ -23,11 +23,13 @@ switch ($_POST["token"]) {
 
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-
-                $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", "biodata_farmer_gender='male'");
-
-                $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", "biodata_farmer_gender='female'");
-
+                if($_SESSION['account_name'] == "Kiima Foods"){
+                    $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_money_used_for_fertilizers", "biodata_farmer_gender='male'");
+                    $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_money_used_for_fertilizers", "biodata_farmer_gender='female'");
+                } else {
+                    $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", "biodata_farmer_gender='male'");
+                    $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", "biodata_farmer_gender='female'");
+                }
             }
         }
         echo "
@@ -98,7 +100,7 @@ switch ($_POST["token"]) {
 
                 $male += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_loan_amount_accessed", "biodata_farmer_gender='male' AND general_questions_loan_amount_accessed != ''");
 
-                $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_loan_amount_accessed", "biodata_farmer_gender='male' AND general_questions_loan_amount_accessed != ''");
+                $female += (int)$mCrudFunctions->get_sum("dataset_" . $row['id'], "general_questions_loan_amount_accessed", "biodata_farmer_gender='female' AND general_questions_loan_amount_accessed != ''");
 
             }
         }
@@ -202,7 +204,7 @@ switch ($_POST["token"]) {
             $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
             echo "<h4>" . $_POST["coop"] . " cooperative farmers </h4>";
-            echo " <table class='table table-responsive' id='dt_example'> <thead class='bg bg-success'><th>#</th><th>name</th> <th>village</th> <th>Action</th></thead>";
+            echo " <table class='display table table-striped table-bordered table-hover' id='dt_example'> <thead class='bg bg-success'><th>#</th><th>name</th> <th>village</th> <th>Action</th></thead>";
 
             foreach ($rows as $row) {
                 $id = $row['id'];
@@ -647,8 +649,6 @@ switch ($_POST["token"]) {
         $client_id = $_SESSION["client_id"];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-//        $farmers_number = array();
-//        $regions = array("Eastern", "Northern", "Western");
         $east = 0;
         $north = 0;
         $west = 0;
