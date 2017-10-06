@@ -487,7 +487,10 @@ switch ($_POST["token"]) {
             $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
             if($acreage < 1){ $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1); }
             if($_SESSION['client_id'] == 5) { $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
-            if($_SESSION['account_name'] == "Kiima Foods") { $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_maize_production_land", 1); }
+            if($_SESSION['account_name'] == "Kiima Foods") {
+                $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_maize_production_land", 1);
+                $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_money_used_for_fertilizers", 1);
+            }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
@@ -536,7 +539,7 @@ switch ($_POST["token"]) {
                        <h4> <a href='expenditure.php'> Fertlizer Expenditure </a> </h4>
                         
                            <a style=\"font-size:15px; color:blue\"><b>UGX " . number_format($cash_given_out) . "</b></a> <br>
-                           <a style=\"font-size:13px; color:green\">UGX " . number_format($cash_returned) . " returned</a>
+                       <!--    <a style=\"font-size:13px; color:green\">UGX " . number_format($cash_returned) . " returned</a>  -->
                            <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
