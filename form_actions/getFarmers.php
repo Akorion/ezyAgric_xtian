@@ -1149,7 +1149,6 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 echo "</table>";
                             }
 
-
                         } else {
                             //
                             //echo $gender;
@@ -1163,21 +1162,15 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                 output($id, " lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' AND lower(biodata_farmer_gender) = '$gender' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                 echo "</table>";
                             }
-
-
                         }
 
                     } else {
 
-
                         $string = $_POST['sel_production_id'];
-
 
                         if (strpos($string, "productionyes") === false) {
                             if (strpos($string, "productionno") === false) {
-
                                 if (strpos($string, "generalyes") === false) {
-
                                     if (strpos($string, "generalno") === false) {
                                     } else {
                                         $p_id = str_replace("generalno", "", $string);
@@ -1185,7 +1178,6 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                         $column = $row[0]['columns'];
 
                                         if ($_POST['gender'] == "all") {
-
 
                                             ///v2 code interview_particulars_va_code
                                             if ($_POST['va'] == "all") {
@@ -1212,9 +1204,7 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                                                 output($id, " lower(biodata_farmer_gender) = '$gender' AND " . $column . " LIKE 'no' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' ORDER BY biodata_farmer_name LIMIT $per_page OFFSET $offset ");
                                                 echo "</table>";
                                             }
-
                                         }
-
                                     }
 
                                 } else {
@@ -2283,6 +2273,7 @@ function output($id, $where)
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
                 $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
                 $crop = $util_obj->remove_apostrophes($row['production_data_crop_insured']);
+                if($_SESSION['account_name'] == "Kiima Foods") $crop = $util_obj->remove_apostrophes($row['crop_production_data_last_season_main_crop']);
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
                 if ($_SESSION['client_id'] == 1) {
@@ -2427,6 +2418,7 @@ function output($id, $where)
                     } else {
                         $maize_prodn_land = $util_obj->remove_apostrophes($row['maize_production_data_maize_production_land']);
                         $prodn_land = $util_obj->remove_apostrophes($row['production_data_land_size']);
+                        if($_SESSION['account_name'] == "Kiima Foods") $maize_prodn_land = $util_obj->remove_apostrophes($row['crop_production_data_maize_production_land']);
 
                         $average = $maize_prodn_land != ""? $maize_prodn_land : $prodn_land;
                         echo "<td style=\"color:#888\"> $average </td>";
