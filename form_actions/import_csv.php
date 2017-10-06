@@ -73,12 +73,11 @@ if ($_FILES["csv"]["size"] > 0) {
 //                        $util_obj->debug_to_console($array);
             $column_string = $util_obj->getColumnsString($db, $table, 1);
 //            if($column_string)  print_r($column_string); echo "<br>";
-            $file = $_FILES['csv']['name'];
+            $file = addslashes($_FILES["csv"]["tmp_name"]);
 //            if($size > 2) {
-//                echo basename($file);
             mysqli_query($con->getServerConnection(), '
                 LOAD DATA LOCAL INFILE "'.$file.'" INTO TABLE '.$table.'
-                    FIELDS TERMINATED BY \';\'
+                    FIELDS TERMINATED BY \';\' 
                     LINES TERMINATED BY \'\\r\\n\' STARTING BY \'\'
                     IGNORE 1 LINES
                     ('. implode(', ', $column_string).')'
