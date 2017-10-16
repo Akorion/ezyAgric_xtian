@@ -21,7 +21,7 @@ function output($client_id, $search)
     $mCrudFunctions = new CrudFunctions();
 
     $url = " ";     //seting the destination of open dataset action
-    if ($client_id == 15){
+    if ($_SESSION["account_name"] == "Ahurire"){
         $url = "loadFarmDash.php";
     }else{
         $url = "dashboard.php";

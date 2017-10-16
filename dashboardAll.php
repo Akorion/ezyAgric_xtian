@@ -222,6 +222,7 @@ include("include/preloader.php");
         getAjaxData(1);
         ictUsageGraph("ict");               //piechart for ict usage
 //        farmersDistrictGraph();             //farmers column graph
+        seedSources();
         cropsAnalysis("name_crop");
         youthFarmers(" ");
         averageYield(' ');
@@ -309,6 +310,20 @@ include("include/preloader.php");
 
     }
 
+    function seedSources() {
+        token = "seed_sources";
+        $.ajax({
+           type: "POST",
+            dataType: "json",
+            url: "form_actions/loadCharts.php",
+            data: {
+               token: token
+            },
+            success: function (data) {
+utiliti            }
+        });
+    }
+
     function cropsAnalysis(name) {
 
         token = "crops_grown";
@@ -367,7 +382,6 @@ include("include/preloader.php");
     }
 
     function getLoadOutGrowerDash() {
-
         token = "outgrower_dash";
         $.ajax({
             type: "POST",
@@ -375,11 +389,8 @@ include("include/preloader.php");
             data: {token: token},
             success: function (data) {
                 $("#outgrower_dash").html(data);
-
             }
-
         });
-
     }
 
     //outgrower_dash

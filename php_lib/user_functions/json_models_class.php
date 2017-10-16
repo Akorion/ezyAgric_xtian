@@ -6,7 +6,6 @@ class JSONModel
 
     public function get_piechart_graph_json($titleArray, $dataArray)
     {
-
         $response = array();
 
         $response['credits'] = array('enabled' => 0);

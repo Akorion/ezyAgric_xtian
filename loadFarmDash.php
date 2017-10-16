@@ -33,10 +33,20 @@ $clearing_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditur
 $total_loans = (int)$mCrudFunctions->get_count("$data_table", "accessed_loan='yes'");
 
 $tp_motorcycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='motorcycle'");
-$tp_vehicle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='vehicle'");
-$tp_bicycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='bicycle'");
-$tp_others = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' ");
+if($tp_motorcycle == 1) $tp_motorcycle = $tp_motorcycle." Farmer";
+else $tp_motorcycle = $tp_motorcycle." Farmers";
 
+$tp_vehicle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='vehicle'");
+if($tp_vehicle == 1) $tp_vehicle = $tp_vehicle." Farmer";
+else $tp_vehicle = $tp_vehicle." Farmers";
+
+$tp_bicycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='bicycle'");
+if($tp_bicycle == 1) $tp_bicycle = $tp_bicycle." Farmer";
+else $tp_bicycle = $tp_bicycle." Farmers";
+
+$tp_others = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' ");
+if($tp_others == 1) $tp_others = $tp_others." Farmer";
+else $tp_others = $tp_others." Farmers";
 
 $total_herbicide_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND item_type='Herbicide' AND units='KGS' ");
 $total_herbicide_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id'  AND item_type='Herbicide' AND units='LITRES' ");
@@ -184,8 +194,9 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                             <h4 class="titles"><b>Total cows owned by farmers</b></h4>
                             <div class="data">
 
-                                <a><b><?php echo $total_cows; ?> Cows </b> <br/> <b><?php echo $total_farmers; ?>
-                                        Farmers </b></a>
+                                <a><b><?php echo $total_cows; ?> Cows </b>
+                                     <!--    <br/> <b><?php echo $total_farmers; ?>Farmers </b>  -->
+                                </a>
 
                             </div>
                         </div>
@@ -257,10 +268,10 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                             <h4 class="titles"><b>Transport modes usage</b></h4>
                             <div class="data">
                                 <a>
-                                    <span><b>Vehicle : <?php echo $tp_vehicle; ?> Farmers</b></span> <br>
-                                    <span><b>Motorcycle : <?php echo $tp_motorcycle; ?> Farmers</b></span> <br>
-                                    <span><b>Bicycle : <?php echo $tp_bicycle; ?> Farmers</b></span> <br>
-                                    <span><b>Others : <?php echo $tp_others; ?> Farmers</b></span> <br>
+                                    <span><b>Vehicle : <?php echo $tp_vehicle; ?> </b></span> <br>
+                                    <span><b>Motorcycle : <?php echo $tp_motorcycle; ?> </b></span> <br>
+                                    <span><b>Bicycle : <?php echo $tp_bicycle; ?> </b></span> <br>
+                                    <span><b>Others : <?php echo $tp_others; ?> </b></span> <br>
                                 </a>
                             </div>
                         </div>
@@ -272,12 +283,12 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                             <div class="data">
 
                                 <a>
-                                    <span><b>Labour: <?php echo $labor_expenditure; ?> UGX</b></span> <br>
-                                    <span><b>Injections: <?php echo $injection_expenditure; ?> UGX</b></span> <br>
-                                    <span><b>Acaricides: <?php echo $acariceides_expenditure; ?> UGX</b></span> <br>
-                                    <span><b>Tools: <?php echo $tools_expenditure; ?> UGX</b></span> <br>
-                                    <span><b>Deworming: <?php echo $deworming_expenditure; ?> UGX</b></span> <br>
-                                    <span><b>Land clearing: <?php echo $clearing_expenditure; ?> UGX</b></span> <br>
+                                    <span><b>Labour: <?php echo number_format($labor_expenditure) ; ?> UGX</b></span> <br>
+                                    <span><b>Injections: <?php echo number_format($injection_expenditure) ; ?> UGX</b></span> <br>
+                                    <span><b>Acaricides: <?php echo number_format($acariceides_expenditure) ; ?> UGX</b></span> <br>
+                                    <span><b>Tools: <?php echo number_format($tools_expenditure) ; ?> UGX</b></span> <br>
+                                    <span><b>Deworming: <?php echo number_format($deworming_expenditure) ; ?> UGX</b></span> <br>
+                                    <span><b>Land clearing: <?php echo number_format($clearing_expenditure) ; ?> UGX</b></span> <br>
                                 </a>
                             </div>
                         </div>
@@ -311,28 +322,28 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
 
                         ?>
 
-                        <div class="col-xs-12">
-                            <div class="panel">
-                                <div class="col-xs-12">
-                                    <div class="x_title">
-                                        <h3>VILLAGE AGENTS</h3>
-                                        <!--  <div class="clearfix"></div> -->
-                                    </div>
-                                    <div class="content" style="margin-top: 1em;">
-                                        <?php echo "<h3><span class='tiny'>Total Number: </span> $total_vas</h3>" ?>
-                                        <br>
-                                        <br>
-
-                                        <?php
-                                        if ($total_vas > 0) {//
-                                            echo "<a style=\"\" class=\"btn btn-sm btn-success\" onclick=\"Export2Csv($va_dataset_id);\" >Export</a>";
-                                            echo "<a style=\"\" href=\"view.php?o=$dataset_&token=$va_token&type=VA\" class=\"btn btn-sm btn-info\">View More &raquo;</a>";
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="col-xs-12">-->
+<!--                            <div class="panel">-->
+<!--                                <div class="col-xs-12">-->
+<!--                                    <div class="x_title">-->
+<!--                                        <h3>VILLAGE AGENTS</h3>-->
+<!--                                        <!--  <div class="clearfix"></div> -->
+<!--                                    </div>-->
+<!--                                    <div class="content" style="margin-top: 1em;">-->
+<!--                                        --><?php //echo "<h3><span class='tiny'>Total Number: </span> $total_vas</h3>" ?>
+<!--                                        <br>-->
+<!--                                        <br>-->
+<!---->
+<!--                                        --><?php
+//                                        if ($total_vas > 0) {//
+//                                            echo "<a style=\"\" class=\"btn btn-sm btn-success\" onclick=\"Export2Csv($va_dataset_id);\" >Export</a>";
+//                                            echo "<a style=\"\" href=\"view.php?o=$dataset_&token=$va_token&type=VA\" class=\"btn btn-sm btn-info\">View More &raquo;</a>";
+//                                        }
+//                                        ?>
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                     </div> <!-- row datasets-->
                     <div id="hidden_form_container">

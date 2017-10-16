@@ -268,7 +268,8 @@
                     $village = $row['village'];
                     $first_name = $row['first_name'];
                     $last_name = $row['last_name'];
-                    $gender = $row['last_name'];
+                    $gender = $row['gender'];
+                    $gender = $util_obj->capitalizeName($gender);
                     $date = $row['age'];
                     $phone = $row['phonenumber'];
 
@@ -277,7 +278,7 @@
 
                     echo "<h6>Name:</h6>
                           <p class=\"align\">$first_name $last_name</p><hr/>";
-                    echo "<h6>Name:</h6>
+                    echo "<h6>Phone_number :</h6>
                           <p class=\"align\">+256 $phone</p><hr/>";
                     echo "<h6>Gender:</h6>
                           <p class=\"align\">$gender</p><hr/>";
@@ -336,7 +337,7 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
                           <p class=\"align\">$injections Ugx</p><hr/>";
                     echo "<h6>Tools:</h6>
                           <p class=\"align\">$tools Ugx</p><hr/>";
-                    echo "<h6>Deworning:</h6>
+                    echo "<h6>Deworming:</h6>
                           <p class=\"align\">$deworning Ugx</p><hr/>";
                     echo "<h6>Land clearing:</h6>
                           <p class=\"align\">$land_clearing Ugx</p><hr/>";
@@ -353,9 +354,9 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
                 echo "
                   <div class=\" col-sm-12 col-md-7 col-lg-7\">
                     <div class=\"card prodn\">
-                  <h5 class=\"\">Outgrower profile</h5>
+                  <h5 class=\"\">Dairy profile</h5>
                   <div class=\"caption\">";
-
+                $accessed_loan_status = "no";
                 foreach ($rows2 as $row) {
 
                     $breed = $row['breed_of_cows'];
@@ -370,6 +371,10 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
                     $unit_price = $row['price_per_litre'];
                     $transport_mode = $row['mode_of_transport'];
                     $other_tp_mode = $row['other_transport_mode'];
+                    if($other_tp_mode == "") $other_tp_mode = "None";
+
+                    $accessed_loan_status = $row['accessed_loan'];
+                    $loan_amount = $row['loan_amount'];
 
                     echo "<h6>Main breed of cows:</h6>
                           <p class=\"align\"> $breed</p><hr/>";
@@ -394,6 +399,13 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
                           <p class=\"align\">$transport_mode</p><hr/>";
                     echo "<h6>Other transport modes:</h6>
                           <p class=\"align\">$other_tp_mode</p><hr/>";
+                    echo "<h6>Accessed_loan:</h6>
+                          <p class=\"align\">".$util_obj->capitalizeName($accessed_loan_status)."</p><hr/>";
+                    if($accessed_loan_status == "yes"){
+                        echo "<h6 id=\"loan_status\">Loan Amount:</h6>
+                          <p class=\"align\" id=\"loan_status\">".number_format($loan_amount)." Ugx</p><hr/>";
+                    }
+
                 }
 
                 echo "</div>
@@ -1000,6 +1012,8 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
 <?php include("./include/footer_client.php"); ?>
 <script>
     $(document).ready(function () {
+//        var loan_status = "<?php //echo $accessed_loan_status; ?>//";
+
         getGardens();
 
         va = document.getElementById('va').value;
@@ -1068,6 +1082,8 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
 
 
     }
+
+
     google.maps.event.addDomListener(window, 'load', initialize);
 
     //getGardens();

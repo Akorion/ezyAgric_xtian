@@ -685,8 +685,6 @@ $mCrudFunctions = new CrudFunctions();
                 getParish();
             }
         });
-
-
     }
 
     $(document).ready(function () {

@@ -50,6 +50,7 @@ switch ($_POST["token"]) {
             draw_milkhours_pie_chart($morning, $evening);
         }
         break;
+
     case  "farmers_districts" :
         session_start();
         $client_id = $_SESSION["client_id"];

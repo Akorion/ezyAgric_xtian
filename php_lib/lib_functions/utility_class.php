@@ -405,33 +405,33 @@ function getClientIpV4()
 public function createTableFromCSV($db,$handle,$table)
 {
 
-       $data = fgetcsv($handle,0,";"," ");
-	   $columns= sizeof($data);
-       $query ="";
-	   if($columns>0){
-	   
-	   $query = "create table $table (";
-	   $query  .= " id INT NOT NULL AUTO_INCREMENT PRIMARY KEY  , ";
-        
-		for ($i = 0; $i < $columns; $i++) 
-        {
-	    /* $validate_=  str_replace(" ","_",$data[$i]);
-		 $validate_=  str_replace("\""," ",$validate_);
-		 $validate_=  str_replace(":","_",$validate_);
-		 $query  .= "$validate_ text ";*/
-		 $validate_=  str_replace(" ","_",$data[$i]);
-		 $validate_=  str_replace("\"","",$validate_);
-		 $validate_=  str_replace(":","_",$validate_);
-		 $validate_=  str_replace("-","_",$validate_);
-		 $validate_=  str_replace("KEY","KEY_",$validate_);
-		 $query  .= "$validate_ text ";
-		 
-		 if(($i+1) != $columns){ $query .=","; }
-   
-	    }
+   $data = fgetcsv($handle,0,";"," ");
+   $columns= sizeof($data);
+   $query ="";
+   if($columns>0){
+
+   $query = "create table $table (";
+   $query  .= " id INT NOT NULL AUTO_INCREMENT PRIMARY KEY  , ";
+
+    for ($i = 0; $i < $columns; $i++)
+    {
+    /* $validate_=  str_replace(" ","_",$data[$i]);
+     $validate_=  str_replace("\""," ",$validate_);
+     $validate_=  str_replace(":","_",$validate_);
+     $query  .= "$validate_ text ";*/
+     $validate_=  str_replace(" ","_",$data[$i]);
+     $validate_=  str_replace("\"","",$validate_);
+     $validate_=  str_replace(":","_",$validate_);
+     $validate_=  str_replace("-","_",$validate_);
+     $validate_=  str_replace("KEY","KEY_",$validate_);
+     $query  .= "$validate_ text ";
+
+     if(($i+1) != $columns){ $query .=","; }
+
+    }
 //            $query .= ", unique_id VARCHAR(50) NULL";
-         $query .= " )";
-       }
+     $query .= " )";
+   }
     return $db->setResultForQuery($query);
 }
 public function remove_apostrophes($string)

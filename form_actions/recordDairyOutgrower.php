@@ -44,8 +44,11 @@ switch ($_POST["token"]) {
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $taken_no_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "accessed_loan='no'");
-            }
 
+                if($taken_no_loans > 1) $taken_no_loans = $taken_no_loans." farmers";
+                elseif ($taken_no_loans == 1) $taken_no_loans = $taken_no_loans. " farmer";
+                else $taken_no_loans = "No farmer";
+            }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "accessed_crop_insurance='yes'", 1);
@@ -61,7 +64,7 @@ switch ($_POST["token"]) {
                            <span class=\"fa fa-users fa-3x\"></span>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4> <a href='dash.php'> Out Grower Farmers </a> </h4>
+                           <h4> <a href='dash.php'> Dairy Farmers </a> </h4>
                          <a style=\"font-size:15px; color:blue\"><b>$farmers</b> Farmers</a> <br>
                            <span style=\"font-size:13px; color:green\">$cows Cows</span> 
                             <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
@@ -76,8 +79,8 @@ switch ($_POST["token"]) {
                        </div>
                        <div class=\"col-md-9\">
                           <h4>Milk supplied today</h4>
-                           <a style=\"font-size:15px; color:blue\"><b>UGX " . number_format($milkreceived) . " Litres</b></a> <br>
-                           <a style=\"font-size:13px; color:green\">UGX " . number_format($milkpayment) . " ugx paid</a>
+                           <a style=\"font-size:15px; color:blue\"><b> " . number_format($milkreceived) . " Litres</b></a> <br>
+                           <a style=\"font-size:13px; color:green\">UGX " . number_format($milkpayment) . " paid</a>
 
                        </div>
                    </div>
@@ -91,7 +94,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                            <h4>Loans accessed</h4>
                            <a style=\"font-size:15px; color:blue\"><b> " . number_format($taken_loans) . " farmers got </b></a> <br>
-                           <a style=\"font-size:13px; color:green\"> " . number_format($taken_no_loans) . " farmers didnt get</a>
+                           <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>
                        </div>
                    </div>
                  </div>
