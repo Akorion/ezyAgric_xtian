@@ -2256,7 +2256,8 @@ function output($id, $where)
                 $real_id = $row['id'];
                 $real_id_ = $row['id'];
                 $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
-                $name = $util_obj->remove_apostrophes($row['biodata_farmer_name']);
+                $name = trim($util_obj->remove_apostrophes($row['biodata_farmer_name']));
+//                $name = trim($name);
                 $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['biodata_farmer_gender']));
 
                 $dob = $util_obj->remove_apostrophes($row['biodata_farmer_dob']);
@@ -2271,9 +2272,10 @@ function output($id, $where)
                 $phone_number = $util_obj->remove_apostrophes($row['biodata_farmer_phone_number']);
                 $uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
                 $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
-                $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
+//                $name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
                 $crop = $util_obj->remove_apostrophes($row['production_data_crop_insured']);
                 if($_SESSION['account_name'] == "Kiima Foods") $crop = $util_obj->remove_apostrophes($row['crop_production_data_last_season_main_crop']);
+                if($_SESSION['account_name'] == "Savannah Commodities") $crop = $util_obj->remove_apostrophes($row['crop_production_data_crop_name']);
 
 ////////////////////////////////////////////////////////////////////////gfhsfaghjfasj
                 if ($_SESSION['client_id'] == 1) {
@@ -2373,7 +2375,7 @@ function output($id, $where)
                 else {
                     echo "<tr>
                            <td>$counter</td>                   
-                           <td>$name</td> <td>$phone_number</td>  
+                           <td>$name</td> <td>$phone_number</td>                             
                            <td>$crop</td>";
 
                     $acares = array();
