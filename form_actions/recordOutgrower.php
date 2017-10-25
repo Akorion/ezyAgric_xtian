@@ -524,7 +524,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                            <h4> <a href='dash.php'> Out Grower Farmers </a> </h4>
                          <a style=\"font-size:15px; color:blue\"><b>Total Farmers: $farmers</b></a> <br>
-                           <span style=\"font-size:13px; color:green\">Total Acreage: $acreage</span> 
+                           <span style=\"font-size:13px; color:green\" class='acres'>Total Acreage: $acreage</span> 
                             <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
                        </div>
@@ -864,3 +864,4 @@ switch ($_POST["token"]) {
 }
 
 ?>
+

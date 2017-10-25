@@ -217,6 +217,7 @@ include("include/preloader.php");
 
     $(document).ready(function () {
         getLoadOutGrowerDash();
+
 //        getLoadDataSets();
 //        formGenderGraph();
         getAjaxData(1);
@@ -389,6 +390,10 @@ utiliti            }
             data: {token: token},
             success: function (data) {
                 $("#outgrower_dash").html(data);
+                var acres = "<?php echo $_SESSION['account_name'] ;?>";
+                if(acres == "Savannah Commodities"){
+                    $('.acres').hide();
+                }
             }
         });
     }
