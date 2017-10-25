@@ -2157,7 +2157,7 @@
 
                     $tractor_money = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND  meta_id='$id' AND cash_type='tractor' ");
 
-                    $acres="";   $crop="";
+                    $acres="";   $crop=$mCrudFunctions->fetch_rows("dataset_".$dataset_id, "crop_production_data_crop_name", "meta_id='$id'")['crop_production_data_crop_name'][0];
 //$rows_tractor_money_taken= $mCrudFunctions->fetch_rows("tractormoney_".$dataset_id,"*"," farmer_id='$id' ");
                     $rows_yield = $mCrudFunctions->fetch_rows("out_grower_produce_tb", "*", " dataset_id='$dataset_id' AND  meta_id='$id' ");
                     $yield = $rows_yield[0]['qty'] == "" ? "N/A" : $rows_yield[0]['qty'].'KGS' ;
