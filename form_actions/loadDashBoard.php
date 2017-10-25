@@ -59,10 +59,17 @@ function output($client_id, $search)
 ////////////////////////////////////////////////////////////////////////////////////////////////
         if ($mCrudFunctions->check_table_exists("garden_" . $dataset_id)) {
             $gardenz = $mCrudFunctions->fetch_rows("total_acerage_tb", "*", " dataset_id='$dataset_id'");
-
             if (sizeof($gardenz) > 0) {
                 $total_acerage = $gardenz[0]['ttl_acerage'];
                 $total_gardens = $gardenz[0]['ttl_gardens'];
+                if($total_acerage < 1){
+                    $acrez = $mCrudFunctions->fetch_farmer_rows("dataset_".$dataset_id, "*");
+                    if($acrez){
+                        foreach ($acrez as $acres){
+                            $total_acerage += $acres['coffee_production_data_number_of_acres_of_coffee'];
+                        }
+                    }
+                }
             } else {
                 $total_acerage_gardens = $mCrudFunctions->getTTLAcerage_Gardens($table, $dataset_id);
                 $total_acerage = $total_acerage_gardens[0];
@@ -70,9 +77,7 @@ function output($client_id, $search)
                 $mCrudFunctions->insert_into_total_acerage_tb($dataset_id, $total_gardens, $total_acerage);
             }
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
         }
-
 
         $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
 
@@ -127,9 +132,11 @@ function output($client_id, $search)
         if ($total_gardens > 0 && $total_acerage > 0) {
 
             echo "<p class='row col-lg-12' style='padding: 0px 10px; font-size:13px' align='center'><b><span><td>Total Gardens: </td>$total_gardens</span><br/><span>Total Acreage: $total_acerage</span></b></p>";
+        } else {
+            echo "<p class='row col-lg-12' style='padding: 0px 10px; font-size:13px' align='center'><b><span>Total Acreage: $total_acerage</span></b></p>";
+            echo "<h6 style=\"margin-left:.5em !important;\" align='center'>$period</h6><br/>";
         }
 
-        echo "<h6 style=\"margin-left:.5em !important;\" align='center'>$period</h6><br/>";
         if ($type == "Farmer") {
             echo "<a style=\"margin-left:15px; font-size:.8em;\" id=\"csv\" class=\"btn btn-xs btn-success\"  onclick=\"Export2Csv($dataset_id);\"  >Export to CSV</a>";
         }
