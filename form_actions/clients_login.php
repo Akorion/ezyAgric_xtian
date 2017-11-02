@@ -52,7 +52,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 //
 ////	$util_obj->redirect_to( "../dash1.php" );
 //        }else
-            if($_SESSION["client_id"]==2){
+    if($_SESSION["client_id"]==2){
 	
 	$user_id=$_SESSION["user_id"];
 	$client_id=$_SESSION["client_id"];

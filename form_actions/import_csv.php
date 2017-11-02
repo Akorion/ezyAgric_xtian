@@ -63,7 +63,7 @@ if ($_FILES["csv"]["size"] > 0) {
 		$__id=$rows[0]['id'];
 		$table="dataset_".$__id;
 		$array= array();
-        $flag =$util_obj->createTableFromCSV($db,$handle,$table);
+        $flag = $util_obj->createTableFromCSV($db,$handle,$table);
 
 		//echo $flag;
         if ($flag)
@@ -72,9 +72,10 @@ if ($_FILES["csv"]["size"] > 0) {
             $array = $mCrudFunctions->insertColumnsIntoTractTables($__id, $handle2);
 //                        $util_obj->debug_to_console($array);
             $column_string = $util_obj->getColumnsString($db, $table, 1);
-//            if($column_string)  print_r($column_string); echo "<br>";
+            if($column_string)  print_r($column_string); echo "<br>";
             $file = addslashes($_FILES["csv"]["tmp_name"]);
 //            if($size > 2) {
+            echo "<br>".$table."<br>";
             mysqli_query($con->getServerConnection(), '
                 LOAD DATA LOCAL INFILE "'.$file.'" INTO TABLE '.$table.'
                     FIELDS TERMINATED BY \';\' 
@@ -83,6 +84,7 @@ if ($_FILES["csv"]["size"] > 0) {
                     ('. implode(', ', $column_string).')'
             )or die(mysqli_error($con->getServerConnection()));
             $string = $mCrudFunctions->get_count($table, "1");
+            echo "<br>".$string."<br>";
             if ($string > 0) $util_obj->redirect_to("../admin/home.php?action=createdataset&success=1&client_id=$client_id&inserted=$string");
 //            } else {
 //                $string = $util_obj->insertCSVintoTable($db, $table, $column_string, $handle);

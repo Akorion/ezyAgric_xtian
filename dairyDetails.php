@@ -231,7 +231,7 @@
                 echo "<div class=\" hide row\">
                         <input type=\"hidden\" id=\"latitude\" value=\"$latitude\" />
                         <input type=\"hidden\" id=\"longitude\" value=\"$longitude\" />
-                        <div class=\" hide col-sm-4 col-md-4 col-lg-4\">
+                        <div class=\"hide  col-sm-4 col-md-4 col-lg-4\">
                          <span class=\"img\" ><img src=\"$picture\" class=\"hide on_map\"></span>
                         </div>
                         
@@ -271,10 +271,12 @@
                     $gender = $row['gender'];
                     $gender = $util_obj->capitalizeName($gender);
                     $date = $row['age'];
+                    $age = explode('/',$date);
+                    $farmer_age = 2017 - $age[2];
                     $phone = $row['phonenumber'];
 
-                    $age = DateTime::createFromFormat("d/m/Y", $date);
-                    $farmer_age = 2017 - $age->format("Y");
+//                    $age = DateTime::createFromFormat("d/m/Y", $date);
+//                    $farmer_age = 2017 - $age->format("Y");
 
                     echo "<h6>Name:</h6>
                           <p class=\"align\">$first_name $last_name</p><hr/>";
@@ -309,12 +311,12 @@
                     $ac_name = $row['account_name'];
                     $mm_acount = $row['account_mobile_phonenumber'];
 //expenditure
-                    $acaricides = number_format($row['expenditure_on_acaricides']);
-                    $labor = number_format($row['expenditure_on_labor']);
-                    $injections = number_format($row['expenditure_on_injections']);
-                    $tools = number_format($row['expenditure_on_farm_tools']);
-                    $deworning = number_format($row['expenditure_on_deworning']);
-                    $land_clearing = number_format($row['expenditure_on_land_clearing']);
+//                    $acaricides = number_format($row['expenditure_on_acaricides']);
+//                    $labor = number_format($row['expenditure_on_labor']);
+//                    $injections = number_format($row['expenditure_on_injections']);
+//                    $tools = number_format($row['expenditure_on_farm_tools']);
+//                    $deworning = number_format($row['expenditure_on_deworning']);
+//                    $land_clearing = number_format($row['expenditure_on_land_clearing']);
 
 
                     echo "<h6>Bank:</h6>
@@ -323,24 +325,26 @@
                           <p class=\"align\">$sacco</p><hr/>";
                     echo "<h6>Bank Branch:</h6>
                           <p class=\"align\">$bank_branch</p><hr/>";
+                    echo "<h6>A/c name:</h6>
+                          <p class=\"align\">$ac_name</p><hr/>";
                     echo "<h6>A/c number:</h6>
                           <p class=\"align\">$account_number</p><hr/>";
                     echo "<h6>Mobile money a/c:</h6>
                           <p class=\"align\">$mm_acount</p><hr/>";
 
-echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></div>";
-                    echo "<h6>Accaricides:</h6>
-                          <p class=\"align\">$acaricides Ugx</p><hr/>";
-                    echo "<h6>Labour:</h6>
-                          <p class=\"align\">$labor Ugx</p><hr/>";
-                    echo "<h6>Injections:</h6>
-                          <p class=\"align\">$injections Ugx</p><hr/>";
-                    echo "<h6>Tools:</h6>
-                          <p class=\"align\">$tools Ugx</p><hr/>";
-                    echo "<h6>Deworming:</h6>
-                          <p class=\"align\">$deworning Ugx</p><hr/>";
-                    echo "<h6>Land clearing:</h6>
-                          <p class=\"align\">$land_clearing Ugx</p><hr/>";
+//echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></div>";
+//                    echo "<h6>Accaricides:</h6>
+//                          <p class=\"align\">$acaricides Ugx</p><hr/>";
+//                    echo "<h6>Labour:</h6>
+//                          <p class=\"align\">$labor Ugx</p><hr/>";
+//                    echo "<h6>Injections:</h6>
+//                          <p class=\"align\">$injections Ugx</p><hr/>";
+//                    echo "<h6>Tools:</h6>
+//                          <p class=\"align\">$tools Ugx</p><hr/>";
+//                    echo "<h6>Deworming:</h6>
+//                          <p class=\"align\">$deworning Ugx</p><hr/>";
+//                    echo "<h6>Land clearing:</h6>
+//                          <p class=\"align\">$land_clearing Ugx</p><hr/>";
                 }
 
                 echo "</div>
@@ -361,7 +365,7 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
 
                     $breed = $row['breed_of_cows'];
                     $other_breeds = $row['other_breed_of_cows'];
-                    $cows_number = $row['number_of_cows'];
+                    $cows_number = $row['number_of_cows'] + $row['number_of_calves'] + $row['number_of_bulls'];
                     $lactating_cows = $row['lactating_cows'];
                     $average_lactating = $row['average_cows_lactating_1_4_months'];
                     $cows_expecting = $row['cows_expecting'];
@@ -393,7 +397,7 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
                           <p class=\"align\">$milk_morning</p><hr/>";
                     echo "<h6>Evening milk quantity:</h6>
                           <p class=\"align\">$milk_evening</p><hr/>";
-                    echo "<h6>Unit price of milk Cows:</h6>
+                    echo "<h6>Unit price of milk:</h6>
                           <p class=\"align\">$unit_price</p><hr/>";
                     echo "<h6>Milk transportation mode:</h6>
                           <p class=\"align\">$transport_mode</p><hr/>";
@@ -419,33 +423,53 @@ echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></
 <h5 class=\"\">Production Data</h5>";
 
                 foreach ($rows2 as $row) {
+                    $acaricides = number_format($row['expenditure_on_acaricides']);
+                    $labor = number_format($row['expenditure_on_labor']);
+                    $injections = number_format($row['expenditure_on_injections']);
+                    $tools = number_format($row['expenditure_on_farm_tools']);
+                    $deworning = number_format($row['expenditure_on_deworning']);
+                    $land_clearing = number_format($row['expenditure_on_land_clearing']);
 
-                    $district = $row['district'];
-                    $subcounty = $row['subcounty'];
-                    $parish = $row['parish'];
-                    $village = $row['village'];
-                    $first_name = $row['first_name'];
-                    $last_name = $row['last_name'];
-                    $gender = $row['last_name'];
-                    $date = $row['age'];
+//                    $district = $row['district'];
+//                    $subcounty = $row['subcounty'];
+//                    $parish = $row['parish'];
+//                    $village = $row['village'];
+//                    $first_name = $row['first_name'];
+//                    $last_name = $row['last_name'];
+//                    $gender = $row['last_name'];
+//                    $date = $row['age'];
+//
+//                    $age = DateTime::createFromFormat("d/m/Y", $date);
+//                    $farmer_age = 2017 - $age->format("Y");
+//
+//                    echo "<h6>Name:</h6>
+//                          <p class=\"align\">$first_name $last_name</p><hr/>";
+//                    echo "<h6>Gender:</h6>
+//                          <p class=\"align\">$gender</p><hr/>";
+//                    echo "<h6>Age:</h6>
+//                          <p class=\"align\">$farmer_age</p><hr/>";
+//                    echo "<h6>Village:</h6>
+//                          <p class=\"align\">$village</p><hr/>";
+//                    echo "<h6>Parish:</h6>
+//                          <p class=\"align\">$parish</p><hr/>";
+//                    echo "<h6>Sub county:</h6>
+//                          <p class=\"align\">$subcounty</p><hr/>";
+//                    echo "<h6>District:</h6>
+//                          <p class=\"align\">$district</p><hr/> <hr/>";
 
-                    $age = DateTime::createFromFormat("d/m/Y", $date);
-                    $farmer_age = 2017 - $age->format("Y");
-
-                    echo "<h6>Name:</h6>
-                          <p class=\"align\">$first_name $last_name</p><hr/>";
-                    echo "<h6>Gender:</h6>
-                          <p class=\"align\">$gender</p><hr/>";
-                    echo "<h6>Age:</h6>
-                          <p class=\"align\">$farmer_age</p><hr/>";
-                    echo "<h6>Village:</h6>
-                          <p class=\"align\">$village</p><hr/>";
-                    echo "<h6>Parish:</h6>
-                          <p class=\"align\">$parish</p><hr/>";
-                    echo "<h6>Sub county:</h6>
-                          <p class=\"align\">$subcounty</p><hr/>";
-                    echo "<h6>District:</h6>
-                          <p class=\"align\">$district</p><hr/> <hr/>";
+                    echo "<div class='' style='padding: 10px; width: 100%;'> <b>Expenditure on</b></div>";
+                    echo "<h6>Accaricides:</h6>
+                          <p class=\"align\">$acaricides Ugx</p><hr/>";
+                    echo "<h6>Labour:</h6>
+                          <p class=\"align\">$labor Ugx</p><hr/>";
+                    echo "<h6>Injections:</h6>
+                          <p class=\"align\">$injections Ugx</p><hr/>";
+                    echo "<h6>Tools:</h6>
+                          <p class=\"align\">$tools Ugx</p><hr/>";
+                    echo "<h6>Deworming:</h6>
+                          <p class=\"align\">$deworning Ugx</p><hr/>";
+                    echo "<h6>Land clearing:</h6>
+                          <p class=\"align\">$land_clearing Ugx</p><hr/>";
                 }
 
                 echo "<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";

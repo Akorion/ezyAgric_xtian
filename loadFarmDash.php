@@ -17,7 +17,20 @@ $dataset_type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
 $data_table = "dataset_" . $dataset_id;
 //print_r($data_table);
 
-$total_cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
+//$total_cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
+$cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
+$calves = (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "1");
+$bulls = (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "1");
+$total_cows = $cows +   $calves +    $bulls;
+
+//if($total_cows = 0){
+//    $cows = (int)$mCrudFunctions->get_sum("$data_table", "cattle_number_cows", "1");
+//    $calves = (int)$mCrudFunctions->get_sum("$data_table", "cattle_number_calves", "1");
+//    $bulls = (int)$mCrudFunctions->get_sum("$data_table", "cattle_number_bulls", "1");
+//    $total_cows =   $cows ;
+//}
+
+//$total_cows
 $total_rarmers = (int)$mCrudFunctions->get_count("$data_table", "1");
 
 $total_lactating = (int)$mCrudFunctions->get_sum("$data_table", "lactating_cows", "1");
@@ -58,11 +71,9 @@ $total_produce_commission = (double)$mCrudFunctions->get_sum("out_grower_produce
 
 
 $client_id = $_SESSION["client_id"];
-
 $profiling_constant = (double)$mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", " client_id='$client_id' AND item='Profiling' AND item_type='Service' ")[0]['commission_per_unit'];
 
 //echo $client_id;
-
 
 $total_acreage = $mCrudFunctions->get_sum("out_grower_cashinput_tb", "acreage", " dataset_id='$dataset_id'  AND cash_type='tractor' ");
 

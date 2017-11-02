@@ -276,6 +276,7 @@ function output($id, $where)
             echo "<p style=\"font-size:1.4em; width:100%; text-align:center; color:#999; margin-top:100px\">There are no farmers in the dataset</p>";
         } else {
             $counter = 1;
+//            echo "inside table ........";
             foreach ($rows as $row) {
 
 //                print_r($row);
@@ -283,6 +284,7 @@ function output($id, $where)
 
                 $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
                 $name = $row['first_name'];
+//                echo $name;
                 $last_name = $row['last_name'];
                 $gender = $row['gender'];
                 $date = $row['age'];
@@ -290,11 +292,11 @@ function output($id, $where)
                 $milk = '';
                 $last_trans_date = '';
                 $phone_number = $row['phonenumber'];
-                $cows = $row['number_of_cows'];
+                $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
                 $lactating_cows = $row['lactating_cows'];
-
-                $age = DateTime::createFromFormat("d/m/Y", $date);
-                $farmer_age = 2017-$age->format("Y");
+                $age = explode('/',$date);
+                $farmer_age = 2017 - $age[2];
+//                echo  "<br>".$farmer_age;
 
 //                print_r($name);
 //                $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['gender']));
@@ -316,19 +318,20 @@ function output($id, $where)
                   <td style='line-height:12pt; align:center'>$name $last_name</td>
                   <td style='line-height:12pt; align:center'>$farmer_age</td>
                   <td style='line-height:12pt; align:center'>$gender</td>
-                  <td style='line-height:12pt; align:center'>0$phone_number</td>
+                  <td style='line-height:12pt; align:center'>$phone_number</td>
                   <td style='line-height:12pt; align:center'>$cows</td>
                   <td style='line-height:12pt; align:center'>$lactating_cows</td>
                   <td style='line-height:12pt; align:center'>$milk</td>
                   <td style='line-height:12pt; align:center'>$last_trans_date</td>";
 
                 echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
-                         </td>";
-                echo "
-                      </div>
-                    </div>
-                   </div>
-                 </div> </a>";
+                       </td>";
+                echo "</tr>";
+//                echo "
+//                      </div>
+//                    </div>
+//                   </div>
+//                 </div> </a>";
 
                 $counter++;
             }
