@@ -868,55 +868,6 @@
     <!--    <h6>Parish:</h6> <p class=\"align\">$parish</p><hr/>  -->
         <h6>Village:</h6> <p class=\"align\">$village</p><hr/>
         ";
-//    foreach ($rows2 as $row) {
-//        $column = $row['columns'];
-//        $value = $rows[0][$column];
-//        $value = $util_obj->captalizeEachWord($value);
-//        $string = str_replace("biodata_farmer_", "", $column);
-//        $string = str_replace("_", " ", $string);
-//        $lable = $util_obj->captalizeEachWord($string);
-//        if ($lable != "Picture") {
-//
-//            if ($lable == "Dob") {
-//                $value = str_replace("00:00:000", " ", $value);
-//                $birth_date = date_create($value);
-//                $birth_date = date_format($birth_date, "d/m/Y");
-//                echo "<h6>Date of Birth:</h6> <p class=\"align\">$birth_date</p><hr/>";
-//                $age = $util_obj->getAge($value, "Africa/Nairobi");
-//                echo "<h6>Age:</h6> <p class=\"align\">$age</p><hr/>";
-//
-//            } else {
-//                echo "<h6>$lable:</h6> <p class=\"align\">$value</p><hr/>";
-//            }
-//        }
-//
-//    }
-//
-//        $table="farmer_location";
-//        $columns="*";
-//        $where=" dataset_id='$dataset_id' ";
-//        $rows3= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//        $va=$rows[0]['interview_particulars_va_name'];
-//        $vaphone=$rows[0]['interview_particulars_va_phone_number'];
-//        $vacode=$rows[0]['interview_particulars_va_code'];
-//        echo"<input type=\"hidden\" id=\"va\" value=\"$va\" />";
-//        echo"<input type=\"hidden\" id=\"vaphone\" value=\"$vaphone\" />";
-//        echo"<input type=\"hidden\" id=\"vacode\" value=\"$vacode\" />";
-//
-//        foreach($rows3 as $row){
-//            $column=$row['columns'];
-//            $value=$rows[0][$column];
-//            $value=$util_obj->captalizeEachWord($value);
-//            $string=str_replace("biodata_farmer_location_farmer_","",$column);
-//            $string=str_replace("_"," ",$string);
-//            $lable=$util_obj->captalizeEachWord($string);
-//            if(!strpos($column,'_gps_')){
-//                echo"<h6>$lable:</h6>
-//  <p class=\"align\">$value</p><hr/>";
-//            }
-//
-//        }
 
                     echo "</div>";
 /////////////////////////////////////////////personal data_ends
@@ -925,45 +876,7 @@
 ///////////////////////////////////////other data_starts
         echo"<div class=\"card\" hidden='hidden'>
 <h5 class=\"\" hidden='hidden'>Others</h5>";
-//        $table="info_on_other_enterprise";
-//        $columns="*";
-//        $where=" dataset_id='$dataset_id' ";
-//        $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//        foreach($rows5 as $row){
-//            $column=$row['columns'];
-//            $value=$rows[0][$column];
-//            $value=$util_obj->captalizeEachWord($value);
-//            $string="information_on_other_crops_";
-//            $string=str_replace($string,"",$column);
-//            $string=str_replace("_"," ",$string);
-//            $lable=$util_obj->captalizeEachWord($string);
-//            if($value!=null){
-////                echo"<h6>$lable:</h6>
-////  <p class=\"align\">$value</p><hr/>";
-//            }
-//        }
-//
-//        $table="general_questions";
-//        $columns="*";
-//        $where=" dataset_id='$dataset_id' ";
-//        $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//
-//        foreach($rows6 as $row){
-//            $column=$row['columns'];
-//
-//            $value=$rows[0][$column];
-//            $value=$util_obj->captalizeEachWord($value);
-//            $string="general_questions_";
-//            $string=str_replace($string,"",$column);
-//            $string=str_replace("_"," ",$string);
-//            $lable=$util_obj->captalizeEachWord($string);
-//            if($value!=null){
-//
-////                echo"<h6>$lable:</h6>
-////  <p class=\"align\">$value</p><hr/>";
-//            }
-//        }
+
         echo"</div>
 </div>
 ";
@@ -1066,39 +979,6 @@
                     $rows_tractor_money_returned=number_format($rows_tractor_money_returned);
                     $tractor_money_taken=number_format($tractor_money_taken);
 
-//        echo "
-//  <div class=\" col-sm-12 col-md-7 col-lg-7\">
-//    <div class=\"card prodn\">
-//  <h5 class=\"\">Outgrower profile</h5>
-//  <div class=\"caption\">
-//
-//   <h6>Acreage:</h6>
-//   <p id=\"total\">N/A</p><hr/>
-//   <h6>Crop:</h6>
-//   <p id=\"enterprise_\">Coffee</p><hr/>
-//   <h6>Yield:</h6>
-//  <p>$yield KGS</p><hr/>
-//  <h6>VA</h6>
-//  <p id=\"va_\">N/A</p><hr/>
-//  <h6>Cash Taken:</h6>
-//  <p>UGX $cash_taken</p><hr/>
-//  <!--<h6>Cash Paid:</h6>
-//   <p>UGX $rows_cash_returned</p><hr/>
-//  <h6>Cash Owed To Farmer:</h6>
-//  <p>UGX $cash_owed</p><hr/>
-//  -->
-//   <h6>Tractor Amount:</h6>
-//   <p>UGX $tractor_money_taken</p><hr/>
-//  <!--
-//   <h6>Tractor Amount Paid:</h6>
-//   <p>UGX $rows_tractor_money_returned</p><hr/>
-//
-//   <h6>Tractor Amount Owed To Farmer:</h6>
-//   <p>UGX $rows_tractor_money_owed</p><hr/>-->
-//  </div>
-//
-//  </div>
-//</div>";
 
                     if( sizeof($rows_seeds)>0){
                         echo "
@@ -1229,30 +1109,6 @@
         <h6 class='trim'>Potassium Requirement:</h6><p>$k_requiremt</p><hr/>
         <h6 class='trim'>Phosphorous Requirement:</h6><p>$p_requiremt</p><hr/>
         ";
-
-//        $table="production_data";
-//        $columns="*";
-//        $where=" dataset_id='$dataset_id' ";load
-//        $rows4= $mCrudFunctions->fetch_rows($table,$columns,$where);
-//        $enterprise="";
-//        foreach($rows4 as $row){
-//            $column=$row['columns'];
-//            $enterprise=$row['enterprise'];
-//            $value=$rows[0][$column];
-//            $value=$util_obj->captalizeEachWord($value);
-//            $string=$enterprise."_production_data_";
-//            $string=str_replace($string,"",$column);
-//            $string=str_replace("_"," ",$string);
-//            $lable=$util_obj->captalizeEachWord($string);
-//            if($value!=null){
-//
-//                echo"<h6 class=\"trim\">$lable:</h6>
-//  <p>$value</p><hr/>";
-//
-//            }
-//        }
-
-//        echo"<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
 
                     echo"</div>
     </div>
@@ -1804,23 +1660,17 @@
                     $tractor_money = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND  meta_id='$id' AND cash_type='tractor' ");
 
                     $acres="";   $crop="";
-//$rows_tractor_money_taken= $mCrudFunctions->fetch_rows("tractormoney_".$dataset_id,"*"," farmer_id='$id' ");
-//                    if($_SESSION['account_name'] == "Kiima Foods"){
-                        $rows_yield = $mCrudFunctions->fetch_rows("dataset_" . $dataset_id, "*", " id='$id' ");
-                        $yield = $rows_yield[0]['crop_production_data_maize_harvested'] ? $rows_yield[0]['crop_production_data_maize_harvested'] : "N/A";
-                        $crop = $rows_yield[0]['crop_production_data_last_season_main_crop'] ? $rows_yield[0]['crop_production_data_last_season_main_crop'] : "N/A";
-                        $acres = $rows_yield[0]['crop_production_data_maize_production_land'] ? $rows_yield[0]['crop_production_data_maize_production_land'] : "N/A";
-//                    } else {
-//                        $rows_yield = $mCrudFunctions->fetch_rows("out_grower_produce_tb", "*", " dataset_id='$dataset_id' AND  meta_id='$id' ");
-//                        $yield = $rows_yield[0]['qty'] == "" ? "N/A" : $rows_yield[0]['qty'];
-//                    }
+
+                    $rows_yield = $mCrudFunctions->fetch_rows("dataset_" . $dataset_id, "*", " id='$id' ");
+                    $yield = $rows_yield[0]['crop_production_data_maize_harvested'] ? $rows_yield[0]['crop_production_data_maize_harvested'] : "N/A";
+                    $crop = $rows_yield[0]['crop_production_data_last_season_main_crop'] ? $rows_yield[0]['crop_production_data_last_season_main_crop'] : "N/A";
+                    $acres = $rows_yield[0]['crop_production_data_maize_production_land'] ? $rows_yield[0]['crop_production_data_maize_production_land'] : "N/A";
 
                     $rows_cash_returned = $mCrudFunctions->get_sum("cash_returned_" . $dataset_id, "cash_returned", " farmer_id='$id' ");
 
                     $rows_tractor_money_returned = $mCrudFunctions->get_sum("tractor_money_returned_" . $dataset_id, "tractor_money_returned", " farmer_id='$id' ");
 
                     $tractor_money_taken = $tractor_money;//$rows_tractor_money_taken[0]['tractor_money'];
-//$cash_taken=$rows_cash[0]['cash_taken'];
 
                     $rows_tractor_money_owed = number_format((int)$tractor_money_taken - (int)$rows_tractor_money_returned);
                     $cash_owed = number_format((int)$cash_taken - (int)$rows_cash_returned);
@@ -2010,6 +1860,8 @@
 
                 }
                 elseif($_SESSION['account_name'] == "Savannah Commodities") {
+                    $bio = $mCrudFunctions->fetch_rows("dataset_".$dataset_id, '*', 'id='.$id);
+                    $picture = $util_obj->remove_apostrophes($bio[0]['biodata_farmer_picture']);
 
 ///////////////////////////////////////////// lat_long_pic starts
                     echo "<div class=\"row\">
@@ -2121,7 +1973,6 @@
                         }
                     }
 
-
                     $table="general_questions";
                     $columns="*";
                     $where=" dataset_id='$dataset_id' ";
@@ -2160,15 +2011,60 @@
                     $crop = $mCrudFunctions->fetch_rows("dataset_".$dataset_id, "*", "id='$id'")[0]['crop_production_data_crop_name'];
                     $crop = str_replace("_", " ", $crop);
 //$rows_tractor_money_taken= $mCrudFunctions->fetch_rows("tractormoney_".$dataset_id,"*"," farmer_id='$id' ");
-                    $rows_yield = $mCrudFunctions->fetch_rows("out_grower_produce_tb", "*", " dataset_id='$dataset_id' AND  meta_id='$id' ");
+
+                    $rows_yield = $mCrudFunctions->fetch_rows("dataset_" . $dataset_id, "*", " id='$id' ");
                     $yield = $rows_yield[0]['qty'] == "" ? "N/A" : $rows_yield[0]['qty'].'KGS' ;
+                    $unik_id = $rows_yield[0]['unique_id'];
+
+                    $samples = $mCrudFunctions->fetch_rows("soil_results_" . $dataset_id, "*", " unique_id='$unik_id' ");
+                    /**** ph values and their description ***/
+                    $ph = $samples[0]['ph'];    $ph_desc=""; $ph_requiremt=""; $n_requiremt="";
+                    if($ph <= 4.5){ $ph_desc = "Extremely acidic"; }
+                    elseif($ph>=4.6 && $ph<=5.5){ $ph_desc = "Strongly acidic"; }
+                    elseif($ph>=5.6 && $ph<=6.0){ $ph_desc = "Moderately acidic"; }
+                    elseif($ph>=6.1 && $ph<=6.5){ $ph_desc = "Slightly acidic"; }
+                    elseif($ph>=6.6 && $ph<=7.2){ $ph_desc = "Neutral"; }
+                    elseif($ph>=7.3 && $ph<=7.8){ $ph_desc = "Slightly alkaline"; }
+                    elseif($ph>=7.9 && $ph<=8.4){ $ph_desc = "Moderately alkaline"; }
+                    elseif($ph>=8.5 && $ph<=9.0){ $ph_desc = "Strongly alkaline"; }
+                    else{$ph_desc = "Very strongly alkaline";}
+
+                    /** organic matter values and their decsription / meaning **/
+                    $om = $samples[0]['om_%'];  $om_desc="";
+                    if($om>=0 && $om<=2.5){$om_desc = "Low" ;}
+                    elseif($om>2.5 && $om<=3.5){$om_desc = "Moderate" ;}
+                    elseif($om>3.5 && $om<=4.9){$om_desc = "High" ;}
+                    else{ $om_desc = "Very High"; }
+
+                    /** nitrogen values and their meanings **/
+                    $n = $samples[0]['n_%'];    $nitrogen_desc="";
+                    if($n < 0.05){$nitrogen_desc = "Very low"; }
+                    elseif($n >= 0.05 && $n < 0.15){ $nitrogen_desc = "Low"; }
+                    elseif($n >= 0.15 && $n < 0.25){ $nitrogen_desc = "Medium"; }
+                    elseif($n >= 0.25 && $n < 0.5){ $nitrogen_desc = "High"; }
+                    else { $nitrogen_desc = "Very high"; }
+
+                    /** phosphorous values and their meanings **/
+                    $p = $samples[0]['p_ppm'];  $p_desc=""; $p_requiremt="";
+                    if($p>=0 && $p<=12){ $p_desc = "Very Low"; }
+                    elseif($p>=12.5 && $p<=22.5){$p_desc = "Low"; }
+                    elseif($p>=23 && $p<=35.5){$p_desc = "Medium"; }
+                    elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
+                    elseif($p >= 69){$p_desc = "Very High"; }
+
+                    /** potassium values and their meanings **/
+                    $k = $samples[0]['k'];  $k_desc=""; $k_requiremt="";
+                    if($k>=0 && $k<0.2){ $k_desc = "Very Low"; }
+                    elseif($k>=0.2 && $k<0.3){ $k_desc = "Low"; }
+                    elseif($k>=0.3 && $k<0.7){ $k_desc = "Medium"; }
+                    elseif($k>=0.7 && $k<2.0){ $k_desc = "High"; }
+                    elseif($k>= 2.0){ $k_desc = "Very High"; }
+                    elseif($k =="trace"){ $k_desc = "trace"; }
+
 
                     $rows_cash_returned = $mCrudFunctions->get_sum("cash_returned_" . $dataset_id, "cash_returned", " farmer_id='$id' ");
-
                     $rows_tractor_money_returned = $mCrudFunctions->get_sum("tractor_money_returned_" . $dataset_id, "tractor_money_returned", " farmer_id='$id' ");
-
                     $tractor_money_taken = $tractor_money;//$rows_tractor_money_taken[0]['tractor_money'];
-//$cash_taken=$rows_cash[0]['cash_taken'];
 
                     $rows_tractor_money_owed = number_format((int)$tractor_money_taken - (int)$rows_tractor_money_returned);
                     $cash_owed = number_format((int)$cash_taken - (int)$rows_cash_returned);
@@ -2351,6 +2247,13 @@
                     }
 
                     echo "<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
+                    echo " <br>
+                        <h6><b> Soil Properties </b></h6><p><b>Values</b></p>&nbsp;<b>Description</b><hr/>
+                        <h6 class=\"trim\">pH Value:</h6><p>$ph</p>&nbsp;$ph_desc<hr/>
+                        <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p>&nbsp;$om_desc<hr/>
+                        <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p>&nbsp;$nitrogen_desc<hr/>
+                        <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p>&nbsp;$p_desc<hr/>
+                        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/> ";
 
                     echo "</div>
     </div>
