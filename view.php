@@ -139,7 +139,8 @@ if ($dataset_type == "Farmer") {
 
 }
 
-echo "<br>
+if($_SESSION['account_name'] == "Savannah Commodities"){
+    echo "<br>
         <div class=\"accordion\" id=\"accordionid\">
   <div class=\"accordion-group\">
     <div class=\"accordion-heading\">
@@ -173,6 +174,8 @@ echo "<br>
   </div>
 </div>
 ";
+}
+
 
         echo "
   <div class=\"right print_export container\">
