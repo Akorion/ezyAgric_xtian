@@ -20,13 +20,17 @@
         color: cadetblue !important;
     }
 
+    h7 {
+        padding-left: 10px;
+    }
+
     .prodn h6 {
         width: 300px;
     }
 
     .prodn p {
         color: #777;
-        max-width: 300px;
+        max-width: 3000px;
     }
 
     .card p {
@@ -2018,7 +2022,7 @@
 
                     $samples = $mCrudFunctions->fetch_rows("soil_results_" . $dataset_id, "*", " unique_id='$unik_id' ");
                     /**** ph values and their description ***/
-                    $ph = $samples[0]['ph'];    $ph_desc=""; $ph_requiremt=""; $n_requiremt="";
+                    $ph = $samples[0]['ph'];    $ph_desc=""; $n_requiremt="";
                     if($ph <= 4.5){ $ph_desc = "Extremely acidic"; }
                     elseif($ph>=4.6 && $ph<=5.5){ $ph_desc = "Strongly acidic"; }
                     elseif($ph>=5.6 && $ph<=6.0){ $ph_desc = "Moderately acidic"; }
@@ -2044,6 +2048,9 @@
                     elseif($n >= 0.25 && $n < 0.5){ $nitrogen_desc = "High"; }
                     else { $nitrogen_desc = "Very high"; }
 
+                    if($nitrogen_desc == "High" || $nitrogen_desc == "Very high"){$n_requiremt = "Apply 100kg/ha of nitrogen for single fertilisers"; }
+                    else { $n_requiremt = "No need"; }
+
                     /** phosphorous values and their meanings **/
                     $p = $samples[0]['p_ppm'];  $p_desc=""; $p_requiremt="";
                     if($p>=0 && $p<=12){ $p_desc = "Very Low"; }
@@ -2051,6 +2058,9 @@
                     elseif($p>=23 && $p<=35.5){$p_desc = "Medium"; }
                     elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
                     elseif($p >= 69){$p_desc = "Very High"; }
+
+                    if($p_desc == "Very Low" || $p_desc == "Low"){$p_requiremt = "Apply 45 kg/ha of fertilisers of phosphates single fertilisers by working it thoroughly in the soil before planting";}
+                    else{$p_requiremt = "No need";}
 
                     /** potassium values and their meanings **/
                     $k = $samples[0]['k'];  $k_desc=""; $k_requiremt="";
@@ -2060,6 +2070,18 @@
                     elseif($k>=0.7 && $k<2.0){ $k_desc = "High"; }
                     elseif($k>= 2.0){ $k_desc = "Very High"; }
                     elseif($k =="trace"){ $k_desc = "trace"; }
+
+                    if($k_desc == "Very Low" || $k_desc == "Low" || $k_desc == "trace"){$k_requiremt = "Apply 60 kg/ha of potassium for single fertilisers"; }
+                    elseif($k_desc == "Medium"){$k_requiremt = "Apply 30 kg/ha of potassium for single fertilisers"; }
+                    else{$k_requiremt = "No need"; }
+
+                    /** magnesium values and their meaning **/
+                    $mg = $samples[0]['mg'];    $mg_desc="";
+                    if($mg>=0 && $mg<0.3){ $mg_desc = "Very Low"; }
+                    elseif($mg>=0.3 && $mg<1.0){ $mg_desc = "Low"; }
+                    elseif($mg>=1.0 && $mg<3.0){ $mg_desc = "Medium"; }
+                    elseif($mg>=3.0 && $mg<8.0){ $mg_desc = "High"; }
+                    elseif($mg>= 8.0){ $mg_desc = "Very High"; }
 
 
                     $rows_cash_returned = $mCrudFunctions->get_sum("cash_returned_" . $dataset_id, "cash_returned", " farmer_id='$id' ");
@@ -2247,14 +2269,20 @@
                     }
 
                     echo "<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
-                    echo " <br>
+                    echo "                         
                         <h6><b> Soil Properties </b></h6><p><b>Values</b></p>&nbsp;<b>Description</b><hr/>
                         <h6 class=\"trim\">pH Value:</h6><p>$ph</p>&nbsp;$ph_desc<hr/>
                         <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p>&nbsp;$om_desc<hr/>
                         <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p>&nbsp;$nitrogen_desc<hr/>
                         <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p>&nbsp;$p_desc<hr/>
-                        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/> ";
-
+                        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/> 
+                        <h6 class=\"trim\">Magnesium Content(cmol/kg):</h6><p>$mg</p>&nbsp;$mg_desc<hr/> 
+                        
+                        <h6><b>Recommendations:</b></h6><br>
+                        <h7 class='trim'><b>Nitrogen Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$n_requiremt</p><hr/>                          
+                        <h7 class='trim'><b>Phosphorous Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$p_requiremt</p><hr/>
+                        <h7 class='trim'><b>Potassium Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$k_requiremt</p><hr/>
+                        ";
                     echo "</div>
     </div>
   </div>";

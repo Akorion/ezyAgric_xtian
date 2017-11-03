@@ -75,6 +75,25 @@
     .down {
         margin-top: -3em !important;
     }
+
+    .accordion-heading
+    {
+        background-color:teal;
+    }
+    /*.accordion-heading:hover*/
+    /*{*/
+        /*background-color:#000;*/
+        /*-webkit-transition: all 0.5s ease-in-out;*/
+        /*-moz-transition: all 0.5s ease-in-out;*/
+        /*-o-transition: all 0.5s ease-in-out;*/
+        /*transition: all 0.5s ease-in-out;*/
+    /*}*/
+    .accordion-heading > a
+    {
+        color:#FFF !important;
+        text-decoration:none;
+        text-transform:uppercase;
+    }
 </style>
 
 <?php include("./include/header_client.php");
@@ -110,15 +129,51 @@ $mCrudFunctions = new CrudFunctions();
 </div>
 </div>
 ";
-        if ($dataset_type == "Farmer") {
-            include("include/filtered.php");
+if ($dataset_type == "Farmer") {
+    include("include/filtered.php");
 
-        } else {
-            include("include/va_filtered.php");
-            $origin = $_GET['o'];
-            echo "<input id=\"origin\" type=\"hidden\" value=\"$origin\"/>";
+} else {
+    include("include/va_filtered.php");
+    $origin = $_GET['o'];
+    echo "<input id=\"origin\" type=\"hidden\" value=\"$origin\"/>";
 
-        }
+}
+
+echo "<br>
+        <div class=\"accordion\" id=\"accordionid\">
+  <div class=\"accordion-group\">
+    <div class=\"accordion-heading\">
+      <a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#accordionid\" href=\"#one\">
+        <h5 style='color: white'>Observations From Soil Results</h5>
+      </a>
+    </div>
+    <div id=\"one\" class=\"collapse\">
+      <div class=\"accordion-inner\" >
+        <h6><b> General Remarks About All Soil Results: </b></h6><br>
+        
+        <h7><b>Phosphorus:</b></h7>
+        <span style='width: 600px'> The soils are generally very low in phosphorus and  the use of ammendments rich in phosphates mainly is a must for successful plant growth. </span><br>
+        <h7><b>Potassium:</b></h7>
+        <span style='width: 600px; padding-left: 10px'> The soils have moderate levels of potassium with a few highlighted samples having low levels. The use of ammendments rich in potassium is therefore a must inorder to sustain a good plant growth.</span><br> 
+        <h7><b>Magnesium:</b></h7> The soils have good magnesium levels with a few highlighted samples having low levels.<hr/>
+        <h6><b>General Recommendations For Barley Growth: </b></h6><br>
+        <span>
+        The seed rate for barley must be considerably lower than the usual seed rate for wheat; the current recommendation is (60-70 kg/ha) for
+        Proctor and  (80-90 kg/ha) for Research. At higher seed rates than these there is a risk of having too many heads; these may
+        not have enough moisture to allow satisfactory ripening of all the grains.
+        At one time it was recommended that no nitrogen fertilisers should be used for fear of raising the nitrogen content of the grain. It is now
+        appreciated that nitrogen in the seed bed is often beneficial and may even lower the nitrogen content of the grain. The reason for this
+        apparent contradiction is that early nitrogen encourages vigorous vegetative growth which in turn provides a good supply of carbohydrate
+        to the grain. The current recommendation is to use ( 222 kg/ha) of 11:54:0 compound fertiliser on poor land and to
+        reduce this rate to  ( 80-90 kg/ha) on good land. For the first crop after breaking the land from grass or on unusually
+        fertile soils, phosphate only should be applied.
+        </span><hr/>
+      </div>
+    </div>
+  </div>
+</div>
+";
+
         echo "
   <div class=\"right print_export container\">
   <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
