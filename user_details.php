@@ -2059,7 +2059,7 @@
                     elseif($p>=36 && $p<=68.5){$p_desc = "High"; }
                     elseif($p >= 69){$p_desc = "Very High"; }
 
-                    if($p_desc == "Very Low" || $p_desc == "Low"){$p_requiremt = "Apply 45 kg/ha of fertilisers of phosphates single fertilisers by working it thoroughly in the soil before planting";}
+                    if($p_desc == "Very Low" || $p_desc == "Low"){$p_requiremt = "Apply 45 kg/ha of phosphates for single fertilisers by working it thoroughly in the soil before planting";}
                     else{$p_requiremt = "No need";}
 
                     /** potassium values and their meanings **/
@@ -2269,16 +2269,17 @@
                     }
 
                     echo "<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
-                    echo "                         
-                        <h6><b> Soil Properties </b></h6><p><b>Values</b></p>&nbsp;<b>Description</b><hr/>
-                        <h6 class=\"trim\">pH Value:</h6><p>$ph</p>&nbsp;$ph_desc<hr/>
-                        <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p>&nbsp;$om_desc<hr/>
-                        <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p>&nbsp;$nitrogen_desc<hr/>
-                        <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p>&nbsp;$p_desc<hr/>
-                        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<hr/> 
+                    echo "  <br>     
+                        <h6><b style='font-size: medium'> Soil Results </b></h6><hr/>
+                        <p style='padding-left: 10px;'><b> Soil Properties </b></p><p style='padding-left: 60px'><b>Values</b></p><b style='padding-left: 70px'>Description</b><hr/>
+                        <h6 class=\"trim\">pH:</h6><p>$ph</p>&nbsp;$ph_desc<br/>
+                        <h6 class=\"trim\">Organic Matter(%):</h6><p>$om</p>&nbsp;$om_desc<br/>
+                        <h6 class=\"trim\">Nitrogen Content(%):</h6><p>$n</p>&nbsp;$nitrogen_desc<br/>
+                        <h6 class=\"trim\">Phosphorous Content(ppm):</h6><p>$p</p>&nbsp;$p_desc<br/>
+                        <h6 class=\"trim\">Potassium Content(cmol/kg):</h6><p>$k</p>&nbsp;$k_desc<br/> 
                         <h6 class=\"trim\">Magnesium Content(cmol/kg):</h6><p>$mg</p>&nbsp;$mg_desc<hr/> 
-                        
-                        <h6><b>Recommendations:</b></h6><br>
+                        <br>
+                        <h6><b style='font-size: medium'>Recommendations:</b></h6><br>
                         <h7 class='trim'><b>Nitrogen Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$n_requiremt</p><hr/>                          
                         <h7 class='trim'><b>Phosphorous Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$p_requiremt</p><hr/>
                         <h7 class='trim'><b>Potassium Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$k_requiremt</p><hr/>
