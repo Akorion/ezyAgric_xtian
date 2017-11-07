@@ -64,8 +64,8 @@ switch ($_POST["token"]) {
 
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-                $slected_rows = $mCrudFunctions->fetch_farmer_rows("dataset_" . $row['id'] . " GROUP BY city_town ORDER BY city_town ASC",
-                    "city_town AS district, COUNT(*) AS farmers, 
+                $slected_rows = $mCrudFunctions->fetch_farmer_rows("dataset_" . $row['id'] . " GROUP BY district ORDER BY city_town ASC",
+                    "district AS district, COUNT(*) AS farmers, 
                SUM(CASE WHEN (2017-CONCAT(19,substring(age,-2,2))) < 35 OR (2017-CONCAT(19,substring(age,-2,2))) = 35 THEN 1 ELSE 0 end) AS youth, 
                SUM(CASE WHEN (2017-CONCAT(19,substring(age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old 
                
