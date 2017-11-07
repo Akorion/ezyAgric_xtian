@@ -48,13 +48,13 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                     ///v2 code interview_particulars_va_code
                     if ($_POST['va'] == "all") {
 
-                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Details</th></tr></thead>";
                         output($id, " 1 ORDER BY first_name LIMIT $per_page OFFSET $offset ");
                         echo "</table>";
 
                     } else {
 //                            echo "Dataset: $dt_st_name";
-                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                        echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Details</th></tr></thead>";
                         output($id, " lower(REPLACE(REPLACE(va_code,' ',''),'.','')) = '$va' ORDER BY first_name LIMIT $per_page OFFSET $offset  ");
                         echo "</table>";
                     }
@@ -321,8 +321,7 @@ function output($id, $where)
                   <td style='line-height:12pt; align:center'>$phone_number</td>
                   <td style='line-height:12pt; align:center'>$cows</td>
                   <td style='line-height:12pt; align:center'>$lactating_cows</td>
-                  <td style='line-height:12pt; align:center'>$milk</td>
-                  <td style='line-height:12pt; align:center'>$last_trans_date</td>";
+                 ";
 
                 echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
                        </td>";

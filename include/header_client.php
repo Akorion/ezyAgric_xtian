@@ -95,7 +95,7 @@ $path = $_SERVER["PHP_SELF"];
                         echo "<a href=\"./insuranceDash.php\">Dashboard</a>";
                     } elseif ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd"){
                         echo "<a href='./acpudash.php'>Dashboard</a>";
-                    } elseif ($_SESSION["account_name"] == "Ahurire"){
+                    } elseif ($_SESSION["account_name"] == "Rushere SACCO"){
                         echo "<a href='./dairyDashboard.php'>Dashboard</a>";
                     }
                     else {

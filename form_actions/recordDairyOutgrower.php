@@ -29,7 +29,12 @@ switch ($_POST["token"]) {
         foreach ($rows as $row) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
-            $cows += $mCrudFunctions->get_sum("dataset_" . $row['id'], "number_of_cows", 1);
+//            $cows += $mCrudFunctions->get_sum("dataset_" . $row['id'], "number_of_cows", 1);
+            $data_table = "dataset_" . $row['id'];
+            $cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
+            $calves = (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "1");
+            $bulls = (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "1");
+            $total_cows = $cows +   $calves +    $bulls;
 //            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 //                $milkreceived += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
 //            }
@@ -66,7 +71,7 @@ switch ($_POST["token"]) {
                        <div class=\"col-md-9\">
                            <h4> <a href='dash.php'> Dairy Farmers </a> </h4>
                          <a style=\"font-size:15px; color:blue\"><b>$farmers</b> Farmers</a> <br>
-                           <span style=\"font-size:13px; color:green\">$cows Cows</span> 
+                           <span style=\"font-size:13px; color:green\">$total_cows Cattle</span> 
                             <a href='dash.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
 
                        </div>

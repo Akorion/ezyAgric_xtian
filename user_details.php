@@ -2262,8 +2262,7 @@
                         $lable = $util_obj->captalizeEachWord($string);
                         if ($value != null) {
 
-                            echo "<h6 class=\"trim\">$lable:</h6>
-  <p>$value</p><hr/>";
+                            echo "<h6 class=\"trim\">$lable:</h6><p>$value</p><hr/>";
 
                         }
                     }

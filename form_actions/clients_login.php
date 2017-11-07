@@ -70,7 +70,7 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
     elseif ($_SESSION["account_name"] == "Insurance"){
         $util_obj->redirect_to("../insuranceDash.php");
     }
-    elseif($_SESSION["account_name"] == "Ahurire"){
+    elseif($_SESSION["account_name"] == "Rushere SACCO"){
         $util_obj->redirect_to("../dairyDashboard.php");
     }
 	else{
