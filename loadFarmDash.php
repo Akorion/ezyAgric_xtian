@@ -202,7 +202,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                 <div class="row">
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <div class="x_panel tile  overflow_hidden">
-                            <h4 class="titles"><b>Total cows owned by farmers</b></h4>
+                            <h4 class="titles"><b>Total number of cattle owned by farmers</b></h4>
                             <div class="data">
 
                                 <a><b><?php echo $total_cows; ?> Cattle </b><br>
