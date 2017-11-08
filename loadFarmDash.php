@@ -205,8 +205,11 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                             <h4 class="titles"><b>Total cows owned by farmers</b></h4>
                             <div class="data">
 
-                                <a><b><?php echo $total_cows; ?> Cows </b>
-                                     <!--    <br/> <b><?php echo $total_farmers; ?>Farmers </b>  -->
+                                <a><b><?php echo $total_cows; ?> Cattle </b><br>
+                                    <br/> <strong>Comprising of;</strong>
+                                    <br/> &nbsp; <b>Cows: <?php echo $cows; ?> </b>
+                                    <br/> &nbsp;&nbsp;<b>Bulls: <?php echo $bulls; ?> </b>
+                                    <br/> &nbsp;&nbsp;<b>Calves: <?php echo $calves; ?> </b>
                                 </a>
 
                             </div>
