@@ -32,7 +32,7 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
     $total_count = !empty($_POST['total_count']) ? (int)$_POST['total_count'] : $total_count_default;
     $pagination_obj = new Pagination($page, $per_page, $total_count);
     $offset = $pagination_obj->getOffset();
-    $gender = $_POST['gender'];
+    $gender = $_POST['biodata_gender'];
     $va = $_POST['va'];
     $va = str_replace("(", "-", $va);
     $va = str_replace(")", "", $va);
@@ -49,7 +49,7 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
                     if ($_POST['va'] == "all") {
 
                         echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Details</th></tr></thead>";
-                        output($id, " 1 ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                        output($id, " 1 ORDER BY biodata_first_name LIMIT $per_page OFFSET $offset ");
                         echo "</table>";
 
                     } else {
@@ -283,15 +283,15 @@ function output($id, $where)
                 $real_id = $row['id'];
 
                 $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
-                $name = $row['first_name'];
+                $name = $row['biodata_first_name'];
 //                echo $name;
-                $last_name = $row['last_name'];
-                $gender = $row['gender'];
-                $date = $row['age'];
-                $district = $row['district'];
+                $last_name = $row['biodata_last_name'];
+                $gender = $row['biodata_gender'];
+                $date = $row['biodata_age'];
+                $district = $row['biodata_farmer_location_farmer_district'];
                 $milk = '';
                 $last_trans_date = '';
-                $phone_number = $row['phonenumber'];
+                $phone_number = $row['biodata_phonenumber'];
                 $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
                 $lactating_cows = $row['lactating_cows'];
                 $age = explode('/',$date);

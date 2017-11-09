@@ -218,21 +218,20 @@
             $id = $rows[0]['id'];
 
             if ($type == "Farmer") {
-                $latitude = $util_obj->remove_apostrophes($rows[0]['home_gps_Latitude']);
-                $longitude = $util_obj->remove_apostrophes($rows[0]['home_gps_Longitude']);
-                $picture = $util_obj->remove_apostrophes($rows[0]['farmer_image']);
+                $latitude = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
+                $longitude = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
+                $picture = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_image']);
                 $uuid = $util_obj->remove_apostrophes($rows[0]['meta_instanceID']);
 
                 echo "<input id=\"picture\" type=\"hidden\" value=\"$picture\" />";
                 echo "<input id=\"uuid\" type=\"hidden\" value=\"$uuid\" />";
 
-
 ///////////////////////////////////////////// lat_long_pic starts
-                echo "<div class=\" hide row\">
+                echo "<div class=\" row\">
                         <input type=\"hidden\" id=\"latitude\" value=\"$latitude\" />
                         <input type=\"hidden\" id=\"longitude\" value=\"$longitude\" />
-                        <div class=\"hide  col-sm-4 col-md-4 col-lg-4\">
-                         <span class=\"img\" ><img src=\"$picture\" class=\"hide on_map\"></span>
+                        <div class=\"col-sm-4 col-md-4 col-lg-4\">
+                         <span class=\"img\" ><img src=\"$picture\" class=\" on_map\"></span>
                         </div>
                         
                         <div class=\"hide col-sm-5 col-md-5 col-lg-5\">
@@ -262,18 +261,18 @@
 
                 foreach ($rows2 as $row) {
 
-                    $district = $row['district'];
-                    $subcounty = $row['subcounty'];
-                    $parish = $row['parish'];
-                    $village = $row['village'];
-                    $first_name = $row['first_name'];
-                    $last_name = $row['last_name'];
-                    $gender = $row['gender'];
+                    $district = $row['biodata_farmer_location_farmer_district'];
+                    $subcounty = $row['biodata_farmer_location_farmer_subcounty'];
+                    $parish = $row['biodata_farmer_location_farmer_parish'];
+                    $village = $row['biodata_farmer_location_farmer_village'];
+                    $first_name = $row['biodata_first_name'];
+                    $last_name = $row['biodata_last_name'];
+                    $gender = $row['biodata_gender'];
                     $gender = $util_obj->capitalizeName($gender);
-                    $date = $row['age'];
+                    $date = $row['biodata_age'];
                     $age = explode('/',$date);
                     $farmer_age = 2017 - $age[2];
-                    $phone = $row['phonenumber'];
+                    $phone = $row['biodata_phonenumber'];
 
 //                    $age = DateTime::createFromFormat("d/m/Y", $date);
 //                    $farmer_age = 2017 - $age->format("Y");
@@ -305,7 +304,7 @@
                 foreach ($rows2 as $row) {
 
                     $bank_name = $row['bank_name'];
-                    $sacco = $row['other_financial_institution'];
+                    $sacco = $row['other_banks'];
                     $bank_branch = $row['bank_branch_name'];
                     $account_number = $row['account_number'];
                     $ac_name = $row['account_name'];
@@ -367,7 +366,7 @@
                     $other_breeds = $row['other_breed_of_cows'];
                     $cows_number = $row['number_of_cows'] + $row['number_of_calves'] + $row['number_of_bulls'];
                     $lactating_cows = $row['lactating_cows'];
-                    $average_lactating = $row['average_cows_lactating_1_4_months'];
+                    $average_lactating = $row['early_lactation'];
                     $cows_expecting = $row['cows_expecting'];
 
                     $milk_morning = $row['milk_litres_morning'];
@@ -382,27 +381,27 @@
 
                     echo "<h6>Main breed of cows:</h6>
                           <p class=\"align\"> $breed</p><hr/>";
-                    echo "<h6>Other Breeds:</h6>
-                          <p class=\"align\">$other_breeds</p><hr/>";
+//                    echo "<h6>Other Breeds:</h6>
+//                          <p class=\"align\">$other_breeds</p><hr/>";
                     echo "<h6>Number of cows:</h6>
                           <p class=\"align\">$cows_number</p><hr/>";
                     echo "<h6>Lactating Cows:</h6>
                           <p class=\"align\">$lactating_cows</p><hr/>";
-                    echo "<h6>Average lactating (1-4)months:</h6>
+                    echo "<h6>Early lactating Cows:</h6>
                           <p class=\"align\">$average_lactating</p><hr/>";
                     echo "<h6>Cows Expecting:</h6>
                           <p class=\"align\">$cows_expecting</p><hr/>";
 
-                    echo "<h6>Morning milk quantity:</h6>
-                          <p class=\"align\">$milk_morning</p><hr/>";
-                    echo "<h6>Evening milk quantity:</h6>
-                          <p class=\"align\">$milk_evening</p><hr/>";
+//                    echo "<h6>Morning milk quantity:</h6>
+//                          <p class=\"align\">$milk_morning</p><hr/>";
+//                    echo "<h6>Evening milk quantity:</h6>
+//                          <p class=\"align\">$milk_evening</p><hr/>";
                     echo "<h6>Unit price of milk:</h6>
                           <p class=\"align\">$unit_price</p><hr/>";
                     echo "<h6>Milk transportation mode:</h6>
                           <p class=\"align\">$transport_mode</p><hr/>";
-                    echo "<h6>Other transport modes:</h6>
-                          <p class=\"align\">$other_tp_mode</p><hr/>";
+//                    echo "<h6>Other transport modes:</h6>
+//                          <p class=\"align\">$other_tp_mode</p><hr/>";
                     echo "<h6>Accessed_loan:</h6>
                           <p class=\"align\">".$util_obj->capitalizeName($accessed_loan_status)."</p><hr/>";
                     if($accessed_loan_status == "yes"){
