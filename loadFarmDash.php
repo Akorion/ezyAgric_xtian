@@ -43,7 +43,9 @@ $tools_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_o
 $deworming_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "1");
 $clearing_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "1");
 
-$total_loans = (int)$mCrudFunctions->get_count("$data_table", "accessed_loan='yes'");
+$total_loans = (int)$mCrudFunctions->get_count("$data_table", "general_questions_accessed_loan LIKE 'yes'");
+if($total_loans == 1) $total_loans = $total_loans." Farmer";
+else $total_loans = $total_loans." Farmers";
 
 $tp_motorcycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='motorcycle'");
 if($tp_motorcycle == 1) $tp_motorcycle = $tp_motorcycle." Farmer";
@@ -231,7 +233,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                         <div class="x_panel tile  overflow_hidden">
                             <h4 class="titles"><b>Total Farmers who got loans</b></h4>
                             <div class="data">
-                                <a><b><?php echo $total_loans; ?> Farmers</b></a>
+                                <a><b><?php echo $total_loans; ?></b></a>
 
                             </div>
                         </div>

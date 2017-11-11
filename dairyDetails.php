@@ -286,16 +286,14 @@
                           <p class=\"align\">$gender</p><hr/>";
                     echo "<h6>Age:</h6>
                           <p class=\"align\">$farmer_age</p><hr/>";
-
                     echo "<h6>District:</h6>
                           <p class=\"align\">$district</p><hr/>";
-                    echo "<h6>Sub county:</h6>
+                    echo "<h6>Subcounty:</h6>
                           <p class=\"align\">$subcounty</p><hr/>";
                     echo "<h6>Parish:</h6>
                           <p class=\"align\">$parish</p><hr/>";
                     echo "<h6>Village:</h6>
                           <p class=\"align\">$village</p><hr/>";
-
                     echo "<h6>Cooperative:</h6>
                           <p class=\"align\">$coop</p><hr/>";
 
@@ -1023,7 +1021,6 @@
 
 
             }
-
 
         }
 
