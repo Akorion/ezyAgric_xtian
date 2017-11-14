@@ -174,7 +174,6 @@
                 </div>
             </div>
 
-
             <!--subcounty-->
             <div class="col-sm-2">
                 <label for="inputPassword3" class="control-label">Sub-county</label>

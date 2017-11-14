@@ -1,4 +1,5 @@
 <?php include("include/header_client.php");
+session_start();
 #includes
 require_once dirname(__FILE__) . "/php_lib/user_functions/crud_functions_class.php";
 require_once dirname(__FILE__) . "/php_lib/lib_functions/database_query_processor_class.php";
@@ -7,77 +8,125 @@ require_once dirname(__FILE__) . "/php_lib/lib_functions/utility_class.php";
 $util_obj = new Utilties();
 $db = new DatabaseQueryProcessor();
 $mCrudFunctions = new CrudFunctions();
-$token = $_GET['token'];
-$category = $_GET['category'];
 
-$total_acreage = 0;
-$dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
-$dataset_type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
-
-$data_table = "dataset_" . $dataset_id;
-//print_r($data_table);
-
-//$total_cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
-$cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
-$calves = (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "1");
-$bulls = (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "1");
-$total_cows = $cows +   $calves +    $bulls;
-
-//if($total_cows = 0){
-//    $cows = (int)$mCrudFunctions->get_sum("$data_table", "cattle_number_cows", "1");
-//    $calves = (int)$mCrudFunctions->get_sum("$data_table", "cattle_number_calves", "1");
-//    $bulls = (int)$mCrudFunctions->get_sum("$data_table", "cattle_number_bulls", "1");
-//    $total_cows =   $cows ;
-//}
-
-//$total_cows
-$total_rarmers = (int)$mCrudFunctions->get_count("$data_table", "1");
-
-$total_lactating = (int)$mCrudFunctions->get_sum("$data_table", "lactating_cows", "1");
-$total_expecting = (int)$mCrudFunctions->get_sum("$data_table", "cows_expecting", "1");
-
-$labor_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", "1");
-$injection_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", "1");
-$acariceides_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", "1");
-$tools_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", "1");
-$deworming_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "1");
-$clearing_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "1");
-
-$total_loans = (int)$mCrudFunctions->get_count("$data_table", "general_questions_accessed_loan LIKE 'yes'");
-if($total_loans == 1) $total_loans = $total_loans." Farmer";
-else $total_loans = $total_loans." Farmers";
-
-$tp_motorcycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='motorcycle'");
-if($tp_motorcycle == 1) $tp_motorcycle = $tp_motorcycle." Farmer";
-else $tp_motorcycle = $tp_motorcycle." Farmers";
-
-$tp_vehicle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='vehicle'");
-if($tp_vehicle == 1) $tp_vehicle = $tp_vehicle." Farmer";
-else $tp_vehicle = $tp_vehicle." Farmers";
-
-$tp_bicycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='bicycle'");
-if($tp_bicycle == 1) $tp_bicycle = $tp_bicycle." Farmer";
-else $tp_bicycle = $tp_bicycle." Farmers";
-
-$tp_others = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' ");
-if($tp_others == 1) $tp_others = $tp_others." Farmer";
-else $tp_others = $tp_others." Farmers";
-
-$total_herbicide_solid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id' AND item_type='Herbicide' AND units='KGS' ");
-$total_herbicide_liquid = (int)$mCrudFunctions->get_sum("out_grower_input_v", "qty", " dataset_id='$dataset_id'  AND item_type='Herbicide' AND units='LITRES' ");
-//out_grower_produce_tb
-$total_tractor_cash = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND cash_type='tractor' ");
-$total_cash_given_to_farmers = (int)$mCrudFunctions->get_sum("out_grower_cashinput_tb", "amount", " dataset_id='$dataset_id' AND cash_type='cashtaken' ");
-$total_produce_supplied = (int)$mCrudFunctions->get_sum("out_grower_produce_v", "qty", " dataset_id='$dataset_id'  ");
-$total_produce_commission = (double)$mCrudFunctions->get_sum("out_grower_produce_v", "commission", " dataset_id='$dataset_id'  ");
-
-
+$role =  $_SESSION['role'];
+$branch = $_SESSION['user_account'];
 $client_id = $_SESSION["client_id"];
-$profiling_constant = (double)$mCrudFunctions->fetch_rows("out_grower_threshold_tb", "*", " client_id='$client_id' AND item='Profiling' AND item_type='Service' ")[0]['commission_per_unit'];
 
-//echo $client_id;
+$rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-$total_acreage = $mCrudFunctions->get_sum("out_grower_cashinput_tb", "acreage", " dataset_id='$dataset_id'  AND cash_type='tractor' ");
+
+$cows = 0;  $calves = 0;    $bulls = 0; $total_cows = 0;
+$total_lactating = 0;
+$total_expecting = 0;
+$labor_expenditure = 0;
+$injection_expenditure = 0;
+$acariceides_expenditure = 0;
+$tools_expenditure = 0;
+$deworming_expenditure = 0;
+$clearing_expenditure = 0;
+$total_loans = 0;
+$total_rarmers = 0;
+$tp_motorcycle = 0; $tp_vehicle = 0;    $tp_bicycle = 0;    $tp_others = 0;
+
+//print_r($role, $branch);
+foreach ($rows as $row) {
+    if($role == 1){
+        $token = $_GET['token'];
+        $category = $_GET['category'];
+
+        $total_acreage = 0;
+        $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
+        $dataset_type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
+
+        $data_table = "dataset_" . $row['id'];
+
+        $cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
+        $calves = (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "1");
+        $bulls = (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "1");
+        $total_cows = $cows +   $calves +    $bulls;
+//$total_cows
+        $total_rarmers = (int)$mCrudFunctions->get_count("$data_table", "1");
+
+        $total_lactating = (int)$mCrudFunctions->get_sum("$data_table", "lactating_cows", "1");
+        $total_expecting = (int)$mCrudFunctions->get_sum("$data_table", "cows_expecting", "1");
+
+        $labor_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", "1");
+        $injection_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", "1");
+        $acariceides_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", "1");
+        $tools_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", "1");
+        $deworming_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "1");
+        $clearing_expenditure = (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "1");
+
+        $total_loans = (int)$mCrudFunctions->get_count("$data_table", "general_questions_accessed_loan LIKE 'yes'");
+        if($total_loans == 1) $total_loans = $total_loans." Farmer";
+        else $total_loans = $total_loans." Farmers";
+
+        $tp_motorcycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='motorcycle'");
+        if($tp_motorcycle == 1) $tp_motorcycle = $tp_motorcycle." Farmer";
+        else $tp_motorcycle = $tp_motorcycle." Farmers";
+
+        $tp_vehicle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='vehicle'");
+        if($tp_vehicle == 1) $tp_vehicle = $tp_vehicle." Farmer";
+        else $tp_vehicle = $tp_vehicle." Farmers";
+
+        $tp_bicycle = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='bicycle'");
+        if($tp_bicycle == 1) $tp_bicycle = $tp_bicycle." Farmer";
+        else $tp_bicycle = $tp_bicycle." Farmers";
+
+        $tp_others = (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' ");
+        if($tp_others == 1) $tp_others = $tp_others." Farmer";
+        else $tp_others = $tp_others." Farmers";
+    }
+    else {
+        $token = $_GET['token'];
+        $category = $_GET['category'];
+
+        $total_acreage = 0;
+        $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
+        $dataset_type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
+
+        $data_table = "dataset_" . $row['id'];
+//        print_r($data_table);
+
+        $cows += (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "sacco_branch_name LIKE '$branch'");
+        $calves += (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "sacco_branch_name LIKE '$branch'");
+        $bulls += (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "sacco_branch_name LIKE '$branch'");
+        $total_cows = $cows +   $calves +    $bulls;
+
+        $total_rarmers += (int)$mCrudFunctions->get_count("$data_table", "sacco_branch_name LIKE '$branch'");
+
+        $total_lactating += (int)$mCrudFunctions->get_sum("$data_table", "lactating_cows", "sacco_branch_name LIKE '$branch'");
+        $total_expecting += (int)$mCrudFunctions->get_sum("$data_table", "cows_expecting", "sacco_branch_name LIKE '$branch'");
+
+        $labor_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", "sacco_branch_name LIKE '$branch'");
+        $injection_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", "sacco_branch_name LIKE '$branch'");
+        $acariceides_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", "sacco_branch_name LIKE '$branch'");
+        $tools_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", "sacco_branch_name LIKE '$branch'");
+        $deworming_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "sacco_branch_name LIKE '$branch'");
+        $clearing_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "sacco_branch_name LIKE '$branch'");
+
+        $total_loans += (int)$mCrudFunctions->get_count("$data_table", "general_questions_accessed_loan LIKE 'yes' AND sacco_branch_name LIKE '$branch'");
+        if($total_loans == 1) $total_loans = $total_loans." Farmer";
+        else $total_loans = $total_loans." Farmers";
+
+        $tp_motorcycle += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='motorcycle' AND sacco_branch_name LIKE '$branch'");
+        if($tp_motorcycle == 1) $tp_motorcycle = $tp_motorcycle." Farmer";
+        else $tp_motorcycle = $tp_motorcycle." Farmers";
+
+        $tp_vehicle += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='vehicle' AND sacco_branch_name LIKE '$branch'");
+        if($tp_vehicle == 1) $tp_vehicle = $tp_vehicle." Farmer";
+        else $tp_vehicle = $tp_vehicle." Farmers";
+
+        $tp_bicycle += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='bicycle' AND sacco_branch_name LIKE '$branch'");
+        if($tp_bicycle == 1) $tp_bicycle = $tp_bicycle." Farmer";
+        else $tp_bicycle = $tp_bicycle." Farmers";
+
+        $tp_others += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' AND sacco_branch_name LIKE '$branch'");
+        if($tp_others == 1) $tp_others = $tp_others." Farmer";
+        else $tp_others = $tp_others." Farmers";
+    }
+}
 
 ?>
 
@@ -133,7 +182,6 @@ $total_acreage = $mCrudFunctions->get_sum("out_grower_cashinput_tb", "acreage", 
 
 </style>
 
-
 <?php
 $dataset_name = "";
 $total_farmers = 0;
@@ -149,45 +197,13 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
     $id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
     $type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
 
-//    switch ($type){
-//        case "Farmer"
-//    }
     if ($type == "Farmer") {
-
         $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
+        $branch_ = $util_obj->encrypt_decrypt("encrypt", $branch);
         $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id");
         $dataset_name = ucfirst(strtolower(str_replace("_", " ", $dataset[0]["dataset_name"])));
-        // $dataset_type=$dataset[0]["dataset_type"];
+
         $total_farmers = number_format($mCrudFunctions->get_count("dataset_" . $id, 1));
-
-        $profiling_commission = $profiling_constant * $total_farmers;
-
-        $va_tb_id = $dataset[0]['va_dataset_id'];
-        $va_dataset_id = $va_tb_id;
-        $va_token = $util_obj->encrypt_decrypt("encrypt", $va_tb_id);
-
-        $total_vas = number_format($mCrudFunctions->get_count("dataset_" . $va_tb_id, 1));
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        if ($mCrudFunctions->check_table_exists("garden_" . $id)) {
-            $gardenz = $mCrudFunctions->fetch_rows("total_acerage_tb", "*", " dataset_id='$id'");
-
-            if (sizeof($gardenz) > 0) {
-                $total_acerage = $gardenz[0]['ttl_acerage'];
-                $total_gardens = $gardenz[0]['ttl_gardens'];
-            } else {
-                $total_acerage_gardens = $mCrudFunctions->getTTLAcerage_Gardens($table, $dataset_id);
-                $total_acerage = $total_acerage_gardens[0];
-                $total_gardens = $total_acerage_gardens[1];
-                $mCrudFunctions->insert_into_total_acerage_tb($dataset_id, $total_gardens, $total_acerage);
-            }
-        }
-
-        $total_acerage = number_format($total_acerage);
-        $total_gardens = number_format($total_gardens);
-
-
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ?>
         <!--<div class="container-fluid" style="background-color: grey;">-->
@@ -195,7 +211,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
         <div class="container-fluid">
             <div class='col-xs-12'><h2
                         style='font-size:16pt; color: #1a405b; padding:10px 0px; border-bottom:1px solid #eee;'><i
-                            class='fa fa-file'></i><?php echo $dataset_name; ?></h2>
+                            class='fa fa-file'></i><?php echo $branch; ?></h2>
                 <div class='clearfix'></div>
             </div>
             <!--    </div>-->
@@ -207,9 +223,9 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                             <h4 class="titles"><b>Total number of cattle owned by farmers</b></h4>
                             <div class="data">
 
-                                <a><b><?php echo $total_cows; ?> Cattle </b><br>
+                                <a><b><?php echo $total_cows;?> Cattle </b><br>
                                     <br/> <strong>Comprising of;</strong>
-                                    <br/> &nbsp; <b>Cows: <?php echo $cows; ?> </b>
+                                    <br/> &nbsp;<b>Cows: <?php echo $cows; ?> </b>
                                     <br/> &nbsp;&nbsp;<b>Bulls: <?php echo $bulls; ?> </b>
                                     <br/> &nbsp;&nbsp;<b>Calves: <?php echo $calves; ?> </b>
                                 </a>
@@ -238,46 +254,8 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                             </div>
                         </div>
                     </div>
-
-                    <!--                    <div class="col-md-4 col-sm-4 col-xs-12">-->
-                    <!--                        <div class="x_panel tile  overflow_hidden">-->
-                    <!--                            <h4 class="titles"><b>Total Acreage Ploughed</b></h4>-->
-                    <!--                            <div class="data">-->
-                    <!--                                <a><b>--><?php //echo $total_acerage; ?><!-- Acres</b></a> <br>-->
-                    <!---->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
                 </div>
-                <div class="row">
-                    <!--                    <div class="col-md-4 col-sm-4 col-xs-12">-->
-                    <!--                        <div class="x_panel tile  overflow_hidden">-->
-                    <!--                            <h4 class="titles"><b>Total Herbicide Given Out</b></h4>-->
-                    <!--                            <div class="data">-->
-                    <!---->
-                    <!--                                <a><b>Solid</b>: <b>--><?php //echo $total_herbicide_solid; ?><!-- KGS</b></a>-->
-                    <!--                                <a><b>Liquid</b>:<b> --><?php //echo $total_herbicide_liquid ?><!-- LITRES</b></a>-->
-                    <!---->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
 
-                    <!--                    <div class="col-md-4 col-sm-4 col-xs-12">-->
-                    <!--                        <div class="x_panel tile  overflow_hidden">-->
-                    <!--                            <h4 class="titles"><b>Total Cost Of Tractor Services</b></h4>-->
-                    <!--                            <div class="data">-->
-                    <!--                                <a><b>--><?php //echo number_format($total_tractor_cash); ?><!-- UGX</b></a>-->
-                    <!---->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
-
-
-
-
-                </div>
                 <div class="row">
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <div class="x_panel tile  overflow_hidden">
@@ -320,11 +298,10 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                         <?php
                         echo "<div class=\" panel\">
     <div class=\"col-xs-12\">
-      <h3>FARMERS</h3>
-   
+      <h3>FARMERS</h3>   
     
     <div class=\"content\" style=\"margin-top: 1em;\">
-    <h3><span class='tiny'>Total Number:</span> $total_farmers</h3>
+    <h3><span class='tiny'>Total Number:</span> $total_rarmers</h3>
     <p>
     <b><span>Total Cows: $total_cows</span></b></p>
     <br>
@@ -334,32 +311,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
       </div>
       </div>
     </div>";
-
-
                         ?>
-
-<!--                        <div class="col-xs-12">-->
-<!--                            <div class="panel">-->
-<!--                                <div class="col-xs-12">-->
-<!--                                    <div class="x_title">-->
-<!--                                        <h3>VILLAGE AGENTS</h3>-->
-<!--                                        <!--  <div class="clearfix"></div> -->
-<!--                                    </div>-->
-<!--                                    <div class="content" style="margin-top: 1em;">-->
-<!--                                        --><?php //echo "<h3><span class='tiny'>Total Number: </span> $total_vas</h3>" ?>
-<!--                                        <br>-->
-<!--                                        <br>-->
-<!---->
-<!--                                        --><?php
-//                                        if ($total_vas > 0) {//
-//                                            echo "<a style=\"\" class=\"btn btn-sm btn-success\" onclick=\"Export2Csv($va_dataset_id);\" >Export</a>";
-//                                            echo "<a style=\"\" href=\"view.php?o=$dataset_&token=$va_token&type=VA\" class=\"btn btn-sm btn-info\">View More &raquo;</a>";
-//                                        }
-//                                        ?>
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
 
                     </div> <!-- row datasets-->
                     <div id="hidden_form_container">
@@ -371,7 +323,8 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
 
         <?php
 
-    } else if ($type == "VA") {
+    }
+    else if ($type == "VA") {
         $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
         $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id");
         $dataset_name = ucfirst(strtolower(str_replace("_", " ", $dataset[0]["dataset_name"])));

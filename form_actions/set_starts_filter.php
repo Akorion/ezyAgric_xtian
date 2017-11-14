@@ -12,13 +12,25 @@ $mCrudFunctions = new CrudFunctions();
 /////////////////////////get farmer datasets
 if (isset($_POST['datasets']) && isset($_SESSION["client_id"])) {
     $client_id = $_SESSION["client_id"];
+    $branch = $_SESSION['user_account'];
+    $role =  $_SESSION['role'];
+
     $table = "client_datasets_v";
     $row0s = $mCrudFunctions->fetch_rows($table, "*", " client_id='$client_id' AND dataset_type='Farmer' ");
     foreach ($row0s as $row) {
         $Id = $row['id'];
-        $label = $util_obj->captalizeEachWord($row['dataset_name']);
-        $lable = str_replace(".", "", $label);
-        echo "<option value=\"$Id\">$lable</option>";
+        if($role == 1){
+            $label = $util_obj->captalizeEachWord($row['dataset_name']);
+            $lable = str_replace(".", "", $label);
+            echo "<option value=\"$Id\">$lable</option>";
+        } else {
+            $tb_rows = $mCrudFunctions->fetch_rows("dataset_".$row['id'], "biodata_cooperative_name", "sacco_branch_name LIKE '$branch'");
+            foreach ($tb_rows as $tb){
+                $label = $util_obj->captalizeEachWord($tb['biodata_cooperative_name']);
+                $lable = str_replace(".", "", $label);
+                echo "<option value=\"$Id\">$lable</option>";
+            }
+        }
     }
 }
 if (isset($_POST['va']) && isset($_POST['id'])) {

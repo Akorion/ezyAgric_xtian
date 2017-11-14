@@ -206,11 +206,11 @@
         echo "<input id=\"id\" type=\"hidden\" value=\"$id\" />";
         echo "<input id=\"type\" type=\"hidden\" value=\"$type\" />";
 
-
-        $table = "dataset_" . $dataset_id;
+        $table = "dataset_" .$dataset_id;
         $columns = "*";
         $where = " id='$id' ";
         $rows = $mCrudFunctions->fetch_rows($table, $columns, $where);
+
         if (sizeof($rows) == 0) {
             echo "details Unavailable";
         } else {

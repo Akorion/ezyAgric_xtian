@@ -47,984 +47,1964 @@ if ($age_min > 0 && $age_max == 0) {
 //header('Content-type: application/json');
 $vasql = " AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'";
 $data = array();
+$branch = $_SESSION['user_account'];
+$role =  $_SESSION['role'];
+
 if($_SESSION["account_name"] == "Rushere SACCO"){
-    if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country']) && isset($_POST['parish']) && isset($_POST['village']))
-    {
+   if($role == 1){
+       if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country']) && isset($_POST['parish']) && isset($_POST['village']))
+       {
 
-        $district = $_POST['district'];
-        $subcounty = $_POST['country'];
-        $parish = $_POST['parish'];
-        $id = $_POST['id'];
+           $district = $_POST['district'];
+           $subcounty = $_POST['country'];
+           $parish = $_POST['parish'];
+           $id = $_POST['id'];
 
-///////////////////////////////////////districts
-        if ($_POST['district'] == "all") {
-            $table = "dataset_" . $_POST['id'];
-            $rows = array();
+           ///////////////////////////////////////districts
+           if ($_POST['district'] == "all") {
+               $table = "dataset_" . $_POST['id'];
+               $rows = array();
 
-            $male = 0;
-            $female = 0;
-            if ($_POST['production'] == "all") {
+               $male = 0;
+               $female = 0;
+               if ($_POST['production'] == "all") {
 
-                if ($_POST['gender'] == "all") {
+                   if ($_POST['gender'] == "all") {
 
-//lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                    if ($_POST['va'] == "all") {
+                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                       if ($_POST['va'] == "all") {
 
-                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' ");
+                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' ");
 
-                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male'  ");
-                        $total_farmers = $female + $male;
+                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male'  ");
+                           $total_farmers = $female + $male;
 
-                    } else {
-                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' " . $vasql);
+                       } else {
+                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' " . $vasql);
 
-                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male'   " . $vasql);
-                    }
+                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male'   " . $vasql);
+                       }
 
-                } else {
+                   } else {
 
-                    $gender = $_POST['gender'];
+                       $gender = $_POST['gender'];
 
-                    if ($gender == "male") {
-                        $male = 100;
-                    } else {
-                        $female = 100;
-                    }
-                }
+                       if ($gender == "male") {
+                           $male = 100;
+                       } else {
+                           $female = 100;
+                       }
+                   }
 
-            }
-            else {
-                $string = $_POST['production'];
-                if (strpos($string, "productionyes") === false) {
-                    if (strpos($string, "productionno") === false) {
-                        if (strpos($string, "generalyes") === false) {
-                            if (strpos($string, "generalno") === false) {
-                            } else {
+               }
+               else {
+                   $string = $_POST['production'];
+                   if (strpos($string, "productionyes") === false) {
+                       if (strpos($string, "productionno") === false) {
+                           if (strpos($string, "generalyes") === false) {
+                               if (strpos($string, "generalno") === false) {
+                               } else {
 
-                                $p_id = str_replace("generalno", "", $string);
-                                //
-                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-                                if ($_POST['gender'] == "all") {
+                                   $p_id = str_replace("generalno", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
 
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                    if ($_POST['va'] == "all") {//$vasql
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {//$vasql
 
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  lower(biodata_farmer_gender) ='male' ");
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  lower(biodata_farmer_gender) ='male' ");
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND lower(biodata_farmer_gender) ='female' ");
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND lower(biodata_farmer_gender) ='female' ");
 
 
-                                    } else {
+                                       } else {
 
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  lower(biodata_farmer_gender) ='male' " . $vasql);
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  lower(biodata_farmer_gender) ='male' " . $vasql);
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND lower(biodata_farmer_gender) ='female' " . $vasql);
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND lower(biodata_farmer_gender) ='female' " . $vasql);
 
 
-                                    }
+                                       }
 
-                                } else {
-                                    $gender = $_POST['gender'];
+                                   } else {
+                                       $gender = $_POST['gender'];
 
-                                    if ($gender == "male") {
-                                        $male = 100;
-                                    } else {
-                                        $female = 100;
-                                    }
-                                }
-                            }
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+                                   }
+                               }
 
-                        } else {
+                           } else {
 
-                            $p_id = str_replace("generalyes", "", $string);
-                            //
-                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                            $column = $row[0]['columns'];
-                            if ($_POST['gender'] == "all") {
+                               $p_id = str_replace("generalyes", "", $string);
+                               //
+                               $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                               $column = $row[0]['columns'];
+                               if ($_POST['gender'] == "all") {
 
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                if ($_POST['va'] == "all") {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='male' ");
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='male' ");
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='female' ");
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='female' ");
 
 
-                                } else {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='male' " . $vasql);
+                                   } else {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='male' " . $vasql);
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='female' " . $vasql);
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='female' " . $vasql);
 
 
-                                }//.$vasql
+                                   }//.$vasql
 
 
-                            } else {
-                                $gender = $_POST['gender'];
-                                if ($gender == "male") {
-                                    $male = 100;
-                                } else {
-                                    $female = 100;
-                                }
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
 
 
-                            }
-                        }
+                               }
+                           }
 
-                    } else {
+                       } else {
 
-                        $p_id = str_replace("productionno", "", $string);
-                        //
-                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                        $column = $row[0]['columns'];
+                           $p_id = str_replace("productionno", "", $string);
+                           //
+                           $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                           $column = $row[0]['columns'];
 
-                        if ($_POST['gender'] == "all") {
+                           if ($_POST['gender'] == "all") {
 
-                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                            if ($_POST['va'] == "all") {
-                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'male' ");
+                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                               if ($_POST['va'] == "all") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'male' ");
 
-                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'female' ");
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                            } else {
+                               } else {
 
-                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
-                            }
+                               }
 
 
-                        } else {
-                            $gender = $_POST['gender'];
-                            if ($gender == "male") {
-                                $male = 100;
-                            } else {
-                                $female = 100;
-                            }
+                           } else {
+                               $gender = $_POST['gender'];
+                               if ($gender == "male") {
+                                   $male = 100;
+                               } else {
+                                   $female = 100;
+                               }
 
-                        }
-                    }
+                           }
+                       }
 
-                } else {
+                   } else {
 
-                    $p_id = str_replace("productionyes", "", $string);
+                       $p_id = str_replace("productionyes", "", $string);
 
-                    //
-                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                    $column = $row[0]['columns'];
-                    if ($_POST['gender'] == "all") {
+                       //
+                       $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                       $column = $row[0]['columns'];
+                       if ($_POST['gender'] == "all") {
 
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                        if ($_POST['va'] == "all") {
-                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) = 'male' ");
+                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                           if ($_POST['va'] == "all") {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) = 'male' ");
 
-                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND lower(biodata_farmer_gender) = 'female' ");
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND lower(biodata_farmer_gender) = 'female' ");
 
-                        } else {//.$vasql
+                           } else {//.$vasql
 
-                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                        }
+                           }
 
 
-                    } else {
-                        $gender = $_POST['gender'];
-                        if ($gender == "male") {
-                            $male = 100;
-                        } else {
-                            $female = 100;
-                        }
+                       } else {
+                           $gender = $_POST['gender'];
+                           if ($gender == "male") {
+                               $male = 100;
+                           } else {
+                               $female = 100;
+                           }
 
 
-                    }
-                }
+                       }
+                   }
 
 
-            }
+               }
 
-//echo $female;
-            draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+               //echo $female;
+               draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
-        } else
+           } else
 
 
-///////////////////////////////////////////subcounties
-            if ($_POST['country'] == "all") {
+               ///////////////////////////////////////////subcounties
+               if ($_POST['country'] == "all") {
 
-                $table = "dataset_" . $_POST['id'];
-                $district = $_POST['district'];
-                $rows = array();
-                if ($_POST['production'] == "all") {
+                   $table = "dataset_" . $_POST['id'];
+                   $district = $_POST['district'];
+                   $rows = array();
+                   if ($_POST['production'] == "all") {
 
-                    if ($_POST['gender'] == "all") {
+                       if ($_POST['gender'] == "all") {
 
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                        if ($_POST['va'] == "all") {
-                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male'");
+                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                           if ($_POST['va'] == "all") {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male'");
 
-                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female'");
-                            $total_farmers = $female + $male;
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female'");
+                               $total_farmers = $female + $male;
 
-                        } else {
-                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male'" . $vasql);
+                           } else {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male'" . $vasql);
 
-                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female'" . $vasql);
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female'" . $vasql);
 
 
-                        }//.$vasql
+                           }//.$vasql
 
 
-                    } else {
-                        $gender = $_POST['gender'];
-                        if ($gender == "male") {
-                            $male = 100;
-                        } else {
-                            $female = 100;
-                        }
+                       } else {
+                           $gender = $_POST['gender'];
+                           if ($gender == "male") {
+                               $male = 100;
+                           } else {
+                               $female = 100;
+                           }
 
 
-                    }
+                       }
 
 
-                } else {
-                    $string = $_POST['production'];
-                    if (strpos($string, "productionyes") === false) {
-                        if (strpos($string, "productionno") === false) {
-                            if (strpos($string, "generalyes") === false) {
-                                if (strpos($string, "generalno") === false) {
+                   } else {
+                       $string = $_POST['production'];
+                       if (strpos($string, "productionyes") === false) {
+                           if (strpos($string, "productionno") === false) {
+                               if (strpos($string, "generalyes") === false) {
+                                   if (strpos($string, "generalno") === false) {
 
-                                } else {
-                                    $p_id = str_replace("generalno", "", $string);
-                                    //
-                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-                                    if ($_POST['gender'] == "all") {
+                                   } else {
+                                       $p_id = str_replace("generalno", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
 
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                        } else {
+                                           } else {
 
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
-                                        }//.$vasql
+                                           }//.$vasql
 
 
-                                    } else {
-                                        $gender = $_POST['gender'];
-                                        if ($gender == "male") {
-                                            $male = 100;
-                                        } else {
-                                            $female = 100;
-                                        }
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
 
 
-                                    }
+                                       }
 
-                                }
-                            } else {
-                                $p_id = str_replace("generalyes", "", $string);
-                                //
-                                $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-                                if ($_POST['gender'] == "all") {
+                                   }
+                               } else {
+                                   $p_id = str_replace("generalyes", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                    if ($_POST['va'] == "all") {
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                    } else {
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                    }//.$vasql
+                                       }//.$vasql
 
 
-                                } else {
-                                    $gender = $_POST['gender'];
-                                    if ($gender == "male") {
-                                        $male = 100;
-                                    } else {
-                                        $female = 100;
-                                    }
+                                   } else {
+                                       $gender = $_POST['gender'];
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
 
 
-                                }
-                            }
+                                   }
+                               }
 
 
-                        } else {
-                            $p_id = str_replace("productionno", "", $string);
+                           } else {
+                               $p_id = str_replace("productionno", "", $string);
 
-                            //
-                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                            $column = $row[0]['columns'];
-                            if ($_POST['gender'] == "all") {
+                               //
+                               $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                               $column = $row[0]['columns'];
+                               if ($_POST['gender'] == "all") {
 
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                if ($_POST['va'] == "all") {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                } else {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                   } else {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                }//.$vasql
+                                   }//.$vasql
 
 
-                            } else {
-                                $gender = $_POST['gender'];
-                                if ($gender == "male") {
-                                    $male = 100;
-                                } else {
-                                    $female = 100;
-                                }
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
 
 
-                            }
-                        }
+                               }
+                           }
 
-                    } else {
-                        $p_id = str_replace("productionyes", "", $string);
+                       } else {
+                           $p_id = str_replace("productionyes", "", $string);
 
-                        //
-                        $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                        $column = $row[0]['columns'];
-                        if ($_POST['gender'] == "all") {
+                           //
+                           $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                           $column = $row[0]['columns'];
+                           if ($_POST['gender'] == "all") {
 
-                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                            if ($_POST['va'] == "all") {
-                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                               if ($_POST['va'] == "all") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                            } else {
-                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                               } else {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                            }//.$vasql
+                               }//.$vasql
 
 
-                        } else {
-                            $gender = $_POST['gender'];
-                            if ($gender == "male") {
-                                $male = 100;
-                            } else {
-                                $female = 100;
-                            }
+                           } else {
+                               $gender = $_POST['gender'];
+                               if ($gender == "male") {
+                                   $male = 100;
+                               } else {
+                                   $female = 100;
+                               }
 
 
-                        }
+                           }
 
-                    }
+                       }
 
 
-                }
+                   }
 
 
-                draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                   draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
-            } else
+               } else
 
-///////////////////////////////////////////parish
+                   ///////////////////////////////////////////parish
 
-                if ($_POST['parish'] == "all") {
+                   if ($_POST['parish'] == "all") {
 
-                    $table = "dataset_" . $_POST['id'];
-                    $subcounty = $_POST['country'];
-                    $rows = array();
-                    if ($_POST['production'] == "all") {
-                        if ($_POST['gender'] == "all") {
+                       $table = "dataset_" . $_POST['id'];
+                       $subcounty = $_POST['country'];
+                       $rows = array();
+                       if ($_POST['production'] == "all") {
+                           if ($_POST['gender'] == "all") {
 
-                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                            if ($_POST['va'] == "all") {
-                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' ");
+                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                               if ($_POST['va'] == "all") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' ");
 
-                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' ");
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' ");
 
 
-                            } else {
-                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' " . $vasql);
+                               } else {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' " . $vasql);
 
-                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' " . $vasql);
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' " . $vasql);
 
 
-                            }
+                               }
 
 
-                        } else {
-                            $gender = $_POST['gender'];
-                            if ($gender == "male") {
-                                $male = 100;
-                            } else {
-                                $female = 100;
-                            }
+                           } else {
+                               $gender = $_POST['gender'];
+                               if ($gender == "male") {
+                                   $male = 100;
+                               } else {
+                                   $female = 100;
+                               }
 
-                        }
-                    } else {
-                        $string = $_POST['production'];
-                        if (strpos($string, "productionyes") === false) {
-                            if (strpos($string, "productionno") === false) {
-                                if (strpos($string, "generalyes") === false) {
-                                    if (strpos($string, "generalno") === false) {
-                                    } else {
-                                        $p_id = str_replace("generalno", "", $string);
-                                        //
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        if ($_POST['gender'] == "all") {
+                           }
+                       } else {
+                           $string = $_POST['production'];
+                           if (strpos($string, "productionyes") === false) {
+                               if (strpos($string, "productionno") === false) {
+                                   if (strpos($string, "generalyes") === false) {
+                                       if (strpos($string, "generalno") === false) {
+                                       } else {
+                                           $p_id = str_replace("generalno", "", $string);
+                                           //
+                                           $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                           $column = $row[0]['columns'];
+                                           if ($_POST['gender'] == "all") {
 
 
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                            if ($_POST['va'] == "all") {
-                                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
+                                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                               if ($_POST['va'] == "all") {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                            } else {
-                                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                               } else {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                            }//.$vasql
+                                               }//.$vasql
 
 
-                                        } else {
-                                            $gender = $_POST['gender'];
-                                            if ($gender == "male") {
-                                                $male = 100;
-                                            } else {
-                                                $female = 100;
-                                            }
+                                           } else {
+                                               $gender = $_POST['gender'];
+                                               if ($gender == "male") {
+                                                   $male = 100;
+                                               } else {
+                                                   $female = 100;
+                                               }
 
 
-                                        }
-                                    }
+                                           }
+                                       }
 
 
-                                } else {
-                                    $p_id = str_replace("generalyes", "", $string);
-                                    //
-                                    $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-                                    if ($_POST['gender'] == "all") {
+                                   } else {
+                                       $p_id = str_replace("generalyes", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
 
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
 
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male'");
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male'");
 
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female'");
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female'");
 
 
-                                        } else {
+                                           } else {
 
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
 
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female'" . $vasql);
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female'" . $vasql);
 
 
-                                        }//.$vasql
+                                           }//.$vasql
 
 
-                                    } else {
-                                        $gender = $_POST['gender'];
-                                        if ($gender == "male") {
-                                            $male = 100;
-                                        } else {
-                                            $female = 100;
-                                        }
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
 
-                                    }
+                                       }
 
-                                }
-                            } else {
-                                $p_id = str_replace("productionno", "", $string);
-                                //
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-                                if ($_POST['gender'] == "all") {
+                                   }
+                               } else {
+                                   $p_id = str_replace("productionno", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                    if ($_POST['va'] == "all") {
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                    } else {
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                    }//.$vasql
+                                       }//.$vasql
 
 
-                                } else {
-                                    $gender = $_POST['gender'];
-                                    if ($gender == "male") {
-                                        $male = 100;
-                                    } else {
-                                        $female = 100;
-                                    }
+                                   } else {
+                                       $gender = $_POST['gender'];
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
 
 
-                                }
+                                   }
 
-                            }
-                        } else {
-                            $p_id = str_replace("productionyes", "", $string);
-                            //
-                            $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                            $column = $row[0]['columns'];
-                            if ($_POST['gender'] == "all") {
+                               }
+                           } else {
+                               $p_id = str_replace("productionyes", "", $string);
+                               //
+                               $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                               $column = $row[0]['columns'];
+                               if ($_POST['gender'] == "all") {
 
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                if ($_POST['va'] == "all") {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                } else {
+                                   } else {
 
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
-                                }//.$vasql
+                                   }//.$vasql
 
 
-                            } else {
-                                $gender = $_POST['gender'];
-                                if ($gender == "male") {
-                                    $male = 100;
-                                } else {
-                                    $female = 100;
-                                }
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
 
-                            }
+                               }
 
 
-                        }
-                    }
+                           }
+                       }
 
-                    draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                       draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
-                } else
+                   } else
 
-///////////////////////////////////////////village
+                       ///////////////////////////////////////////village
 
-                    if ($_POST['village'] == "all") {
+                       if ($_POST['village'] == "all") {
 
-                        $table = "dataset_" . $_POST['id'];
-                        $parish = $_POST['parish'];
-                        $rows = array();
-                        if ($_POST['production'] == "all") {
-                            if ($_POST['gender'] == "all") {
+                           $table = "dataset_" . $_POST['id'];
+                           $parish = $_POST['parish'];
+                           $rows = array();
+                           if ($_POST['production'] == "all") {
+                               if ($_POST['gender'] == "all") {
 
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                if ($_POST['va'] == "all") {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' ");
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' ");
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' ");
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' ");
 
 
-                                } else {
+                                   } else {
 
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' " . $vasql);
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' " . $vasql);
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' " . $vasql);
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' " . $vasql);
 
-                                }//.$vasql
+                                   }//.$vasql
 
 
-                            } else {
-                                $gender = $_POST['gender'];
-                                if ($gender == "male") {
-                                    $male = 100;
-                                } else {
-                                    $female = 100;
-                                }
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
 
-                            }
-                        } else {
-                            $string = $_POST['production'];
-                            if (strpos($string, "productionyes") === false) {
-                                if (strpos($string, "productionno") === false) {
-                                    if (strpos($string, "generalyes") === false) {
-                                        if (strpos($string, "generalno") === false) {
-                                        } else {
-                                            $p_id = str_replace("generalno", "", $string);
-                                            //
-                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-                                            if ($_POST['gender'] == "all") {
+                               }
+                           } else {
+                               $string = $_POST['production'];
+                               if (strpos($string, "productionyes") === false) {
+                                   if (strpos($string, "productionno") === false) {
+                                       if (strpos($string, "generalyes") === false) {
+                                           if (strpos($string, "generalno") === false) {
+                                           } else {
+                                               $p_id = str_replace("generalno", "", $string);
+                                               //
+                                               $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                               $column = $row[0]['columns'];
+                                               if ($_POST['gender'] == "all") {
 
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                                if ($_POST['va'] == "all") {
-                                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+                                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                                   if ($_POST['va'] == "all") {
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                                } else {
+                                                   } else {
 
-                                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                                }//.$vasql
+                                                   }//.$vasql
 
 
-                                            } else {
-                                                $gender = $_POST['gender'];
-                                                if ($gender == "male") {
-                                                    $male = 100;
-                                                } else {
-                                                    $female = 100;
-                                                }
+                                               } else {
+                                                   $gender = $_POST['gender'];
+                                                   if ($gender == "male") {
+                                                       $male = 100;
+                                                   } else {
+                                                       $female = 100;
+                                                   }
 
 
-                                            }
+                                               }
 
-                                        }
-                                    } else {
-                                        $p_id = str_replace("generalyes", "", $string);
-                                        //
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        if ($_POST['gender'] == "all") {
+                                           }
+                                       } else {
+                                           $p_id = str_replace("generalyes", "", $string);
+                                           //
+                                           $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                           $column = $row[0]['columns'];
+                                           if ($_POST['gender'] == "all") {
 
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                            if ($_POST['va'] == "all") {
-                                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+                                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                               if ($_POST['va'] == "all") {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                            } else {
-                                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                               } else {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                            }//.$vasql
+                                               }//.$vasql
 
 
-                                        } else {
-                                            $gender = $_POST['gender'];
-                                            if ($gender == "male") {
-                                                $male = 100;
-                                            } else {
-                                                $female = 100;
-                                            }
+                                           } else {
+                                               $gender = $_POST['gender'];
+                                               if ($gender == "male") {
+                                                   $male = 100;
+                                               } else {
+                                                   $female = 100;
+                                               }
 
-                                        }
+                                           }
 
-                                    }
+                                       }
 
-                                } else {
-                                    $p_id = str_replace("productionno", "", $string);
-                                    //
-                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-                                    if ($_POST['gender'] == "all") {
+                                   } else {
+                                       $p_id = str_replace("productionno", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
 
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
 
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                        } else {
+                                           } else {
 
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                        }//.$vasql
+                                           }//.$vasql
 
 
-                                    } else {
-                                        $gender = $_POST['gender'];
-                                        if ($gender == "male") {
-                                            $male = 100;
-                                        } else {
-                                            $female = 100;
-                                        }
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
 
-                                    }
+                                       }
 
-                                }
+                                   }
 
-                            } else {
-                                $p_id = str_replace("productionyes", "", $string);
-                                //
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-                                if ($_POST['gender'] == "all") {
+                               } else {
+                                   $p_id = str_replace("productionyes", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
 
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                    if ($_POST['va'] == "all") {
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
 
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
 
-                                    } else {
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                    }//.$vasql
+                                       }//.$vasql
 
-                                } else {
-                                    $gender = $_POST['gender'];
-                                    if ($gender == "male") {
-                                        $male = 100;
-                                    } else {
-                                        $female = 100;
-                                    }
-                                    if ($gender == "male") {
-                                        $male = 100;
-                                    } else {
-                                        $female = 100;
-                                    }
+                                   } else {
+                                       $gender = $_POST['gender'];
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
 
-                                }
+                                   }
 
 
-                            }
-                        }
+                               }
+                           }
 
-                        draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                           draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
-                    }
-                    else
-                    {
+                       }
+                       else
+                       {
 
-//echo "off";
-                        $table = "dataset_" . $_POST['id'];
-                        $parish = $_POST['parish'];
-                        $village = $_POST['village'];
-                        $rows = array();
-                        if ($_POST['production'] == "all") {
-                            if ($_POST['gender'] == "all") {
+                           //echo "off";
+                           $table = "dataset_" . $_POST['id'];
+                           $parish = $_POST['parish'];
+                           $village = $_POST['village'];
+                           $rows = array();
+                           if ($_POST['production'] == "all") {
+                               if ($_POST['gender'] == "all") {
 
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                if ($_POST['va'] == "all") {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                } else {
-                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                   } else {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                }//.$vasql
+                                   }//.$vasql
 
 
-                            } else {
-                                $gender = $_POST['gender'];
+                               } else {
+                                   $gender = $_POST['gender'];
 
-                                if ($gender == "male") {
-                                    $male = 100;
-                                } else {
-                                    $female = 100;
-                                }
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
 
 
-                            }
-                        } else {
-                            $string = $_POST['production'];
-                            if (strpos($string, "productionyes") === false) {
-                                if (strpos($string, "productionno") === false) {
-                                    if (strpos($string, "generalyes") === false) {
-                                        if (strpos($string, "generalno") === false) {
-                                        } else {
-                                            $p_id = str_replace("generalno", "", $string);
-                                            //
-                                            $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                            $column = $row[0]['columns'];
-                                            if ($_POST['gender'] == "all") {
+                               }
+                           } else {
+                               $string = $_POST['production'];
+                               if (strpos($string, "productionyes") === false) {
+                                   if (strpos($string, "productionno") === false) {
+                                       if (strpos($string, "generalyes") === false) {
+                                           if (strpos($string, "generalno") === false) {
+                                           } else {
+                                               $p_id = str_replace("generalno", "", $string);
+                                               //
+                                               $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                               $column = $row[0]['columns'];
+                                               if ($_POST['gender'] == "all") {
 
-                                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                                if ($_POST['va'] == "all") {
+                                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                                   if ($_POST['va'] == "all") {
 
-                                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male'");
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male'");
 
-                                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female'");
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female'");
 
-                                                } else {
-                                                    $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
+                                                   } else {
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
 
-                                                    $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female'" . $vasql);
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female'" . $vasql);
 
 
-                                                }//.$vasql
+                                                   }//.$vasql
 
 
-                                            } else {
-                                                $gender = $_POST['gender'];
-                                                if ($gender == "male") {
-                                                    $male = 100;
-                                                } else {
-                                                    $female = 100;
-                                                }
+                                               } else {
+                                                   $gender = $_POST['gender'];
+                                                   if ($gender == "male") {
+                                                       $male = 100;
+                                                   } else {
+                                                       $female = 100;
+                                                   }
 
-                                            }
+                                               }
 
-                                        }
-                                    } else {
-                                        $p_id = str_replace("generalyes", "", $string);
-                                        //
-                                        $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
-                                        $column = $row[0]['columns'];
-                                        if ($_POST['gender'] == "all") {
+                                           }
+                                       } else {
+                                           $p_id = str_replace("generalyes", "", $string);
+                                           //
+                                           $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                           $column = $row[0]['columns'];
+                                           if ($_POST['gender'] == "all") {
 
-                                            //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                            if ($_POST['va'] == "all") {
-                                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+                                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                               if ($_POST['va'] == "all") {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
 
-                                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
 
 
-                                            } else {
+                                               } else {
 
-                                                $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
 
-                                                $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                            }//.$vasql
+                                               }//.$vasql
 
-                                        } else {
-                                            $gender = $_POST['gender'];
-                                            if ($gender == "male") {
-                                                $male = 100;
-                                            } else {
-                                                $female = 100;
-                                            }
+                                           } else {
+                                               $gender = $_POST['gender'];
+                                               if ($gender == "male") {
+                                                   $male = 100;
+                                               } else {
+                                                   $female = 100;
+                                               }
 
-                                        }
+                                           }
 
-                                    }
-                                } else {
-                                    $p_id = str_replace("productionno", "", $string);
-                                    //
-                                    $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                    $column = $row[0]['columns'];
-                                    if ($_POST['gender'] == "all") {
+                                       }
+                                   } else {
+                                       $p_id = str_replace("productionno", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
 
-                                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                        if ($_POST['va'] == "all") {
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
 
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
 
-                                        } else {
-                                            $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
-                                            $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                           } else {
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                        }//.$vasql
+                                           }//.$vasql
 
-                                    } else {
-                                        $gender = $_POST['gender'];
-                                        if ($gender == "male") {
-                                            $male = 100;
-                                        } else {
-                                            $female = 100;
-                                        }
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
 
-                                    }
+                                       }
 
-                                }
-                            } else {
-                                $p_id = str_replace("productionyes", "", $string);
-                                //
-                                $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
-                                $column = $row[0]['columns'];
-                                if ($_POST['gender'] == "all") {
+                                   }
+                               } else {
+                                   $p_id = str_replace("productionyes", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-                                    if ($_POST['va'] == "all") {
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
 
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
 
-                                    } else {
-                                        $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
-                                        $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
 
 
-                                    }//.$vasql
+                                       }//.$vasql
 
-                                } else {
-                                    $gender = $_POST['gender'];
+                                   } else {
+                                       $gender = $_POST['gender'];
 
-                                    if ($gender == "male") {
-                                        $male = 100;
-                                    } else {
-                                        $female = 100;
-                                    }
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
 
-                                }
+                                   }
 
-                            }
-                        }
+                               }
+                           }
 
-                        draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+                           draw_pie_chart($male, $female, $json_model_obj, $util_obj);
 
 
-                    }
+                       }
 
-    }
-    else {
-        $util_obj->deliver_response(200, 0, null);
-    }
+       }
+       else {
+           $util_obj->deliver_response(200, 0, null);
+       }
+   }
+   else {
+       if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country']) && isset($_POST['parish']) && isset($_POST['village']))
+       {
+
+           $district = $_POST['district'];
+           $subcounty = $_POST['country'];
+           $parish = $_POST['parish'];
+           $id = $_POST['id'];
+
+           ///////////////////////////////////////districts
+           if ($_POST['district'] == "all") {
+               $table = "dataset_" . $_POST['id'];
+               $rows = array();
+
+               $male = 0;
+               $female = 0;
+               if ($_POST['production'] == "all") {
+
+                   if ($_POST['gender'] == "all") {
+
+                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                       if ($_POST['va'] == "all") {
+
+                           $female = (int)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+
+                           $male = (int)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+                           $total_farmers = $female + $male;
+
+                       } else {
+                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' " . $vasql);
+
+                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male'   " . $vasql);
+                       }
+
+                   } else {
+
+                       $gender = $_POST['gender'];
+
+                       if ($gender == "male") {
+                           $male = (int)$mCrudFunctions->get_count($table, $ageFilter . "  lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+
+                       } else {
+                           $female = (int)$mCrudFunctions->get_count($table, $ageFilter . "   lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+
+                       }
+                   }
+
+               }
+               else {
+                   $string = $_POST['production'];
+                   if (strpos($string, "productionyes") === false) {
+                       if (strpos($string, "productionno") === false) {
+                           if (strpos($string, "generalyes") === false) {
+                               if (strpos($string, "generalno") === false) {
+                               } else {
+
+                                   $p_id = str_replace("generalno", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
+
+
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {//$vasql
+
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  lower(biodata_farmer_gender) ='male' ");
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND lower(biodata_farmer_gender) ='female' ");
+
+
+                                       } else {
+
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  lower(biodata_farmer_gender) ='male' " . $vasql);
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND lower(biodata_farmer_gender) ='female' " . $vasql);
+
+
+                                       }
+
+                                   } else {
+                                       $gender = $_POST['gender'];
+
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+                                   }
+                               }
+
+                           } else {
+
+                               $p_id = str_replace("generalyes", "", $string);
+                               //
+                               $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                               $column = $row[0]['columns'];
+                               if ($_POST['gender'] == "all") {
+
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='male' ");
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='female' ");
+
+
+                                   } else {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='male' " . $vasql);
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) ='female' " . $vasql);
+
+
+                                   }//.$vasql
+
+
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
+
+
+                               }
+                           }
+
+                       } else {
+
+                           $p_id = str_replace("productionno", "", $string);
+                           //
+                           $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                           $column = $row[0]['columns'];
+
+                           if ($_POST['gender'] == "all") {
+
+                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                               if ($_POST['va'] == "all") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'male' ");
+
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                               } else {
+
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no'  AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+                               }
+
+
+                           } else {
+                               $gender = $_POST['gender'];
+                               if ($gender == "male") {
+                                   $male = 100;
+                               } else {
+                                   $female = 100;
+                               }
+
+                           }
+                       }
+
+                   } else {
+
+                       $p_id = str_replace("productionyes", "", $string);
+
+                       //
+                       $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                       $column = $row[0]['columns'];
+                       if ($_POST['gender'] == "all") {
+
+                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                           if ($_POST['va'] == "all") {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) = 'male' ");
+
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND lower(biodata_farmer_gender) = 'female' ");
+
+                           } else {//.$vasql
+
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes'  AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                           }
+
+
+                       } else {
+                           $gender = $_POST['gender'];
+                           if ($gender == "male") {
+                               $male = 100;
+                           } else {
+                               $female = 100;
+                           }
+
+
+                       }
+                   }
+
+
+               }
+
+               //echo $female;
+               draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+
+
+           } else
+
+               ///////////////////////////////////////////subcounties
+               if ($_POST['country'] == "all") {
+
+                   $table = "dataset_" . $_POST['id'];
+                   $district = $_POST['district'];
+                   $rows = array();
+                   if ($_POST['production'] == "all") {
+
+                       if ($_POST['gender'] == "all") {
+
+                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                           if ($_POST['va'] == "all") {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+                               $total_farmers = $female + $male;
+
+                           } else {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male'" . $vasql);
+
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female'" . $vasql);
+
+
+                           }//.$vasql
+
+
+                       } else {
+                           $gender = $_POST['gender'];
+                           if ($gender == "male") {
+                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+
+                           } else {
+                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+
+                           }
+                       }
+
+                   }
+                   else {
+                       $string = $_POST['production'];
+                       if (strpos($string, "productionyes") === false) {
+                           if (strpos($string, "productionno") === false) {
+                               if (strpos($string, "generalyes") === false) {
+                                   if (strpos($string, "generalno") === false) {
+
+                                   } else {
+                                       $p_id = str_replace("generalno", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
+
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                           } else {
+
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+                                           }//.$vasql
+
+
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
+
+
+                                       }
+
+                                   }
+                               } else {
+                                   $p_id = str_replace("generalyes", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
+
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                       }//.$vasql
+
+
+                                   } else {
+                                       $gender = $_POST['gender'];
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+
+
+                                   }
+                               }
+
+
+                           } else {
+                               $p_id = str_replace("productionno", "", $string);
+
+                               //
+                               $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                               $column = $row[0]['columns'];
+                               if ($_POST['gender'] == "all") {
+
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                   } else {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                   }//.$vasql
+
+
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
+
+
+                               }
+                           }
+
+                       } else {
+                           $p_id = str_replace("productionyes", "", $string);
+
+                           //
+                           $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                           $column = $row[0]['columns'];
+                           if ($_POST['gender'] == "all") {
+
+                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                               if ($_POST['va'] == "all") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                               } else {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                               }//.$vasql
+
+
+                           } else {
+                               $gender = $_POST['gender'];
+                               if ($gender == "male") {
+                                   $male = 100;
+                               } else {
+                                   $female = 100;
+                               }
+
+
+                           }
+
+                       }
+
+
+                   }
+
+                   draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+
+               } else
+
+                   ///////////////////////////////////////////parish
+
+                   if ($_POST['parish'] == "all") {
+
+                       $table = "dataset_" . $_POST['id'];
+                       $subcounty = $_POST['country'];
+                       $rows = array();
+                       if ($_POST['production'] == "all") {
+                           if ($_POST['gender'] == "all") {
+
+                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                               if ($_POST['va'] == "all") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+
+                               } else {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' " . $vasql);
+
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' " . $vasql);
+
+                               }
+
+                           } else {
+                               $gender = $_POST['gender'];
+                               if ($gender == "male") {
+                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+                               } else {
+                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+                               }
+
+                           }
+                       } else {
+                           $string = $_POST['production'];
+                           if (strpos($string, "productionyes") === false) {
+                               if (strpos($string, "productionno") === false) {
+                                   if (strpos($string, "generalyes") === false) {
+                                       if (strpos($string, "generalno") === false) {
+                                       } else {
+                                           $p_id = str_replace("generalno", "", $string);
+                                           //
+                                           $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                           $column = $row[0]['columns'];
+                                           if ($_POST['gender'] == "all") {
+
+
+                                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                               if ($_POST['va'] == "all") {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                               } else {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                               }//.$vasql
+
+
+                                           } else {
+                                               $gender = $_POST['gender'];
+                                               if ($gender == "male") {
+                                                   $male = 100;
+                                               } else {
+                                                   $female = 100;
+                                               }
+
+
+                                           }
+                                       }
+
+
+                                   } else {
+                                       $p_id = str_replace("generalyes", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
+
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
+
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male'");
+
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female'");
+
+
+                                           } else {
+
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
+
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female'" . $vasql);
+
+
+                                           }//.$vasql
+
+
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
+
+                                       }
+
+                                   }
+                               } else {
+                                   $p_id = str_replace("productionno", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
+
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'no' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                       }//.$vasql
+
+
+                                   } else {
+                                       $gender = $_POST['gender'];
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+
+
+                                   }
+
+                               }
+                           } else {
+                               $p_id = str_replace("productionyes", "", $string);
+                               //
+                               $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                               $column = $row[0]['columns'];
+                               if ($_POST['gender'] == "all") {
+
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                   } else {
+
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+                                   }//.$vasql
+
+
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
+
+                               }
+
+
+                           }
+                       }
+
+                       draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+
+
+                   } else
+
+                       ///////////////////////////////////////////village
+
+                       if ($_POST['village'] == "all") {
+
+                           $table = "dataset_" . $_POST['id'];
+                           $parish = $_POST['parish'];
+                           $rows = array();
+                           if ($_POST['production'] == "all") {
+                               if ($_POST['gender'] == "all") {
+
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+
+
+                                   } else {
+
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' " . $vasql);
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' " . $vasql);
+
+                                   }//.$vasql
+
+
+                               } else {
+                                   $gender = $_POST['gender'];
+                                   if ($gender == "male") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'male' AND sacco_branch_name LIKE '$branch' ");
+                                   } else {
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  AND lower(biodata_gender) = 'female' AND sacco_branch_name LIKE '$branch' ");
+                                   }
+
+                               }
+                           } else {
+                               $string = $_POST['production'];
+                               if (strpos($string, "productionyes") === false) {
+                                   if (strpos($string, "productionno") === false) {
+                                       if (strpos($string, "generalyes") === false) {
+                                           if (strpos($string, "generalno") === false) {
+                                           } else {
+                                               $p_id = str_replace("generalno", "", $string);
+                                               //
+                                               $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                               $column = $row[0]['columns'];
+                                               if ($_POST['gender'] == "all") {
+
+                                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                                   if ($_POST['va'] == "all") {
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                                   } else {
+
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                                   }//.$vasql
+
+
+                                               } else {
+                                                   $gender = $_POST['gender'];
+                                                   if ($gender == "male") {
+                                                       $male = 100;
+                                                   } else {
+                                                       $female = 100;
+                                                   }
+
+
+                                               }
+
+                                           }
+                                       } else {
+                                           $p_id = str_replace("generalyes", "", $string);
+                                           //
+                                           $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                           $column = $row[0]['columns'];
+                                           if ($_POST['gender'] == "all") {
+
+                                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                               if ($_POST['va'] == "all") {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                               } else {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                               }//.$vasql
+
+
+                                           } else {
+                                               $gender = $_POST['gender'];
+                                               if ($gender == "male") {
+                                                   $male = 100;
+                                               } else {
+                                                   $female = 100;
+                                               }
+
+                                           }
+
+                                       }
+
+                                   } else {
+                                       $p_id = str_replace("productionno", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
+
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
+
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                           } else {
+
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                           }//.$vasql
+
+
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
+
+                                       }
+
+                                   }
+
+                               } else {
+                                   $p_id = str_replace("productionyes", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
+
+
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
+
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' ");
+
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " " . $column . "  LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                       }//.$vasql
+
+                                   } else {
+                                       $gender = $_POST['gender'];
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+
+                                   }
+
+
+                               }
+                           }
+
+                           draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+
+
+                       }
+                       else
+                       {
+
+                           //echo "off";
+                           $table = "dataset_" . $_POST['id'];
+                           $parish = $_POST['parish'];
+                           $village = $_POST['village'];
+                           $rows = array();
+                           if ($_POST['production'] == "all") {
+                               if ($_POST['gender'] == "all") {
+
+                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                   if ($_POST['va'] == "all") {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                   } else {
+                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                   }//.$vasql
+
+
+                               } else {
+                                   $gender = $_POST['gender'];
+
+                                   if ($gender == "male") {
+                                       $male = 100;
+                                   } else {
+                                       $female = 100;
+                                   }
+
+
+                               }
+                           } else {
+                               $string = $_POST['production'];
+                               if (strpos($string, "productionyes") === false) {
+                                   if (strpos($string, "productionno") === false) {
+                                       if (strpos($string, "generalyes") === false) {
+                                           if (strpos($string, "generalno") === false) {
+                                           } else {
+                                               $p_id = str_replace("generalno", "", $string);
+                                               //
+                                               $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                               $column = $row[0]['columns'];
+                                               if ($_POST['gender'] == "all") {
+
+                                                   //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                                   if ($_POST['va'] == "all") {
+
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male'");
+
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female'");
+
+                                                   } else {
+                                                       $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male'" . $vasql);
+
+                                                       $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female'" . $vasql);
+
+
+                                                   }//.$vasql
+
+
+                                               } else {
+                                                   $gender = $_POST['gender'];
+                                                   if ($gender == "male") {
+                                                       $male = 100;
+                                                   } else {
+                                                       $female = 100;
+                                                   }
+
+                                               }
+
+                                           }
+                                       } else {
+                                           $p_id = str_replace("generalyes", "", $string);
+                                           //
+                                           $row = $mCrudFunctions->fetch_rows("general_questions", "columns", " id='$p_id' ");
+                                           $column = $row[0]['columns'];
+                                           if ($_POST['gender'] == "all") {
+
+                                               //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                               if ($_POST['va'] == "all") {
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+
+
+                                               } else {
+
+                                                   $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+
+                                                   $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                               }//.$vasql
+
+                                           } else {
+                                               $gender = $_POST['gender'];
+                                               if ($gender == "male") {
+                                                   $male = 100;
+                                               } else {
+                                                   $female = 100;
+                                               }
+
+                                           }
+
+                                       }
+                                   } else {
+                                       $p_id = str_replace("productionno", "", $string);
+                                       //
+                                       $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                       $column = $row[0]['columns'];
+                                       if ($_POST['gender'] == "all") {
+
+                                           //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                           if ($_POST['va'] == "all") {
+
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+
+                                           } else {
+                                               $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                               $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'no' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                           }//.$vasql
+
+                                       } else {
+                                           $gender = $_POST['gender'];
+                                           if ($gender == "male") {
+                                               $male = 100;
+                                           } else {
+                                               $female = 100;
+                                           }
+
+                                       }
+
+                                   }
+                               } else {
+                                   $p_id = str_replace("productionyes", "", $string);
+                                   //
+                                   $row = $mCrudFunctions->fetch_rows("production_data", "columns", " id='$p_id' ");
+                                   $column = $row[0]['columns'];
+                                   if ($_POST['gender'] == "all") {
+
+                                       //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
+                                       if ($_POST['va'] == "all") {
+
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' ");
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' ");
+
+                                       } else {
+                                           $male = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'male' " . $vasql);
+                                           $female = (double)$mCrudFunctions->get_count($table, $ageFilter . "  " . $column . " LIKE 'Yes' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) LIKE '$village' AND lower(biodata_farmer_gender) = 'female' " . $vasql);
+
+
+                                       }//.$vasql
+
+                                   } else {
+                                       $gender = $_POST['gender'];
+
+                                       if ($gender == "male") {
+                                           $male = 100;
+                                       } else {
+                                           $female = 100;
+                                       }
+
+                                   }
+
+                               }
+                           }
+
+                           draw_pie_chart($male, $female, $json_model_obj, $util_obj);
+
+
+                       }
+
+       }
+       else {
+           $util_obj->deliver_response(200, 0, null);
+       }
+   }
 }
 else {
     if (isset($_POST['id']) && isset($_POST['district']) && isset($_POST['country']) && isset($_POST['parish']) && isset($_POST['village']) && isset($_POST['production']))

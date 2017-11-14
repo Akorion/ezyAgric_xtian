@@ -101,26 +101,27 @@ $mCrudFunctions = new CrudFunctions();
         $dataset_type = $dataset[0]["dataset_type"];
 
         echo "<div class=\"row hide\">
-                <div  class=\"col-md-12\">
-                <p class=\"text-center\">
-                <span><h3 style=\"color:#3F51B5;display:block; text-align:center; top:-5px; margin:0\">$dataset_name</h3></span></p>
-                <input id=\"dataset_type\" type=\"hidden\" value=\"$dataset_type\"/>
-                <input id=\"dataset_id_container\" type=\"hidden\" value=\"$id\"/>
-                </div>
-                </div>
-                ";
+            <div  class=\"col-md-12\">
+            <p class=\"text-center\">
+            <span><h3 style=\"color:#3F51B5;display:block; text-align:center; top:-5px; margin:0\">$dataset_name</h3></span></p>
+            <input id=\"dataset_type\" type=\"hidden\" value=\"$dataset_type\"/>
+            <input id=\"dataset_id_container\" type=\"hidden\" value=\"$id\"/>
+            </div>
+            </div>
+            ";
         // if ($dataset_type == "Farmer") {
         include("include/dairyFilter.php");
 
         echo "
-          <div class=\"right print_export container\">
-              <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
-              btn-fab btn-raised mdi-action-class\"></a>
-          </div>";
+      <div class=\"right print_export container\">
+          <a href=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
+          btn-fab btn-raised mdi-action-class\"></a>
+      </div>";
 
         include("include/preloader.php");
         include("include/empty.php");
     }
+
     ?>
 
     <div id="filtered_data" class="containers down"><!--data grid goes here-->
