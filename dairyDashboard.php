@@ -221,7 +221,7 @@ include("include/preloader.php");
 //        getLoadDataSets();
 //        formGenderGraph();
         getAjaxData(1);
-        ictUsageGraph("ict");               //piechart for ict usage
+        ictUsageGraph();               //piechart for ict usage
 //        farmersDistrictGraph();             //farmers column graph
         cropsAnalysis("name_crop");
         youthFarmers(" ");
@@ -254,7 +254,7 @@ include("include/preloader.php");
         });
         hideProgressBar();
     }
-    function ictUsageGraph(range) {
+    function ictUsageGraph() {
 
         token = "milk_collection";
         $.ajax({
@@ -262,8 +262,8 @@ include("include/preloader.php");
             dataType: "json",
             url: "form_actions/loadDairyCharts.php", //Relative or absolute path to file
             data: {
-                token: token,
-                ict_range: range
+                token: token
+//                ict_range: range
             },
             success: function (data) {
 

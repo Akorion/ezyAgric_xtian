@@ -158,23 +158,23 @@
     </div>
 </div>
 
-<div class="h4 container" style="padding-top: 1.5em;">Fertlizer expenditure</div>
+<div class="h4 container" style="padding-top: 1.5em;">Farmers Expenditure</div>
 
 
 <div class="container-fluid">
 
-    <div class="col-md-12 col-sm-4 col-lg-6" style="box-shadow: 2px 2px 2px 2px lightgray;">
+    <div class="col-md-12 col-sm-4 col-lg-8" style="box-shadow: 2px 2px 2px 2px lightgray;">
         <div id="farmers_regions" class="col-lg-12 row" style='height:300px; padding-top: 10px;'>
 
         </div>
     </div>
 
-    <div class="col-lg-6">
+   <!-- <div class="col-lg-6">
         <div class="col-md-12" style="box-shadow: 2px 2px 2px 2px lightgray;">
             <div id="gender_graph" class="col-lg-12 row" style=" height:300px; padding-top: 10px;">
             </div>
         </div>
-    </div>
+    </div>  -->
 
 </div>
 <?php
@@ -228,7 +228,7 @@ include("include/preloader.php");
         token = "get_expenditure";
         $.ajax({
             type: "POST",
-            url: "form_actions/loadCharts.php",
+            url: "form_actions/loadDairyCharts.php",
             data: {token: token},
             success: function (data) {
                 $("#farmers_regions").html(data);
@@ -243,7 +243,7 @@ include("include/preloader.php");
         token = "outgrower_dash";
         $.ajax({
             type: "POST",
-            url: "form_actions/recordOutgrower.php",
+            url: "form_actions/recordDairyOutgrower.php",
             data: {token: token},
             success: function (data) {
                 $("#outgrower_dash").html(data);

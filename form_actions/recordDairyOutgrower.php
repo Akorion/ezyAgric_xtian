@@ -31,6 +31,8 @@ switch ($_POST["token"]) {
         $total_cows = 0;
         $calves = 0;
         $bulls = 0;
+        $labor_expenditure = 0; $injection_expenditure = 0; $acariceides_expenditure = 0;
+        $tools_expenditure = 0; $deworming_expenditure = 0; $clearing_expenditure = 0;
         $expenditure = 0;
         foreach ($rows as $row) {
             if ($role == 1) {
@@ -99,8 +101,15 @@ switch ($_POST["token"]) {
                 $bulls += (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "biodata_cooperative_name LIKE '$branch'");
                 $total_cows = $cows + $calves + $bulls;
 
-                $milkreceived += (int)$mCrudFunctions->get_sum("dataset_".$row['id'], "milk_production_data_milk_for_dairy", "biodata_cooperative_name LIKE '$branch'");
+                $milkreceived += (int)$mCrudFunctions->get_sum("$data_table", "milk_production_data_milk_for_dairy", "biodata_cooperative_name LIKE '$branch'");
 
+                $labor_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", "biodata_cooperative_name LIKE '$branch'");
+                $injection_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", "biodata_cooperative_name LIKE '$branch'");
+                $acariceides_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", "biodata_cooperative_name LIKE '$branch'");
+                $deworming_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "biodata_cooperative_name LIKE '$branch'");
+                $clearing_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "biodata_cooperative_name LIKE '$branch'");
+                $tools_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", "biodata_cooperative_name LIKE '$branch'");
+                $expenditure = $labor_expenditure + $injection_expenditure + $acariceides_expenditure + $deworming_expenditure + $clearing_expenditure + $tools_expenditure;
 
                 if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 //                echo "the table exists";
@@ -209,9 +218,9 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-sitemap fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4>Expenditure</h4>
-                           <a style=\"font-size:15px; color:blue\"><b> " . number_format($taken_loans) . " farmers got </b></a> <br>
-                           <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>
+                           <h4><a href='expenditure.php'>Expenditure</a></h4>
+                           <a style=\"font-size:15px; color:blue\">Total Amount: <b> " . number_format($expenditure) . " UGX</b></a> <br>
+                        <!--   <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>  -->
                        </div>
                    </div>
                  </div>
