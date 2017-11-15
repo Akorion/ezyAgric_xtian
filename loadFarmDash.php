@@ -78,7 +78,7 @@ foreach ($rows as $row) {
         if($tp_others == 1) $tp_others = $tp_others." Farmer";
         else $tp_others = $tp_others." Farmers";
     }
-    else {
+    else if($role == 2) {
         $token = $_GET['token'];
         $category = $_GET['category'];
 
@@ -123,6 +123,54 @@ foreach ($rows as $row) {
         else $tp_bicycle = $tp_bicycle." Farmers";
 
         $tp_others += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' AND sacco_branch_name LIKE '$branch'");
+        if($tp_others == 1) $tp_others = $tp_others." Farmer";
+        else $tp_others = $tp_others." Farmers";
+    }
+    else {
+        $token = $_GET['token'];
+        $category = $_GET['category'];
+
+        $total_acreage = 0;
+        $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
+        $dataset_type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
+
+        $data_table = "dataset_" . $row['id'];
+//        print_r($data_table);
+
+        $cows += (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "biodata_cooperative_name LIKE '$branch'");
+        $calves += (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "biodata_cooperative_name LIKE '$branch'");
+        $bulls += (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "biodata_cooperative_name LIKE '$branch'");
+        $total_cows = $cows +   $calves +    $bulls;
+
+        $total_rarmers += (int)$mCrudFunctions->get_count("$data_table", "biodata_cooperative_name LIKE '$branch'");
+
+        $total_lactating += (int)$mCrudFunctions->get_sum("$data_table", "lactating_cows", "biodata_cooperative_name LIKE '$branch'");
+        $total_expecting += (int)$mCrudFunctions->get_sum("$data_table", "cows_expecting", "biodata_cooperative_name LIKE '$branch'");
+
+        $labor_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", "biodata_cooperative_name LIKE '$branch'");
+        $injection_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", "biodata_cooperative_name LIKE '$branch'");
+        $acariceides_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", "biodata_cooperative_name LIKE '$branch'");
+        $tools_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", "biodata_cooperative_name LIKE '$branch'");
+        $deworming_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "biodata_cooperative_name LIKE '$branch'");
+        $clearing_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "biodata_cooperative_name LIKE '$branch'");
+
+        $total_loans += (int)$mCrudFunctions->get_count("$data_table", "general_questions_accessed_loan LIKE 'yes' AND biodata_cooperative_name LIKE '$branch'");
+        if($total_loans == 1) $total_loans = $total_loans." Farmer";
+        else $total_loans = $total_loans." Farmers";
+
+        $tp_motorcycle += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='motorcycle' AND biodata_cooperative_name LIKE '$branch'");
+        if($tp_motorcycle == 1) $tp_motorcycle = $tp_motorcycle." Farmer";
+        else $tp_motorcycle = $tp_motorcycle." Farmers";
+
+        $tp_vehicle += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='vehicle' AND biodata_cooperative_name LIKE '$branch'");
+        if($tp_vehicle == 1) $tp_vehicle = $tp_vehicle." Farmer";
+        else $tp_vehicle = $tp_vehicle." Farmers";
+
+        $tp_bicycle += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport='bicycle' AND biodata_cooperative_name LIKE '$branch'");
+        if($tp_bicycle == 1) $tp_bicycle = $tp_bicycle." Farmer";
+        else $tp_bicycle = $tp_bicycle." Farmers";
+
+        $tp_others += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' AND biodata_cooperative_name LIKE '$branch'");
         if($tp_others == 1) $tp_others = $tp_others." Farmer";
         else $tp_others = $tp_others." Farmers";
     }

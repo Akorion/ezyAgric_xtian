@@ -71,36 +71,20 @@ if (isset($_POST['id']) && isset($_POST['district'])
 
                     if ($_POST['gender'] == "all") {
 
-                        if ($_POST['va'] == "all") {
-
                             $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district)  as district,
     COUNT(biodata_farmer_location_farmer_district)  as frequency ", $ageFilter . "  1 GROUP BY district ORDER BY frequency Desc ");
-
-                        } else {
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district)  as district, 
-    COUNT(biodata_farmer_location_farmer_district)  as frequency ", $ageFilter . "  lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY district ORDER BY frequency Desc ");
-
-                        }
 
 
                     } else {
                         $gender = $_POST['gender'];
 
-                        if ($_POST['va'] == "all") {
-
                             $rows = $mCrudFunctions->fetch_rows($table, "TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) as district, 
     COUNT(biodata_farmer_location_farmer_district)  as frequency ", $ageFilter . "  lower(biodata_farmer_gender) = '$gender'  GROUP BY district ORDER BY frequency Desc ");
 
-                        } else {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, "TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) as district, 
-    COUNT(biodata_farmer_location_farmer_district)  as frequency ", $ageFilter . "  lower(biodata_farmer_gender) = '$gender' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY district ORDER BY frequency Desc ");
-
-                        }
-
                     }
 
-                } else {
+                }
+                else {
                     $string = $_POST['production'];
                     if (strpos($string, "productionyes") === false) {
                         if (strpos($string, "productionno") === false) {
@@ -297,43 +281,20 @@ if (isset($_POST['id']) && isset($_POST['district'])
                 if ($_POST['production'] == "all") {
 
                     if ($_POST['gender'] == "all") {
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                        if ($_POST['va'] == "all") {
 
                             $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty)  as subcounty, 
 COUNT(biodata_farmer_location_farmer_subcounty)  as frequency ", $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' GROUP BY subcounty  ORDER BY frequency Desc ");
 
-                        } else {
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty)  as subcounty, 
-COUNT(biodata_farmer_location_farmer_subcounty)  as frequency ", $ageFilter . "  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY subcounty  ORDER BY frequency Desc ");
-
-
-                        }
-
                     } else {
                         $gender = $_POST['gender'];
-
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                        if ($_POST['va'] == "all") {
 
                             $rows = $mCrudFunctions->fetch_rows($table, "TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty)  as subcounty, 
 COUNT(biodata_farmer_location_farmer_subcounty)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND   TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' GROUP BY subcounty  ORDER BY frequency Desc");
 
-                        } else {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, "TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty)  as subcounty, 
-COUNT(biodata_farmer_location_farmer_subcounty)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND   TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY subcounty  ORDER BY frequency Desc");
-
-
-                        }
-
-
                     }
 
-
-                } else {
+                }
+                else {
                     $string = $_POST['production'];
                     if (strpos($string, "productionyes") === false) {
                         if (strpos($string, "productionno") === false) {
@@ -556,37 +517,15 @@ COUNT(biodata_farmer_location_farmer_subcounty)  as frequency ", $ageFilter . " 
                 if ($_POST['production'] == "all") {
                     if ($_POST['gender'] == "all") {
 
-                        // lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                        if ($_POST['va'] == "all") {
                             $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
 COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' GROUP BY parish ORDER BY frequency Desc ");
-
-                        } else {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
-COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY parish ORDER BY frequency Desc ");
-
-
-                        }
 
 
                     } else {
                         $gender = $_POST['gender'];
 
-
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                        if ($_POST['va'] == "all") {
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
+                        $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
 COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' GROUP BY parish ORDER BY frequency Desc ");
-                        } else {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
-COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY parish ORDER BY frequency Desc ");
-
-
-                        }
 
                     }
                 } else {
@@ -787,41 +726,14 @@ COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " low
                 if ($_POST['production'] == "all") {
                     if ($_POST['gender'] == "all") {
 
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                        if ($_POST['va'] == "all") {
-
                             $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
 COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish'  GROUP BY village ORDER BY frequency Desc ");
-
-
-                        } else {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
-COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY village ORDER BY frequency Desc ");
-
-
-                        }
-
 
                     } else {
                         $gender = $_POST['gender'];
 
-                        //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                        if ($_POST['va'] == "all") {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
+                        $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
 COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' GROUP BY village ORDER BY frequency Desc ");
-
-
-                        } else {
-
-                            $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
-COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY village ORDER BY frequency Desc ");
-
-
-                        }
 
                     }
                 } else {
@@ -1291,11 +1203,10 @@ COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " lo
                     } else {
                         $gender = $_POST['gender'];
 
-                            $rows = $mCrudFunctions->fetch_rows($table, "TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) as district, 
+                        $rows = $mCrudFunctions->fetch_rows($table, "TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) as district, 
     COUNT(biodata_farmer_location_farmer_district)  as frequency ", $ageFilter . "  lower(biodata_gender) = '$gender' AND sacco_branch_name LIKE '$branch'  GROUP BY district ORDER BY frequency Desc ");
 
                     }
-
                 }
                 else {
                     $string = $_POST['production'];
@@ -1481,7 +1392,6 @@ COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " lo
                     $data = $json_model_obj->get_stat_bar_graph_json2($rows, array("text" => 'Farmers Per District'), "Districts", "district");
                     $util_obj->deliver_response(200, 1, $data);
                 }
-
 
             } else
 
@@ -1731,37 +1641,14 @@ COUNT(biodata_farmer_location_farmer_subcounty)  as frequency ", $ageFilter . " 
                         if ($_POST['production'] == "all") {
                             if ($_POST['gender'] == "all") {
 
-                                // lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
                                     $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
 COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND sacco_branch_name LIKE '$branch' GROUP BY parish ORDER BY frequency Desc ");
-
-                                } else {
-
-                                    $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
-COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY parish ORDER BY frequency Desc ");
-
-
-                                }
-
 
                             } else {
                                 $gender = $_POST['gender'];
 
-
-                                //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                if ($_POST['va'] == "all") {
-                                    $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
+                                $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
 COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " lower(biodata_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND sacco_branch_name LIKE '$branch' GROUP BY parish ORDER BY frequency Desc ");
-                                } else {
-
-                                    $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) as parish, 
-COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " lower(biodata_farmer_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY parish ORDER BY frequency Desc ");
-
-
-                                }
 
                             }
                         }
@@ -1963,41 +1850,16 @@ COUNT(biodata_farmer_location_farmer_parish)  as frequency ", $ageFilter . " low
                             if ($_POST['production'] == "all") {
                                 if ($_POST['gender'] == "all") {
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
 
-                                    if ($_POST['va'] == "all") {
-
-                                        $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
+                                    $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
 COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND sacco_branch_name LIKE '$branch'  GROUP BY village ORDER BY frequency Desc ");
-
-
-                                    } else {
-
-                                        $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
-COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY village ORDER BY frequency Desc ");
-
-
-                                    }
 
 
                                 } else {
                                     $gender = $_POST['gender'];
 
-                                    //lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va'
-
-                                    if ($_POST['va'] == "all") {
-
                                         $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
 COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " lower(biodata_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND sacco_branch_name LIKE '$branch' GROUP BY village ORDER BY frequency Desc ");
-
-
-                                    } else {
-
-                                        $rows = $mCrudFunctions->fetch_rows($table, " TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_village) as village, 
-COUNT(biodata_farmer_location_farmer_village)  as frequency ", $ageFilter . " lower(biodata_gender) = '$gender'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_district) LIKE '$district' AND TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_subcounty) LIKE '$subcounty'  AND  TRIM(TRAILING '.' FROM biodata_farmer_location_farmer_parish) LIKE '$parish' AND lower(REPLACE(REPLACE(interview_particulars_va_code,' ',''),'.','')) = '$va' GROUP BY village ORDER BY frequency Desc ");
-
-
-                                    }
 
                                 }
                             }

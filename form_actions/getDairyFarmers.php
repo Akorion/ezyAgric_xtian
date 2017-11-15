@@ -239,7 +239,7 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
         }
     }
-    else {
+    elseif($role == 2) {
         if (isset($_POST['district']) && $_POST['district'] != "") {
 
             switch ($_POST['district']) {
@@ -431,6 +431,119 @@ if (isset($_POST['id']) && $_POST['id'] != "") {
 
                     }
 
+                    break;
+            }
+        }
+    }
+    else {
+        if (isset($_POST['district']) && $_POST['district'] != "") {
+
+            switch ($_POST['district']) {
+                case  "all" :
+                    if ($_POST['gender'] == "all") {
+
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Details</th></tr></thead>";
+                            output($id, " biodata_cooperative_name LIKE '$branch' ORDER BY biodata_first_name LIMIT $per_page OFFSET $offset ");
+                            echo "</table>";
+
+                    } else {        //gender else option
+
+                            echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                            output($id, " lower(biodata_gender) = '$gender' AND biodata_cooperative_name LIKE '$branch' ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                            echo "</table>";
+
+                    }
+
+/////////////////////////////////////////////////////////////////////district all ends
+                    break;
+                default:
+
+                    if ($_POST['subcounty'] == "all") {
+                        $district = $_POST['district'];
+
+///////////////////////////////////////////////////////////////////// subcounty all starts
+
+                        if ($_POST['gender'] == "all") {
+
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                output($id, "  TRIM(TRAILING '.' FROM district) LIKE '$district' ORDER BY first_name  LIMIT $per_page OFFSET $offset");
+                                echo "</table>";
+
+                        } else {
+                                echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                echo "<table>" . output($id, " TRIM(TRAILING '.' FROM district) LIKE '$district' AND lower(gender) = '$gender' ORDER BY first_name LIMIT $per_page OFFSET $offset ") . "</table>";
+                                echo "</table>";
+
+                        }
+
+//////////////////////////////////////////////////////////////////// subcounty all ends
+                    }
+                    else {
+                        $subcounty = $_POST['subcounty'];
+                        $district = $_POST['district'];
+                        if ($_POST['parish'] == "all") {
+
+                            ////////////////////////////////////////////////////////////////////// parish all starts
+
+                            if ($_POST['gender'] == "all") {
+
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                    output($id, "  TRIM(TRAILING '.' FROM district) LIKE '$district' AND TRIM(TRAILING '.' FROM subcounty) LIKE '$subcounty' AND biodata_cooperative_name LIKE '$branch' ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                                    echo "</table>";
+
+                            } else {
+
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM district) LIKE '$district' AND TRIM(TRAILING '.' FROM subcounty) LIKE '$subcounty' AND lower(gender) = '$gender' ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                                    echo "</table>";
+
+                            }
+
+///////////////////////////////////////////////////////////////////////////////// parish all ends
+                        } else {
+                            $subcounty = $_POST['subcounty'];
+                            $district = $_POST['district'];
+                            $parish = $_POST['parish'];
+
+                            if ($_POST['village'] == "all") {
+
+                                if ($_POST['gender'] == "all") {
+
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM district) LIKE '$district' AND TRIM(TRAILING '.' FROM subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM parish) LIKE '$parish' AND biodata_cooperative_name LIKE '$branch' ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                                    echo "</table>";
+
+                                } else {
+
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM district) LIKE '$district' AND TRIM(TRAILING '.' FROM subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM parish) LIKE '$parish' AND lower(gender) = '$gender' AND parish LIKE '%$parish%' AND biodata_cooperative_name LIKE '$branch' ORDER BY first_name LIMIT $per_page OFFSET $offset  ");
+                                    echo "</table>";
+
+                                }
+                                /////////////////////////////////////////////////////////////////////////////
+                            } else {
+                                $subcounty = $_POST['subcounty'];
+                                $district = $_POST['district'];
+                                $parish = $_POST['parish'];
+                                $village = $_POST['village'];
+
+                                if ($_POST['gender'] == "all") {
+
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM district) LIKE '$district' AND TRIM(TRAILING '.' FROM subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM village) LIKE '$village' AND biodata_cooperative_name LIKE '$branch' ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                                    echo "</table>";
+
+                                } else {
+
+                                    echo "<table class='$class'><thead class='bg bg-success'><tr><th>#</th><th>Name</th> <th>Age</th><th>Gender</th><th>Contact</th><th>Cows owned</th><th>Lactating Cows</th><th>Last milk supply</th><th>Date of last supply</th><th>Details</th></tr></thead>";
+                                    output($id, " TRIM(TRAILING '.' FROM district) LIKE '$district' AND TRIM(TRAILING '.' FROM subcounty) LIKE '$subcounty' AND  TRIM(TRAILING '.' FROM parish) LIKE '$parish' AND TRIM(TRAILING '.' FROM village) LIKE '$village' AND lower(gender) = '$gender' ORDER BY first_name LIMIT $per_page OFFSET $offset ");
+                                    echo "</table>";
+
+                                }
+                            }
+
+                        }
+                    }
                     break;
             }
         }

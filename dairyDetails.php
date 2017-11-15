@@ -254,10 +254,9 @@
 //print_r($rows2);
 /////////////////////////////////////////////personal data_starts
                 echo "<div class=\"row data1\">
-<div class=\"col-sm-12 col-me-5 col-lg-5\">
-<div class=\"card\">
-<h5 class=\"\" style=\"\">Personal Profile</h5>";
-
+                <div class=\"col-sm-12 col-me-5 col-lg-5\">
+                <div class=\"card\">
+                <h5 class=\"\" style=\"\">Personal Profile</h5>";
 
                 foreach ($rows2 as $row) {
 
@@ -352,7 +351,28 @@
 /////////////////////////////////////////////other data_ends
 
 /////////////////////////////////////////////production data_starts
+            echo "
+                <div class=\" col-sm-12 col-md-7 col-lg-7\">
+                    <div class=\"card prodn\">
+                  <h5 class=\"\">Periodic Milk Transactional Data</h5>                  
+                  <br>
+                  <p style='padding-left: 10px;'><b> Milk Supplied(Kgs) </b></p><p style='padding-left: 60px'><b>Date</b></p><b style='padding-left: 70px'>Description</b><hr/>
+                  ";
+                $milk_data=file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=2017-10-25&end_date=2017-11-14");
+                $milk_periodic_data = json_decode($milk_data);
+                foreach ($milk_periodic_data as $milk_supply){
+                    $milk_quantity = $milk_supply->milk_amount;
+                    $supply_date = new DateTime($milk_supply->created_at);
+                    $date = $supply_date->format('d/m/Y');
+                    echo "
+                        <p style='padding-left: 40px;'>$milk_quantity </p><p style='padding-left: 60px'> $date </p></hr>
+                        ";
+                }
+                echo " 
+                </div>
+                </div>";
 
+  ////////////////     //////////////////
 
                 echo "
                   <div class=\" col-sm-12 col-md-7 col-lg-7\">
@@ -404,18 +424,15 @@
 //                        echo "<h6 id=\"loan_status\">Loan Amount:</h6>
 //                          <p class=\"align\" id=\"loan_status\">".number_format($loan_amount)." Ugx</p><hr/>";
 //                    }
-
                 }
 
-                echo "</div>
-                
+                echo "</div>                
                   </div>
                 </div>";
 
-
                 echo "<div class=\"col-sm-12 col-md- col-lg-7\" style=\"margin-bottom:100px;\">
-<div class=\"card prodn\">
-<h5 class=\"\">Production Data</h5>";
+                    <div class=\"card prodn\">
+                    <h5 class=\"\">Production Data</h5>";
 
                 $table = "production_data";
                 $columns = "*";
