@@ -174,7 +174,7 @@ switch ($_POST["token"]) {
                     $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
                         "biodata_farmer_location_farmer_subcounty AS district, COUNT(*) AS farmers, 
                        SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) < 35 OR (2017-CONCAT(19,substring(biodata_age,-2,2))) = 35 THEN 1 ELSE 0 end) AS youth, 
-                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS biodata_age ", 1);
+                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "1 GROUP by district ORDER by district ASC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($no_farmers, $sel['farmers']);
@@ -186,7 +186,7 @@ switch ($_POST["token"]) {
                     $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
                         "biodata_farmer_location_farmer_subcounty AS district, COUNT(*) AS farmers, 
                        SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) < 35 OR (2017-CONCAT(19,substring(biodata_age,-2,2))) = 35 THEN 1 ELSE 0 end) AS youth, 
-                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS biodata_age ", "sacco_branch_name LIKE '$branch'");
+                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "sacco_branch_name LIKE '$branch' GROUP by district ORDER by district ASC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($no_farmers, $sel['farmers']);
@@ -219,88 +219,56 @@ switch ($_POST["token"]) {
         $branch = $_SESSION['user_account'];
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-        $amount = array(); $labour = array();   $injection = array(); $land = array(); $animal_feeds = array();
-        $acaricides = array();   $deworming = array();  $clearing = array();    $tools = array(); $fencing = array();
+        $amount = array(); $labour = 0;   $injection = 0; $land = 0; $animal_feeds = 0;
+        $acaricides = 0;   $deworming = 0;  $clearing = 0;    $tools = 0; $fencing = 0;
 
-        $expenses = array('Acaricides','Labour','Injections','Tools','Deworming','Land','Feeds','Fencing');
+        $labels = array('Acaricides','Labour','Injections','Tools','Deworming','Land','Feeds','Fencing');
+        $expenses = array();
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 if($role == 1){
-                    $rows_num = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
-                        "SUM(expenditure_on_acaricides)AS acaricides, SUM(expenditure_on_labor) AS labour, SUM(expenditure_on_injections) AS injections, SUM(expenditure_on_farm_tools) AS tools,
-                                   SUM(expenditure_on_deworning) AS deworming, SUM(expenditure_on_land_clearing) AS land,SUM(expenditure_on_animal_feeeds) AS animal_feeds,SUM(expenditure_on_fencing) AS fencing", 1);
-
-                    foreach ($rows_num as $row_n) {
-                        array_push($acaricides, $row_n['acaricides']);
-                        array_push($labour, $row_n['labour']);
-                        array_push($injection, $row_n['injections']);
-                        array_push($tools, $row_n['tools']);
-                        array_push($deworming, $row_n['deworming']);
-                        array_push($land, $row_n['land']);
-                        array_push($animal_feeds, $row_n['animal_feeds']);
-                        array_push($fencing, $row_n['fencing']);
-                    }
-
-                    array_push($expenses, $acaricides);
-                    array_push($expenses, $labour);
-                    array_push($expenses, $injection);
-                    array_push($expenses, $tools);
-                    array_push($expenses, $deworming);
-                    array_push($expenses, $land);
-                    array_push($expenses, $animal_feeds);
-                    array_push($expenses, $fencing);
-                } elseif ($role == 2){
-                    $rows_num = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
-                        "SUM(expenditure_on_acaricides)AS acaricides, SUM(expenditure_on_labor) AS labour, SUM(expenditure_on_injections) AS injections, SUM(expenditure_on_farm_tools) AS tools,
-                                   SUM(expenditure_on_deworning) AS deworming, SUM(expenditure_on_land_clearing) AS land,SUM(expenditure_on_animal_feeeds) AS animal_feeds,SUM(expenditure_on_fencing) AS fencing", "sacco_branch_name LIKE '$branch'");
-
-                    foreach ($rows_num as $row_n) {
-                        array_push($acaricides, $row_n['acaricides']);
-                        array_push($labour, $row_n['labour']);
-                        array_push($injection, $row_n['injections']);
-                        array_push($tools, $row_n['tools']);
-                        array_push($deworming, $row_n['deworming']);
-                        array_push($land, $row_n['land']);
-                        array_push($animal_feeds, $row_n['animal_feeds']);
-                        array_push($fencing, $row_n['fencing']);
-                    }
-
-                    array_push($expenses, $acaricides);
-                    array_push($expenses, $labour);
-                    array_push($expenses, $injection);
-                    array_push($expenses, $tools);
-                    array_push($expenses, $deworming);
-                    array_push($expenses, $land);
-                    array_push($expenses, $animal_feeds);
-                    array_push($expenses, $fencing);
-                } else {
-                    $rows_num = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
-                        "SUM(expenditure_on_acaricides)AS acaricides, SUM(expenditure_on_labor) AS labour, SUM(expenditure_on_injections) AS injections, SUM(expenditure_on_farm_tools) AS tools,
-                                   SUM(expenditure_on_deworning) AS deworming, SUM(expenditure_on_land_clearing) AS land,SUM(expenditure_on_animal_feeeds) AS animal_feeds,SUM(expenditure_on_fencing) AS fencing", "biodata_cooperative_name LIKE '$branch''");
-
-                    foreach ($rows_num as $row_n) {
-                        array_push($acaricides, $row_n['acaricides']);
-                        array_push($labour, $row_n['labour']);
-                        array_push($injection, $row_n['injections']);
-                        array_push($tools, $row_n['tools']);
-                        array_push($deworming, $row_n['deworming']);
-                        array_push($land, $row_n['land']);
-                        array_push($animal_feeds, $row_n['animal_feeds']);
-                        array_push($fencing, $row_n['fencing']);
-                    }
-
-                    array_push($expenses, $acaricides);
-                    array_push($expenses, $labour);
-                    array_push($expenses, $injection);
-                    array_push($expenses, $tools);
-                    array_push($expenses, $deworming);
-                    array_push($expenses, $land);
-                    array_push($expenses, $animal_feeds);
-                    array_push($expenses, $fencing);
+                    $labour += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_labor", 1);
+                    $injection += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_injections", 1);
+                    $acaricides += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_acaricides", 1);
+                    $land += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_land_clearing", 1);
+                    $animal_feeds += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_animal_feeeds", 1);
+                    $deworming += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_deworning", 1);
+                    $tools += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_farm_tools", 1);
+                    $fencing += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_fencing", 1);
+                }
+                elseif ($role == 2){
+                    $labour += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_labor", "sacco_branch_name LIKE '$branch'");
+                    $injection += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_injections", "sacco_branch_name LIKE '$branch'");
+                    $acaricides += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_acaricides", "sacco_branch_name LIKE '$branch'");
+                    $land += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_land_clearing", "sacco_branch_name LIKE '$branch'");
+                    $animal_feeds += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_animal_feeeds", "sacco_branch_name LIKE '$branch'");
+                    $deworming += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_deworning", "sacco_branch_name LIKE '$branch'");
+                    $tools += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_farm_tools", "sacco_branch_name LIKE '$branch'");
+                    $fencing += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_fencing", "sacco_branch_name LIKE '$branch'");
+                }
+                else {
+                    $labour += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_labor", "biodata_cooperative_name LIKE '$branch'");
+                    $injection += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_injections", "biodata_cooperative_name LIKE '$branch'");
+                    $acaricides += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_acaricides", "biodata_cooperative_name LIKE '$branch'");
+                    $land += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_land_clearing", "biodata_cooperative_name LIKE '$branch'");
+                    $animal_feeds += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_animal_feeeds", "biodata_cooperative_name LIKE '$branch'");
+                    $deworming += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_deworning", "biodata_cooperative_name LIKE '$branch'");
+                    $tools += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_farm_tools", "biodata_cooperative_name LIKE '$branch'");
+                    $fencing += $mCrudFunctions->get_sum("dataset_" . $row['id'], "expenditure_on_fencing", "biodata_cooperative_name LIKE '$branch'");
                 }
             }
         }
-        analyseRegions("line", $expenses, "Farmers and their locations");
+//        if($role == 3){
+            array_push($expenses, $acaricides);
+            array_push($expenses, $labour);
+            array_push($expenses, $injection);
+            array_push($expenses, $tools);
+            array_push($expenses, $deworming);
+            array_push($expenses, $land);
+            array_push($expenses, $animal_feeds);
+            array_push($expenses, $fencing);
+//        }
+        farmer_expenditure($labels, $expenses, "column", "Farmers Expenditure");
         break;
 
     case "youth_farmers" :
@@ -319,16 +287,16 @@ switch ($_POST["token"]) {
         foreach ($rows as $row) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 if($role == 1){
-                    $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'] . " GROUP BY mode_of_transport ORDER BY farmers DESC ",
-                        "DISTINCT(mode_of_transport) as transport, COUNT(*) as farmers", 1);
+                    $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],"DISTINCT(mode_of_transport) as transport, 
+                    COUNT(*) as farmers", "1 GROUP BY mode_of_transport ORDER BY farmers DESC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($farmers_number, $sel['farmers']);
                         array_push($tp, $sel['transport']);
                     }
                 } elseif ($role == 2){
-                    $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'] . " GROUP BY mode_of_transport ORDER BY farmers DESC ",
-                        "DISTINCT(mode_of_transport) as transport, COUNT(*) as farmers", "sacco_branch_name LIKE '$branch'");
+                    $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],"DISTINCT(mode_of_transport) as transport, 
+                    COUNT(*) as farmers","sacco_branch_name LIKE '$branch' GROUP BY mode_of_transport ORDER BY farmers DESC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($farmers_number, $sel['farmers']);
@@ -458,6 +426,19 @@ function analyseSeeds($source, $farmers, $type, $title)
 
 
     $data = $json_model_obj->drawSeedGraph($source, $array_int, $type, $title);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
+function farmer_expenditure($source, $farmers, $type, $title)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    //converting a string array into an array of integers
+    $array_int = array_map(create_function('$value', 'return (int)$value;'), $farmers);
+
+
+    $data = $json_model_obj->drawFarmerExpenditureGraph($source, $array_int, $type, $title);
     $util_obj->deliver_response(200, 1, $data);
 }
 

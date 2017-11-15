@@ -45,6 +45,14 @@ switch ($_POST["token"]) {
 
                 $milkreceived += (int)$mCrudFunctions->get_sum("dataset_".$row['id'], "milk_production_data_milk_for_dairy", 1);
 
+                $labor_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", 1);
+                $injection_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", 1);
+                $acariceides_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", 1);
+                $deworming_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", 1);
+                $clearing_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", 1);
+                $tools_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", 1);
+                $expenditure = $labor_expenditure + $injection_expenditure + $acariceides_expenditure + $deworming_expenditure + $clearing_expenditure + $tools_expenditure;
+
                 if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 
                     $taken_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "accessed_loan='yes'");
@@ -59,7 +67,10 @@ switch ($_POST["token"]) {
                 }
             }
             elseif($role == 2) {
-                $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id", "sacco_branch_name LIKE '$branch'");
+                if ( sizeof($rows_n) != 0) {
+                    $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+                }
                 $type = $util_obj->encrypt_decrypt("encrypt", 'Farmer');
 
                 $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], "sacco_branch_name LIKE '$branch'");
@@ -72,6 +83,15 @@ switch ($_POST["token"]) {
                 $total_cows = $cows + $calves + $bulls;
 
                 $milkreceived += (int)$mCrudFunctions->get_sum("dataset_".$row['id'], "milk_production_data_milk_for_dairy", "sacco_branch_name LIKE '$branch'");
+
+                $labor_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_labor", "sacco_branch_name LIKE '$branch'");
+                $injection_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_injections", "sacco_branch_name LIKE '$branch'");
+                $acariceides_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_acaricides", "sacco_branch_name LIKE '$branch'");
+                $deworming_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_deworning", "sacco_branch_name LIKE '$branch'");
+                $clearing_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_land_clearing", "sacco_branch_name LIKE '$branch'");
+                $tools_expenditure += (int)$mCrudFunctions->get_sum("$data_table", "expenditure_on_farm_tools", "sacco_branch_name LIKE '$branch'");
+                $expenditure = $labor_expenditure + $injection_expenditure + $acariceides_expenditure + $deworming_expenditure + $clearing_expenditure + $tools_expenditure;
+
 
                 if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 
@@ -89,8 +109,12 @@ switch ($_POST["token"]) {
                 }
             }
             else {
-                $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
-                $type = $util_obj->encrypt_decrypt("encrypt", 'Farmer');
+                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id", "biodata_cooperative_name LIKE '$branch'");
+                if ( sizeof($rows_n) != 0) {
+//                    echo $row['id'];
+                    $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+                }
+                    $type = $util_obj->encrypt_decrypt("encrypt", 'Farmer');
 
                 $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_cooperative_name LIKE '$branch'");
 
@@ -129,7 +153,7 @@ switch ($_POST["token"]) {
         }
 
     if($role == 1){
-        echo "<div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+        echo "<div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
                <div class=\"x_panel tile  overflow_hidden\">
                    <div class=\"col-md-3\" style=\"background-color:#3a3; padding:10px; border-radius:2px;color:#fff; margin-top: -20px;\">
                        <span class=\"fa fa-users fa-3x\"></span>
@@ -143,7 +167,7 @@ switch ($_POST["token"]) {
                    </div>
                </div>
              </div>
-             <div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+             <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
                <div class=\"x_panel tile  overflow_hidden\">
                    <div class=\"col-md-3\" style=\"background-color:#822; padding:15px; border-radius:2px;color:#fff; margin-top: -20px;\">
                        <i class=\"fa fa-money fa-3x\"></i>
@@ -156,28 +180,15 @@ switch ($_POST["token"]) {
                </div>
              </div>
 
-             <div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+            <div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
                <div class=\"x_panel tile  overflow_hidden\">
                    <div class=\"col-md-3\" style=\"background-color: #00a1b5; padding:15px; border-radius:2px;color:#fff; margin-top: -20px;\">
                        <i class=\"fa fa-sitemap fa-3x\"></i>
                    </div>
                    <div class=\"col-md-9\">
-                       <h4>Loans accessed</h4>
-                       <a style=\"font-size:15px; color:blue\"><b> " . number_format($taken_loans) . " farmers got </b></a> <br>
-                       <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>
-                   </div>
-               </div>
-             </div>
-
-             <div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
-               <div class=\"x_panel tile  overflow_hidden\">
-                   <div class=\"col-md-3\" style=\"background-color:orange; padding:15px; border-radius:2px;color:#fff; margin-top: -20px; \">
-                       <i class=\"fa fa-leaf fa-3x\"></i>
-                   </div>
-                   <div class=\"col-md-9\">
-                       <h4>Insured farmers</h4>
-                       <a style=\"font-size:15px; color:blue\"><b> Insured: $insured</b></a> <br>
-                       <a style=\"font-size:13px; color:green\">Not insured: $not_insured</a>
+                       <h4>Expenditure</h4>
+                       <a style=\"font-size:15px; color:blue\">Total Amount: <b> " . number_format($expenditure) . " UGX</b></a> <br>
+                    <!--   <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>  -->
                    </div>
                </div>
              </div>
@@ -218,25 +229,13 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-sitemap fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4><a href='expenditure.php'>Expenditure</a></h4>
+                           <h4>Expenditure</h4>
                            <a style=\"font-size:15px; color:blue\">Total Amount: <b> " . number_format($expenditure) . " UGX</b></a> <br>
                         <!--   <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>  -->
                        </div>
                    </div>
                  </div>
-
-             <!--    <div class=\"col-md-3 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
-                   <div class=\"x_panel tile  overflow_hidden\">
-                       <div class=\"col-md-3\" style=\"background-color:orange; padding:15px; border-radius:2px;color:#fff; margin-top: -20px; \">
-                           <i class=\"fa fa-leaf fa-3x\"></i>
-                       </div>
-                       <div class=\"col-md-9\">
-                           <h4>Insured farmers</h4>
-                           <a style=\"font-size:15px; color:blue\"><b> Insured: $insured</b></a> <br>
-                           <a style=\"font-size:13px; color:green\">Not insured: $not_insured</a>
-                       </div>
-                   </div>
-                 </div>  -->              ";
+           ";
     }
 
 

@@ -144,6 +144,7 @@
                         <?php if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['type']) && $_GET['type'] != "") {
 
                             $id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
+                            echo $id;
                             $table = "dataset_" . $id;
                             $row0s = $mCrudFunctions->fetch_rows($table, " DISTINCT TRIM(TRAILING '.' FROM district)  as district", " 1 ORDER BY district ASC");
                             $temp_array = array();

@@ -206,7 +206,7 @@
         echo "<input id=\"id\" type=\"hidden\" value=\"$id\" />";
         echo "<input id=\"type\" type=\"hidden\" value=\"$type\" />";
 
-        $table = "dataset_" .$dataset_id;
+        $table = "dataset_" . $dataset_id;
         $columns = "*";
         $where = " id='$id' ";
         $rows = $mCrudFunctions->fetch_rows($table, $columns, $where);
@@ -250,6 +250,7 @@
                 $table = "dataset_" . $dataset_id;
                 $columns = "*";
                 $where = " id='$id' ";
+                $phone = "";
                 $rows2 = $mCrudFunctions->fetch_rows($table, $columns, $where);
 //print_r($rows2);
 /////////////////////////////////////////////personal data_starts
@@ -269,7 +270,7 @@
                     $gender = $row['biodata_gender'];
                     $gender = $util_obj->capitalizeName($gender);
                     $date = $row['biodata_age'];
-                    $age = explode('/',$date);
+                    $age = explode('/', $date);
                     $farmer_age = 2017 - $age[2];
                     $phone = $row['biodata_phonenumber'];
                     $coop = $row['biodata_cooperative_name'];
@@ -324,23 +325,23 @@
 
                 echo "<br>";
 
-                $table="general_questions";
-                $columns="*";
-                $where=" dataset_id='$dataset_id' ";
-                $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
+                $table = "general_questions";
+                $columns = "*";
+                $where = " dataset_id='$dataset_id' ";
+                $rows6 = $mCrudFunctions->fetch_rows($table, $columns, $where);
 
-                foreach($rows6 as $row){
-                    $column=$row['columns'];
+                foreach ($rows6 as $row) {
+                    $column = $row['columns'];
 
-                    $value=$rows[0][$column];
-                    $value=$util_obj->captalizeEachWord($value);
-                    $string="general_questions_";
-                    $string=str_replace($string,"",$column);
-                    $string=str_replace("_"," ",$string);
-                    $lable=$util_obj->captalizeEachWord($string);
-                    if($value!=null){
+                    $value = $rows[0][$column];
+                    $value = $util_obj->captalizeEachWord($value);
+                    $string = "general_questions_";
+                    $string = str_replace($string, "", $column);
+                    $string = str_replace("_", " ", $string);
+                    $lable = $util_obj->captalizeEachWord($string);
+                    if ($value != null) {
 
-                        echo"<h6>$lable:</h6>
+                        echo "<h6>$lable:</h6>
   <p class=\"align\">$value</p><hr/>";
                     }
                 }
@@ -351,19 +352,25 @@
 /////////////////////////////////////////////other data_ends
 
 /////////////////////////////////////////////production data_starts
-            echo "
+                echo "
                 <div class=\" col-sm-12 col-md-7 col-lg-7\">
                     <div class=\"card prodn\">
-                  <h5 class=\"\">Periodic Milk Transactional Data</h5>                  
+                  <h5 class=\"\">Periodic Milk Transactional Data <span class='pull-right'><button>7days</button></span></h5>    
+                                
                   <br>
                   <p style='padding-left: 10px;'><b> Milk Supplied(Kgs) </b></p><p style='padding-left: 60px'><b>Date</b></p><b style='padding-left: 70px'>Description</b><hr/>
                   ";
-                $milk_data=file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=2017-10-25&end_date=2017-11-14");
+                $today = date("Y-m-d", strtotime('today'));
+                $svndays = date("Y-m-d", strtotime('-1 week'));
+
+                $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
                 $milk_periodic_data = json_decode($milk_data);
-                foreach ($milk_periodic_data as $milk_supply){
+                foreach ($milk_periodic_data as $milk_supply) {
                     $milk_quantity = $milk_supply->milk_amount;
                     $supply_date = new DateTime($milk_supply->created_at);
                     $date = $supply_date->format('d/m/Y');
+                    
+                    /**introduce farmer phone to get their specific data**/
                     echo "
                         <p style='padding-left: 40px;'>$milk_quantity </p><p style='padding-left: 60px'> $date </p></hr>
                         ";
@@ -372,7 +379,7 @@
                 </div>
                 </div>";
 
-  ////////////////     //////////////////
+                ////////////////     //////////////////
 
                 echo "
                   <div class=\" col-sm-12 col-md-7 col-lg-7\">
@@ -394,7 +401,7 @@
                     $unit_price = $row['price_per_litre'];
                     $transport_mode = $row['mode_of_transport'];
                     $other_tp_mode = $row['other_transport_mode'];
-                    if($other_tp_mode == "") $other_tp_mode = "None";
+                    if ($other_tp_mode == "") $other_tp_mode = "None";
 
                     $accessed_loan_status = $row['accessed_loan'];
                     $loan_amount = $row['loan_amount'];

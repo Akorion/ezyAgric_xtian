@@ -282,6 +282,34 @@ class JSONModel
         return $json;
     }
 
+    public function drawFarmerExpenditureGraph($district, $no_farmers, $type, $title)
+    {
+        $json['chart'] = array('type' => $type);
+
+        $json['title'] = array('text'=>$title);
+
+        $json['xAxis'] = array('categories' => $district, 'crosshair' => true);
+
+        $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Amount /UGX'));
+
+        $json['credits'] = array('enabled' => false);
+
+        $json['exporting'] = array('enabled' => false);
+
+        $json['tooltip'] = array("headerFormat" => '<span style="font-size:10px">{point.key}</span><table>',
+            "pointFormat" => '<tr><td style="color:{series.color};padding:0">{series.name}: </td><td style="padding:0"><b>{point.y:.1f} UGX</b></td></tr>',
+            "footerFormat" => '</table>', "shared" => true,
+            "useHTML" => true);
+
+        $json['plotOptions'] = array(
+            "column" => array(
+                "pointPadding" => 0.2,
+                'borderWidth' => 0
+            ));
+        $json['series'] = array(array('name' => 'Costs', 'colorByPoint' => 'true' ,'data' => $no_farmers));
+        return $json;
+    }
+
     public function drawMilkPerVillageGraph($district, $no_farmers, $type, $title)
     {
         $json['chart'] = array('type' => $type);

@@ -15,7 +15,7 @@ $client_id = $_SESSION["client_id"];
 
 $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
 
-
+$dataset_id = '';
 $cows = 0;  $calves = 0;    $bulls = 0; $total_cows = 0;
 $total_lactating = 0;
 $total_expecting = 0;
@@ -132,6 +132,7 @@ foreach ($rows as $row) {
 
         $total_acreage = 0;
         $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
+//        echo $dataset_id;
         $dataset_type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
 
         $data_table = "dataset_" . $row['id'];
@@ -246,7 +247,7 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
     $type = $util_obj->encrypt_decrypt("decrypt", $_GET['category']);
 
     if ($type == "Farmer") {
-        $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
+        $dataset_ = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
         $branch_ = $util_obj->encrypt_decrypt("encrypt", $branch);
         $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id");
         $dataset_name = ucfirst(strtolower(str_replace("_", " ", $dataset[0]["dataset_name"])));

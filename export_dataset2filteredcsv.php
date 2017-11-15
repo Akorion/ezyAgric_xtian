@@ -42,35 +42,38 @@ $_SESSION['fields']['bio_data']=array_unique($_SESSION['fields']['bio_data']);
 
 }
 foreach($_SESSION['fields']['bio_data'] as $bio_data ){
-$count_bio++;
+    $count_bio++;
 
-$column=$mCrudFunctions->fetch_rows("bio_data","columns"," id='$bio_data' AND dataset_id ='$id' ")[0]["columns"];
-$value=str_replace("biodata_farmer_","",$column);
+    $column = $mCrudFunctions->fetch_rows("bio_data", "columns", " id='$bio_data' AND dataset_id ='$id' ")[0]["columns"];
+    $value = str_replace("biodata_farmer_", "", $column);
 
-if($count_bio>1 && ($count_bio-1) < sizeof($_SESSION['fields']['bio_data'])){
+    if ($count_bio > 1 && ($count_bio - 1) < sizeof($_SESSION['fields']['bio_data'])) {
 
-if($value=='picture'){}else{
-$array_bio_data_columns .= ",".$column;
-array_push($bio_data_columns,$column);
-}
+        if ($value == 'picture') {
+        } else {
+            $array_bio_data_columns .= "," . $column;
+            array_push($bio_data_columns, $column);
+        }
 
-}else{
-if($value=='picture'){}else{
-$array_bio_data_columns .= $column;
-array_push($bio_data_columns,$column);
-}
+    } else {
+        if ($value == 'picture') {
+        } else {
+            $array_bio_data_columns .= $column;
+            array_push($bio_data_columns, $column);
+        }
 
-}
+    }
 
-if($value=='picture'){}else{
+    if ($value == 'picture') {
+    } else {
 
 
-if(strpos($value, 'dob') !== false){
- $value="birth date";
-}
-$value=str_replace("_"," ",strtoupper($value));
-$header .='"'.$util_obj->escape_csv_value($value).'",';
-}
+        if (strpos($value, 'dob') !== false) {
+            $value = "birth date";
+        }
+        $value = str_replace("_", " ", strtoupper($value));
+        $header .= '"' . $util_obj->escape_csv_value($value) . '",';
+    }
 
 }
 //echo $array_bio_data_columns."</br>";
