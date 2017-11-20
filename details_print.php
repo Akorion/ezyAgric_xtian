@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 #includes
+session_start();
 require_once dirname(__FILE__)."/php_lib/user_functions/crud_functions_class.php";
 require_once dirname(__FILE__)."/php_lib/lib_functions/database_query_processor_class.php";
 require_once dirname(__FILE__)."/php_lib/lib_functions/utility_class.php";
@@ -131,140 +132,312 @@ $phone=$util_obj->remove_apostrophes($rows[0]['va_phonenumber']);
 
 }
 
-if($type=="Farmer"){
-$latitude=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
-$longitude=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
-$picture=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_picture']);
+if($type=="Farmer") {
+    if ($_SESSION["account_name"] == "Rushere SACCO") {
 
- $table="bio_data";		 
- $columns="*";
- $where=" dataset_id='$dataset_id' ";
- $rows2= $mCrudFunctions->fetch_rows($table,$columns,$where);
- 
- echo"<div class=\"row\" style=\"margin-top:15px;\">
+        $latitude = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
+        $longitude = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
+        $picture = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_picture']);
+
+        $table = "bio_data";
+        $columns = "*";
+        $where = " dataset_id='$dataset_id' ";
+        $phone = "";
+        $rows2 = $mCrudFunctions->fetch_rows($table, $columns, $where);
+
+        echo "<div class=\"row\" style=\"margin-top:15px;\">
  <div class=\"col-md-12\">
  <table class=\"table\">
  ";
-  foreach($rows2 as $row){
-  $column=$row['columns'];
-  $value=$rows[0][$column];
-  $value=$util_obj->captalizeEachWord($value);
-  $string=str_replace("biodata_farmer_","",$column);
-  $string=str_replace("_"," ",$string);
-  $lable=$util_obj->captalizeEachWord($string);
-  if($lable!="Picture"){
-  echo"<tr><th>$lable:</th>
-  <td>$value</td></tr>";
-  }
-  
-  }
-  
-  $table="farmer_location";		 
-  $columns="*";
-  $where=" dataset_id='$dataset_id' ";
-  $rows3= $mCrudFunctions->fetch_rows($table,$columns,$where);
-  
-  foreach($rows3 as $row){
-   $column=$row['columns'];
-  $value=$rows[0][$column];
-  $value=$util_obj->captalizeEachWord($value);
-  $string=str_replace("biodata_farmer_location_farmer_","",$column);
-  $string=str_replace("_"," ",$string);
-  $lable=$util_obj->captalizeEachWord($string);
-  if(!strpos($column,'_gps_')){
-   echo"<tr><th>$lable:</th>
-  <td>$value</td></tr>";
-  }
-     
-  }
-  
-  echo"</table>
+        foreach ($rows2 as $row) {
+            $column = $row['columns'];
+            $value = $rows[0][$column];
+            $value = $util_obj->captalizeEachWord($value);
+            $string = str_replace("biodata_farmer_", "", $column);
+            $string = str_replace("biodata_", "", $column);
+            $string = str_replace("_", " ", $string);
+            $lable = $util_obj->captalizeEachWord($string);
+            if ($lable != "Farmer Image") {
+                if ($lable == "Age") {
+                    $date = explode('/', $value);
+                    $value = date("Y") - $date[2];
+                }
+                if($lable == "Phonenumber") $phone = $value;
+                echo "<tr><th>$lable:</th><td>$value</td></tr>";
+            }
+        }
+
+//    $table = "farmer_location";
+//    $columns = "*";
+//    $where = " dataset_id='$dataset_id' ";
+//    $rows3 = $mCrudFunctions->fetch_rows($table, $columns, $where);
+//
+//    foreach ($rows3 as $row) {
+//        $column = $row['columns'];
+//        $value = $rows[0][$column];
+//        $value = $util_obj->captalizeEachWord($value);
+//        $string = str_replace("biodata_farmer_location_farmer_", "", $column);
+//        $string = str_replace("_", " ", $string);
+//        $lable = $util_obj->captalizeEachWord($string);
+//        if (!strpos($column, '_gps_')) {
+//            echo "<tr><th>$lable:</th>
+//  <td>$value</td></tr>";
+//        }
+//
+//    }
+
+    echo "</table>
 </div>
 </div>";
-echo"
+    echo "
 <div class=\"page-break\"></div>";
-echo"<div class=\"row\">
+    echo "<div class=\"row\">
 <div class=\"col-md-12\">
 <h3 class=\"text-center\">Production data</h3>
 <table class=\"table\">";
 
-  $table="production_data";		 
-  $columns="*";
-  $where=" dataset_id='$dataset_id' ";
-  $rows4= $mCrudFunctions->fetch_rows($table,$columns,$where);
-  
-  foreach($rows4 as $row){
-   $column=$row['columns'];
-   $enterprise=$row['enterprise'];
-  $value=$rows[0][$column];
-   $value=$util_obj->captalizeEachWord($value);
-  $string=$enterprise."_production_data_";
-   $string=str_replace($string,"",$column);
-  $string=str_replace("_"," ",$string);
-  $lable=$util_obj->captalizeEachWord($string);
-  if($value!=null){
-   echo"<tr><th>$lable:</th>
-  <td>$value</td></tr>";
- 
-  }
-  }
-  
+    echo "<tr><th>Quantity of Milk Supplied (Ltrs)</th><th>Date</th></tr>";
+        $today = date("Y-m-d", strtotime('today'));
+        $svndays = date("Y-m-d", strtotime('-5 days'));
 
- echo"</table>
+        $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
+        $milk_periodic_data = json_decode($milk_data);
+        foreach ($milk_periodic_data as $milk_supply) {
+            $milk_quantity = $milk_supply->milk_amount;
+            $supply_date = new DateTime($milk_supply->created_at);
+            $date = $supply_date->format('d/m/Y');
+            /**introduce farmer phone to get their specific data**/
+            $account = $milk_supply->account_no;
+            $mobile_no = substr($account, 6);
+            if($mobile_no == $phone){
+                echo "
+                        <tr><td style='padding-left: 40px;'>$milk_quantity</td><td>$date</td></tr>
+                        ";
+            }
+        }
+//    $table = "production_data";
+//    $columns = "*";
+//    $where = " dataset_id='$dataset_id' ";
+//    $rows4 = $mCrudFunctions->fetch_rows($table, $columns, $where);
+//
+//    foreach ($rows4 as $row) {
+//        $column = $row['columns'];
+//        $enterprise = $row['enterprise'];
+//        $value = $rows[0][$column];
+//        $value = $util_obj->captalizeEachWord($value);
+//        $string = $enterprise . "_production_data_";
+//        $string = str_replace($string, "", $column);
+//        $string = str_replace("_", " ", $string);
+//        $lable = $util_obj->captalizeEachWord($string);
+//        if ($value != null) {
+//            echo "<tr><th>$lable:</th>
+//  <td>$value</td></tr>";
+//
+//        }
+//    }
+    echo "</table>
 </div>
 </div>";
 
-echo"
+    echo "
+<div class=\"page-break\"></div>
+<div class=\"col-md-12\">
+<!-- <h3 class=\"text-center\">Others</h3>  -->
+<div class=\"table-responsive\">
+//<table class=\"table\" style=\"margin-left:15px; width:100%;\">";
+//
+//    $table = "info_on_other_enterprise";
+//    $columns = "*";
+//    $where = " dataset_id='$dataset_id' ";
+//    $rows5 = $mCrudFunctions->fetch_rows($table, $columns, $where);
+//
+//    foreach ($rows5 as $row) {
+//        $column = $row['columns'];
+//        $value = $rows[0][$column];
+//        $value = $util_obj->captalizeEachWord($value);
+//        $string = "information_on_other_crops_";
+//        $string = str_replace($string, "", $column);
+//        $string = str_replace("_", " ", $string);
+//        $lable = $util_obj->captalizeEachWord($string);
+//        if ($value != null) {
+//            echo "<tr><th>$lable:</th>
+//  <td>$value</td></tr>";
+//        }
+//    }
+//
+//
+//    $table = "general_questions";
+//    $columns = "*";
+//    $where = " dataset_id='$dataset_id' ";
+//    $rows6 = $mCrudFunctions->fetch_rows($table, $columns, $where);
+//
+//    foreach ($rows6 as $row) {
+//        $column = $row['columns'];
+//
+//        $value = $rows[0][$column];
+//        $value = $util_obj->captalizeEachWord($value);
+//        $string = "general_questions_";
+//        $string = str_replace($string, "", $column);
+//        $string = str_replace("_", " ", $string);
+//        $lable = $util_obj->captalizeEachWord($string);
+//        if ($value != null) {
+//
+//            echo "<tr><th>$lable:</th>
+//  <td>$value</td></tr>";
+//        }
+//    }
+//
+//    echo "</table>";
+    echo "<div class=\"row\">
+            <div class=\"col-sm-8\">
+            <p class=\"lead\">Generated From EZYAGRIC </p>
+            </div>
+
+            <div class=\"col-sm-4 pull-right\">
+                <p class=\"lead\"><a href='https://www.akorion.com'>www.akorion.com</a></p>
+            </div>
+          </div>
+          </div>
+          </div>";
+
+}
+    }
+    else {
+
+        $latitude=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
+        $longitude=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
+        $picture=$util_obj->remove_apostrophes($rows[0]['biodata_farmer_picture']);
+
+        $table="bio_data";
+        $columns="*";
+        $where=" dataset_id='$dataset_id' ";
+        $rows2= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+        echo"<div class=\"row\" style=\"margin-top:15px;\">
+ <div class=\"col-md-12\">
+ <table class=\"table\">
+ ";
+        foreach($rows2 as $row){
+            $column=$row['columns'];
+            $value=$rows[0][$column];
+            $value=$util_obj->captalizeEachWord($value);
+            $string=str_replace("biodata_farmer_","",$column);
+            $string=str_replace("biodata_","",$column);
+            $string=str_replace("_"," ",$string);
+            $lable=$util_obj->captalizeEachWord($string);
+            if($lable!="Picture"){
+                echo"<tr><th>$lable:</th>
+  <td>$value</td></tr>";
+            }
+
+        }
+
+        $table="farmer_location";
+        $columns="*";
+        $where=" dataset_id='$dataset_id' ";
+        $rows3= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+        foreach($rows3 as $row){
+            $column=$row['columns'];
+            $value=$rows[0][$column];
+            $value=$util_obj->captalizeEachWord($value);
+            $string=str_replace("biodata_farmer_location_farmer_","",$column);
+            $string=str_replace("_"," ",$string);
+            $lable=$util_obj->captalizeEachWord($string);
+            if(!strpos($column,'_gps_')){
+                echo"<tr><th>$lable:</th>
+  <td>$value</td></tr>";
+            }
+
+        }
+
+        echo"</table>
+</div>
+</div>";
+        echo"
+<div class=\"page-break\"></div>";
+        echo"<div class=\"row\">
+<div class=\"col-md-12\">
+<h3 class=\"text-center\">Production data</h3>
+<table class=\"table\">";
+
+        $table="production_data";
+        $columns="*";
+        $where=" dataset_id='$dataset_id' ";
+        $rows4= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+        foreach($rows4 as $row){
+            $column=$row['columns'];
+            $enterprise=$row['enterprise'];
+            $value=$rows[0][$column];
+            $value=$util_obj->captalizeEachWord($value);
+            $string=$enterprise."_production_data_";
+            $string=str_replace($string,"",$column);
+            $string=str_replace("_"," ",$string);
+            $lable=$util_obj->captalizeEachWord($string);
+            if($value!=null){
+                echo"<tr><th>$lable:</th>
+  <td>$value</td></tr>";
+
+            }
+        }
+
+
+        echo"</table>
+</div>
+</div>";
+
+        echo"
 <div class=\"page-break\"></div>
 <div class=\"col-md-12\">
 <h3 class=\"text-center\">Others</h3>
 <div class=\"table-responsive\">
 <table class=\"table\" style=\"margin-left:15px; width:100%;\">";
 
-$table="info_on_other_enterprise";		 
-  $columns="*";
-  $where=" dataset_id='$dataset_id' ";
-  $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
-  
-  foreach($rows5 as $row){
-   $column=$row['columns'];
-  $value=$rows[0][$column];
-  $value=$util_obj->captalizeEachWord($value);
-  $string="information_on_other_crops_";
-   $string=str_replace($string,"",$column);
-  $string=str_replace("_"," ",$string);
-  $lable=$util_obj->captalizeEachWord($string);
-  if($value!=null){
-   echo"<tr><th>$lable:</th>
+        $table="info_on_other_enterprise";
+        $columns="*";
+        $where=" dataset_id='$dataset_id' ";
+        $rows5= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+        foreach($rows5 as $row){
+            $column=$row['columns'];
+            $value=$rows[0][$column];
+            $value=$util_obj->captalizeEachWord($value);
+            $string="information_on_other_crops_";
+            $string=str_replace($string,"",$column);
+            $string=str_replace("_"," ",$string);
+            $lable=$util_obj->captalizeEachWord($string);
+            if($value!=null){
+                echo"<tr><th>$lable:</th>
   <td>$value</td></tr>";
-  }
-  }
-  
-  
-  $table="general_questions";		 
-  $columns="*";
-  $where=" dataset_id='$dataset_id' ";
-  $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
-  
-  foreach($rows6 as $row){
-   $column=$row['columns'];
-   
-  $value=$rows[0][$column];
-   $value=$util_obj->captalizeEachWord($value);
-  $string="general_questions_";
-   $string=str_replace($string,"",$column);
-  $string=str_replace("_"," ",$string);
-  $lable=$util_obj->captalizeEachWord($string);
-  if($value!=null){
-  
-   echo"<tr><th>$lable:</th>
+            }
+        }
+
+
+        $table="general_questions";
+        $columns="*";
+        $where=" dataset_id='$dataset_id' ";
+        $rows6= $mCrudFunctions->fetch_rows($table,$columns,$where);
+
+        foreach($rows6 as $row){
+            $column=$row['columns'];
+
+            $value=$rows[0][$column];
+            $value=$util_obj->captalizeEachWord($value);
+            $string="general_questions_";
+            $string=str_replace($string,"",$column);
+            $string=str_replace("_"," ",$string);
+            $lable=$util_obj->captalizeEachWord($string);
+            if($value!=null){
+
+                echo"<tr><th>$lable:</th>
   <td>$value</td></tr>";
-  }
-  }
-  
- echo"</table>";
- echo "<div class=\"row\">";
-          echo "
+            }
+        }
+
+        echo"</table>";
+        echo "<div class=\"row\">";
+        echo "
             <div class=\"col-sm-8\">
             <p class=\"lead\">Generated From EZY AGRIC </p>
             </div>
@@ -273,14 +446,14 @@ $table="info_on_other_enterprise";
                 <p class=\"lead\">www.akorion.com</p>
             </div>
           ";
- echo "</div>";
+        echo "</div>";
 
- echo "</div></div>";
+        echo "</div></div>";
 
+
+    }
 }
 
-
-}
 }?>
 
 </div>

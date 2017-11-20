@@ -563,7 +563,7 @@ function output($id, $where)
     $dts = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id'");
 //    echo $id;
 //    $id_ = $util_obj->encrypt_decrypt("encrypt", $id);
-    $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id ");
+    $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id = $id ");
     $dataset_name = $dataset[0]["dataset_name"];
     $dataset_type = $dataset[0]["dataset_type"];
 
@@ -635,7 +635,8 @@ function output($id, $where)
             }
 
 //        }
-    }else {
+    }
+    elseif($role == 2) {
         foreach ($dts as $dt){
             $dataset_ = $util_obj->encrypt_decrypt("encrypt", $dt['id']);
 
@@ -702,6 +703,63 @@ function output($id, $where)
             }
 
         }
-    }}
+    }
+    else {
+        foreach ($dts as $dt){
+            $dataset_ = $util_obj->encrypt_decrypt("encrypt", $dt['id']);
+
+            $rows = $mCrudFunctions->fetch_rows( "dataset_" .$dt['id'], "*", $where);
+
+            if ($dataset_type == "Farmer") {
+                if (sizeof($rows) != 0) {
+
+//                echo "<p hidden='hidden' id='check_contect'></p>";
+                    $counter = 1;
+                    //            echo "inside table ........";
+                    foreach ($rows as $row) {
+
+                        //                print_r($row);
+                        $real_id = $row['id'];
+
+                        $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+                        $name = $row['biodata_first_name'];
+                        //                echo $name;
+                        $last_name = $row['biodata_last_name'];
+                        $gender = $row['biodata_gender'];
+                        $date = $row['biodata_age'];
+                        $district = $row['biodata_farmer_location_farmer_district'];
+                        $milk = '';
+                        $last_trans_date = '';
+                        $phone_number = $row['biodata_phonenumber'];
+                        $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
+                        $lactating_cows = $row['lactating_cows'];
+                        $age = explode('/',$date);
+                        $farmer_age = 2017 - $age[2];
+
+                        ////////////////////////////////////////////////////////////////////////
+                        //                if ($_SESSION['client_id'] == 1) {
+                        echo "<tr>";
+                        echo "
+                            <td>$counter</td>
+    
+                      <td style='line-height:12pt; align:center'>$name $last_name</td>
+                      <td style='line-height:12pt; align:center'>$farmer_age</td>
+                      <td style='line-height:12pt; align:center'>$gender</td>
+                      <td style='line-height:12pt; align:center'>$phone_number</td>
+                      <td style='line-height:12pt; align:center'>$cows</td>
+                      <td style='line-height:12pt; align:center'>$lactating_cows</td>
+                     ";
+
+                        echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
+                           </td>";
+                        echo "</tr>";
+                        $counter++;
+                    }
+                }
+            }
+
+        }
+    }
+}
 
 ?>

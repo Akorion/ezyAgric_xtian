@@ -173,7 +173,160 @@ $mCrudFunctions = new CrudFunctions();
                     unset($_SESSION['fields']);
                     $role =  $_SESSION['role'];
                     $branch = $_SESSION['user_account'];
-                    if($role == 3){
+                    if($role == 1){
+                        $key = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);;
+                        $enterprise = $mCrudFunctions->fetch_rows("production_data", "enterprise", " dataset_id='$key'")[0]['enterprise'];
+
+                        $bio_data_rows = $mCrudFunctions->fetch_rows("bio_data", "*", " dataset_id='$key' GROUP BY id");//
+
+                        $production_data_rows = $mCrudFunctions->fetch_rows("production_data", "*", " dataset_id='$key' GROUP BY id");//
+
+                        $general_questions_rows = $mCrudFunctions->fetch_rows("general_questions", "*", " dataset_id='$key' GROUP BY id");
+
+                        $farmer_location_rows = $mCrudFunctions->fetch_rows("farmer_location", "*", " dataset_id='$key' GROUP BY id");
+
+                        $info_on_other_enterprise_rows = $mCrudFunctions->fetch_rows("info_on_other_enterprise", "*", " dataset_id='$key' GROUP BY id");
+
+                        $milk_data=file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=2017-10-25&end_date=2017-11-17");
+                        $milk_periodic_data = json_decode($milk_data);
+
+                        $index = 0;
+
+                        echo "<div class=\"col-md-6\">";
+
+                        foreach ($bio_data_rows as $row) {
+
+                            $index = $index + 1;
+                            $column = $row['columns'];
+
+                            $id__ = "bio_data_" . $row['id'];
+
+                            $column = str_replace("biodata_", "", $column);
+                            $column = str_replace("_", " ", $column);
+
+                            if (strpos($column, 'dob') !== false) {
+                                $column = $util_obj->captalizeEachWord("farmer birth date");
+                            }
+                            echo "<div class=\"\">
+          <label>
+            <input id=\"$index\" type=\"checkbox\" value=\"$id__\"  onclick=\"selection($index); UncheckButton();\"/>  $column
+        </label>
+          </div>";
+
+                        }
+                        echo " </div>";
+
+                        echo "<div class=\"col-md-6\">";
+                        foreach ($farmer_location_rows as $row) {
+                            $index = $index + 1;
+                            $column = $row['columns'];
+
+                            $id__ = "farmer_location_" . $row['id'];
+
+                            $column = str_replace("biodata_farmer_location_", "", $column);
+                            $column = str_replace("farmer_home_gps_", "", $column);
+
+                            $column = $util_obj->captalizeEachWord(str_replace("_", " ", $column));
+                            echo "<div class=\"\">
+          <label>
+            <input id=\"$index\" type=\"checkbox\"  value=\"$id__\" onclick=\"selection($index); UncheckButton();\"/>   $column
+        </label>
+          </div>";
+
+                        }
+                        echo " </div>";
+
+
+                        echo "<div class=\"col-md-6\">";
+
+                        $gardens_table = "garden_" . $key;
+
+                        if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
+
+
+                            $index = $index + 1;
+                            $id__ = "acreage_data";
+
+                            echo "<div class=\"\">
+          <label>
+            <input id=\"$index\" type=\"checkbox\" value=\"$id__\"  onclick=\"selection($index); UncheckButton();\" />  Acreage
+        </label>
+          </div>";
+
+                        }
+
+                        foreach ($production_data_rows as $row) {
+                            $index = $index + 1;
+                            $column = $row['columns'];
+
+                            $id__ = "production_data_" . $row['id'];
+
+                            $column = str_replace($enterprise . "_production_data_", "", $column);
+                            $column = $util_obj->captalizeEachWord(str_replace("_", " ", $column));
+                            echo "<div class=\"\">
+          <label>
+            <input id=\"$index\" type=\"checkbox\" value=\"$id__\"  onclick=\"selection($index); UncheckButton();\" />  $column
+        </label>
+          </div>";
+
+                        }
+                        echo " </div>";
+
+                        echo "<div class=\"col-md-6\">";
+                        foreach ($general_questions_rows as $row) {
+                            $index = $index + 1;
+                            $column = $row['columns'];
+
+                            $id__ = "general_questions_" . $row['id'];
+
+
+                            $column = str_replace("general_questions_", "", $column);
+                            $column = $util_obj->captalizeEachWord(str_replace("_", " ", $column));
+                            echo "<div class=\"\">
+          <label>
+            <input id=\"$index\" type=\"checkbox\" value=\"$id__\" onclick=\"selection($index); UncheckButton();\" />   $column
+        </label>
+          </div>";
+
+                        }
+                        echo " </div>";
+
+                        echo "<div class=\"col-md-6\">";
+                        foreach ($info_on_other_enterprise_rows as $row) {
+                            $index = $index + 1;
+                            $column = $row['columns'];
+
+                            $id__ = "info_on_other_enterprise_" . $row['id'];
+
+                            $column = str_replace("information_on_other_crops_", "", $column);
+                            $column = $util_obj->captalizeEachWord(str_replace("_", " ", $column));
+                            echo "<div class=\"\">
+          <label >
+            <input id=\"$index\" type=\"checkbox\" value=\"$id__\" onclick=\"selection($index); UncheckButton();\" />  $column
+        </label>
+          </div>";
+
+                        }
+                        echo " </div>";
+
+//                    echo "<div class=\"col-md-6\">";
+//                    $milk_quantity = 0;
+//                    foreach ($milk_periodic_data as $milk_supply) {
+//                        $index += 1;
+//                        $milk_quantity = $milk_supply->milk_amount;
+////                        $supply_date = new DateTime($milk_supply->created_at);
+////                        $date = $supply_date->format('d/m/Y');
+//                    }
+//
+//                        echo "<div class=\"\">
+//                            <label>
+//                                <input id=\"$milk_quantity\" type=\"checkbox\" value=\"$milk_quantity\" onclick=\"selection($milk_quantity); UncheckButton();\" />milk_supplied
+//                            </label>
+//                            </div>";
+//
+//                    echo "</div>";
+                    }
+                    else{
                         $key = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);;
                         $enterprise = $mCrudFunctions->fetch_rows("production_data", "enterprise", " dataset_id='$key'")[0]['enterprise'];
 
@@ -900,11 +1053,9 @@ $mCrudFunctions = new CrudFunctions();
                 getPaginationSearch(page);
             }
         });
-
     }
 
     function Export2Csv() {
-
 
         var sel_district = document.getElementById("sel_district");
         var sel_county = document.getElementById("sel_county");
@@ -1016,14 +1167,14 @@ $mCrudFunctions = new CrudFunctions();
     $("#sel_va").change(function () {
 
         filterDataPagination(1);
-        ;
+
     });
 
     $("#sel_village").change(function () {
         $("#sel_va").val("all");
         filterDataPagination(1);
         getVAs();
-        ;
+
     });
 
     $("#sel_gender").change(function () {

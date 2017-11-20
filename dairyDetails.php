@@ -355,13 +355,13 @@
                 echo "
                 <div class=\" col-sm-12 col-md-7 col-lg-7\">
                     <div class=\"card prodn\">
-                  <h5 class=\"\">Periodic Milk Transactional Data <span class='pull-right'><button>7days</button></span></h5>    
+                  <h5 class=\"\">Periodic Milk Transactional Data </h5><span class='pull-right'><button class='btn btn-primary'>Past 5days</button></span>    
                                 
                   <br>
-                  <p style='padding-left: 10px;'><b> Milk Supplied(Kgs) </b></p><p style='padding-left: 60px'><b>Date</b></p><b style='padding-left: 70px'>Description</b><hr/>
+                  <p style='padding-left: 10px;'><b> Milk Supplied(Ltrs) </b></p><p style='padding-left: 60px'><b>Date</b></p><hr/>
                   ";
                 $today = date("Y-m-d", strtotime('today'));
-                $svndays = date("Y-m-d", strtotime('-1 week'));
+                $svndays = date("Y-m-d", strtotime('-5 days'));
 
                 $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
                 $milk_periodic_data = json_decode($milk_data);
@@ -369,11 +369,15 @@
                     $milk_quantity = $milk_supply->milk_amount;
                     $supply_date = new DateTime($milk_supply->created_at);
                     $date = $supply_date->format('d/m/Y');
-                    
+
                     /**introduce farmer phone to get their specific data**/
-                    echo "
+                    $account = $milk_supply->account_no;
+                    $mobile_no = substr($account, 6);
+                    if($mobile_no == $phone){
+                        echo "
                         <p style='padding-left: 40px;'>$milk_quantity </p><p style='padding-left: 60px'> $date </p></hr>
                         ";
+                    }
                 }
                 echo " 
                 </div>

@@ -9,7 +9,6 @@ $mCrudFunctions = new CrudFunctions();
 
 switch ($_POST["token"]) {
 
-
     case "outgrower_dash":
         session_start();
         $client_id = $_SESSION["client_id"];
@@ -31,11 +30,23 @@ switch ($_POST["token"]) {
         $total_cows = 0;
         $calves = 0;
         $bulls = 0;
-        $labor_expenditure = 0; $injection_expenditure = 0; $acariceides_expenditure = 0;
+        $labor_expenditure = 0; $injection_expenditured = 0; $acariceides_expenditure = 0;
         $tools_expenditure = 0; $deworming_expenditure = 0; $clearing_expenditure = 0;
-        $expenditure = 0;
+        $expenditure = 0;   $milk_quantity = 0; $milk = array();
+        $branch_farmer_nos = array();   $cooperative_farmer_nos = array();  $rushere_farmer_nos = array();
+
+        $current_date = date('d/m/Y');
+        $today = date("Y-m-d", strtotime('today'));
+        $svndays = date("Y-m-d", strtotime('-1 day'));
+        $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
+        $milk_periodic_data = json_decode($milk_data);
+
         foreach ($rows as $row) {
             if ($role == 1) {
+                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "biodata_phonenumber", 1);
+                if ( sizeof($rows_n) != 0) {
+                    foreach ($rows_n as $rn) { array_push($rushere_farmer_nos, $rn['biodata_phonenumber']); }
+                }
                 $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
                 $data_table = "dataset_" . $row['id'];
                 $cows = (int)$mCrudFunctions->get_sum("$data_table", "number_of_cows", "1");
@@ -67,10 +78,12 @@ switch ($_POST["token"]) {
                 }
             }
             elseif($role == 2) {
-                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id", "sacco_branch_name LIKE '$branch'");
+                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id, biodata_phonenumber", "sacco_branch_name LIKE '$branch'");
                 if ( sizeof($rows_n) != 0) {
                     $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+                    foreach ($rows_n as $rn) { array_push($branch_farmer_nos, $rn['biodata_phonenumber']); }
                 }
+
                 $type = $util_obj->encrypt_decrypt("encrypt", 'Farmer');
 
                 $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], "sacco_branch_name LIKE '$branch'");
@@ -109,13 +122,14 @@ switch ($_POST["token"]) {
                 }
             }
             else {
-                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id", "biodata_cooperative_name LIKE '$branch'");
-                if ( sizeof($rows_n) != 0) {
-//                    echo $row['id'];
-                    $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
-                }
-                    $type = $util_obj->encrypt_decrypt("encrypt", 'Farmer');
 
+                $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id, 	biodata_phonenumber", "biodata_cooperative_name LIKE '$branch'");
+                if ( sizeof($rows_n) != 0) {
+                    $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+                    foreach ($rows_n as $rn) { array_push($cooperative_farmer_nos, $rn['biodata_phonenumber']); }
+                }
+
+                $type = $util_obj->encrypt_decrypt("encrypt", 'Farmer');
                 $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], "biodata_cooperative_name LIKE '$branch'");
 
                 $data_table = "dataset_" . $row['id'];
@@ -152,6 +166,27 @@ switch ($_POST["token"]) {
             }
         }
 
+        foreach ($milk_periodic_data as $milk_supply) {
+            $account = $milk_supply->account_no;
+            $mobile_no = substr($account, 6);
+
+            if($role == 1){
+                if(in_array($mobile_no, $rushere_farmer_nos)){
+                    $milk_quantity += $milk_supply->milk_amount;
+                }
+            }
+            elseif ($role == 2) {
+                if(in_array($mobile_no, $branch_farmer_nos)){
+                    $milk_quantity += $milk_supply->milk_amount;
+                }
+            }
+            else {
+                if(in_array($mobile_no, $cooperative_farmer_nos)){
+                    $milk_quantity += $milk_supply->milk_amount;
+                }
+            }
+        }
+
     if($role == 1){
         echo "<div class=\"col-md-4 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
                <div class=\"x_panel tile  overflow_hidden\">
@@ -174,7 +209,7 @@ switch ($_POST["token"]) {
                    </div>
                    <div class=\"col-md-9\">
                       <h4>Milk supplied today</h4>
-                       <a style=\"font-size:15px; color:blue\"><b> " . number_format($milkreceived) . " Litres</b></a> <br>
+                       <a style=\"font-size:15px; color:blue\"><b> " . number_format($milk_quantity) . " Litres</b></a> <br>
                     <!--   <a style=\"font-size:13px; color:green\">UGX " . number_format($milkpayment) . " paid</a>  -->
                    </div>
                </div>
@@ -216,9 +251,9 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-money fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                          <h4>Milk supplied</h4>
-                           <a style=\"font-size:15px; color:blue\">Total Quantity: <b>" . number_format($milkreceived) . " Litres</b></a> <br>
-                        <!--   <a style=\"font-size:13px; color:green\">UGX " . number_format($milkpayment) . " paid</a>  -->
+                          <h4>Milk Supplied Today</h4>
+                           <a style=\"font-size:15px; color:blue\">Total Quantity: <b>" . number_format($milk_quantity) . " Litres</b></a> <br>
+                           <!-- <a style=\"font-size:13px; color:green\">UGX " . date('d/m/Y') . " paid</a>  -->
                        </div>
                    </div>
                  </div>

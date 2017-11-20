@@ -82,8 +82,21 @@ $path = $_SERVER["PHP_SELF"];
             </button>
 
             <a class="navbar-brand" href="#"><?php if (isset($_SESSION["account_name"])) {
+                if($_SESSION["account_name"] == "Rushere SACCO"){
+                    $role =  $_SESSION['role'];
+
                     $user_account = (strlen($_SESSION["account_name"]) > 25) ? substr($_SESSION["account_name"], 0, 25) . '...' : $_SESSION["account_name"];
-                    echo $user_account;
+
+                    if($role == 1) echo $user_account;
+                    elseif($role == 2) echo $user_account." > ".$_SESSION['user_account']." Branch";
+                    else echo $user_account." > ".$_SESSION['user_account']." Cooperative";
+
+                }
+                else {
+                    $user_account = (strlen($_SESSION["account_name"]) > 25) ? substr($_SESSION["account_name"], 0, 25) . '...' : $_SESSION["account_name"];
+
+                }
+
                 } ?></a>
         </div>
 
@@ -106,7 +119,14 @@ $path = $_SERVER["PHP_SELF"];
                     <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
                                 class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="./stat_farmers.php">Farmers</a></li>
+                        <?php
+                        if ($_SESSION["account_name"] == "Rushere SACCO"){
+                            echo "<li><a href='./dairy_stats.php'>Farmers</a></li>";
+                        } else {
+                            echo "<li><a href='./stat_farmers.php'>Farmers</a></li>";
+                        }
+                        ?>
+<!--                        <li><a href="./stat_farmers.php">Farmers</a></li>-->
                         <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
                     </ul>
                 </li>
