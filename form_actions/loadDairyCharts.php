@@ -202,7 +202,7 @@ switch ($_POST["token"]) {
 
                     foreach ($slected_rows as $sel) {
                         array_push($no_farmers, $sel['farmers']);
-                        array_push($district, $sel['district']);
+                        array_push($district, $sel['village']);
                         array_push($youth, $sel['youth']);
                         array_push($old, $sel['old']);
                     }

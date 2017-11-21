@@ -1,4 +1,5 @@
 <?php
+session_start();
 #includes
 require_once dirname(__FILE__)."/php_lib/user_functions/crud_functions_class.php";
 require_once dirname(__FILE__)."/php_lib/lib_functions/database_query_processor_class.php";
@@ -190,7 +191,7 @@ if($_SESSION["account_name"] == "Rushere SACCO") {
         }
         $body .=$header;
         $body .=$newline ;
-        $rows=$mCrudFunctions->fetch_rows("dataset_".$id,"*","sacco_branch_name LIKE '$branch' ");
+        $rows=$mCrudFunctions->fetch_rows("dataset_".$id,"*","sacco_branch_name LIKE '$branch'");
 
         foreach($rows as $row){
 
@@ -410,7 +411,7 @@ if($_SESSION["account_name"] == "Rushere SACCO") {
     }
     $body .=$header;
     $body .=$newline ;
-    $rows=$mCrudFunctions->fetch_rows("dataset_".$id,"*","sacco_branch_name LIKE '$branch' ");
+    $rows=$mCrudFunctions->fetch_rows("dataset_".$id,"*",1);
 
     foreach($rows as $row){
 
