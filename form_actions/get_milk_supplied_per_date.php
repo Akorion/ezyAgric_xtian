@@ -175,14 +175,14 @@ switch ($_POST['token']){
                 array_push($b_vals, $k);
         }
 
-        if($role == 1) analyseSeeds($branches, $b_vals, "column", "Milk Supplied Per Branch");
-        elseif ($role == 2) analyseBranch($branches, $b_vals, "column", "Milk Supplied Per Cooperative");
-        else analyseCooperative($branches, $b_vals, "column", "Milk Supplied Per Village");
+        if($role == 1) analyseSacco($branches, $b_vals, "column", "Milk Supplied Per Branch", "Branches");
+        elseif ($role == 2) analyseBranch($branches, $b_vals, "column", "Milk Supplied Per Cooperative", "Cooperatives");
+        else analyseCooperative($branches, $b_vals, "column", "Milk Supplied Per Village", "Villages");
 
         break;
 }
 
-function analyseSeeds($branches, $b_vals, $type, $title)
+function analyseSacco($branches, $b_vals, $type, $title, $label_x)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -191,10 +191,10 @@ function analyseSeeds($branches, $b_vals, $type, $title)
     $array_int = array_map(create_function('$value', 'return (int)$value;'), $b_vals);
 
 
-    $data = $json_model_obj->drawSeedGraph($branches, $array_int, $type, $title);
+    $data = $json_model_obj->drawSaccoGraph($branches, $array_int, $type, $title, $label_x);
     $util_obj->deliver_response(200, 1, $data);
 }
-function analyseBranch($branches, $b_vals, $type, $title)
+function analyseBranch($branches, $b_vals, $type, $title, $label_x)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -202,10 +202,10 @@ function analyseBranch($branches, $b_vals, $type, $title)
     //converting a string array into an array of integers
     $array_int = array_map(create_function('$value', 'return (int)$value;'), $b_vals);
 
-    $data = $json_model_obj->drawSeedGraph($branches, $array_int, $type, $title);
+    $data = $json_model_obj->drawSaccoGraph($branches, $array_int, $type, $title, $label_x);
     $util_obj->deliver_response(200, 1, $data);
 }
-function analyseCooperative($branches, $b_vals, $type, $title)
+function analyseCooperative($branches, $b_vals, $type, $title, $label_x)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -213,7 +213,7 @@ function analyseCooperative($branches, $b_vals, $type, $title)
     //converting a string array into an array of integers
     $array_int = array_map(create_function('$value', 'return (int)$value;'), $b_vals);
 
-    $data = $json_model_obj->drawSeedGraph($branches, $array_int, $type, $title);
+    $data = $json_model_obj->drawSaccoGraph($branches, $array_int, $type, $title, $label_x);
     $util_obj->deliver_response(200, 1, $data);
 }
 

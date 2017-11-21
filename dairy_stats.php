@@ -254,9 +254,14 @@
         age_max = document.getElementById("age_max").value;
         age = document.getElementById("age_").value;
 
+        var date_from = document.getElementById("date_from").value;
+        var date_to = document.getElementById("date_to").value;
+        var date_ = document.getElementById("date_").value;
+
         va = document.getElementById('sel_va').value;
         var theForm, newInput1, newInput2, newInput3, newInput4;
         var newInput5, newInput6, newInput7, newInput8, newInput9, newInput10, newInput11;
+        var newInput12, newInput13, newInput14;
         // Start by creating a <form>
         theForm = document.createElement('form');
         theForm.action = 'export_stat2csv.php';
@@ -317,6 +322,21 @@
         newInput11.name = 'va';
         newInput11.value = va;
 
+        newInput12 = document.createElement('input');
+        newInput12.type = 'hidden';
+        newInput12.name = 'date_from';
+        newInput12.value = date_from;
+
+        newInput13 = document.createElement('input');
+        newInput13.type = 'hidden';
+        newInput13.name = 'date_to';
+        newInput13.value = date_to;
+
+        newInput14 = document.createElement('input');
+        newInput14.type = 'hidden';
+        newInput14.name = 'date_';
+        newInput14.value = date_;
+
         // Now put everything together...
         theForm.appendChild(newInput1);
         theForm.appendChild(newInput2);
@@ -329,6 +349,9 @@
         theForm.appendChild(newInput9);
         theForm.appendChild(newInput10);
         theForm.appendChild(newInput11);
+        theForm.appendChild(newInput12);
+        theForm.appendChild(newInput13);
+        theForm.appendChild(newInput14);
         // ...and it to the DOM...
         $('#hidden_form_container').empty();
         document.getElementById('hidden_form_container').appendChild(theForm);

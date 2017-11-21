@@ -262,7 +262,7 @@ border: 1px solid #d2d6de;border-radius: 4px;height:2em;">
 
             <div class="col-sm-2">
                 <label style=" padding-top:10px;" class="control-label">Date</label>
-                <input type="date" class="form-control" style="background-color: #fff; border: 1px solid #d2d6de; border-radius: 4px;height:2em;" value="<?php echo date('d/m/Y') ;?>" id="date_" >
+                <input type="date" class="form-control" style="background-color: #fff; border: 1px solid #d2d6de; border-radius: 4px;height:2em;" id="date_" >
             </div>
 
 
