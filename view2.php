@@ -118,11 +118,11 @@ $mCrudFunctions = new CrudFunctions();
         // if ($dataset_type == "Farmer") {
         include("include/dairyFilter.php");
 
-        echo "
-      <div class=\"right print_export container\">
-          <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
-          btn-fab btn-raised mdi-action-class\"></a>
-      </div>";
+//        echo "
+//      <div class=\"right print_export container\">
+//          <a hred=\"#export\" data-toggle=\"modal\" title=\"Export CSV\" data-target=\"#export\" class=\"btn btn-success
+//          btn-fab btn-raised mdi-action-class\"></a>
+//      </div>";
 
         include("include/preloader.php");
         include("include/empty.php");

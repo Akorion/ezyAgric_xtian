@@ -28,12 +28,22 @@ $clearing_expenditure = 0;
 $total_loans = 0;
 $total_rarmers = 0;
 $tp_motorcycle = 0; $tp_vehicle = 0;    $tp_bicycle = 0;    $tp_others = 0;
+$rushere_farmer_nos = array();  $milk_quantity = 0;
 
+$today = date("Y-m-d", strtotime('today'));
+$svndays = date("Y-m-d", strtotime('-1 day'));
+$milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
+$milk_periodic_data = json_decode($milk_data);
 //print_r($role, $branch);
 foreach ($rows as $row) {
     if($role == 1){
         $token = $_GET['token'];
         $category = $_GET['category'];
+
+        $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "biodata_phonenumber", 1);
+        if ( sizeof($rows_n) != 0) {
+            foreach ($rows_n as $rn) { array_push($rushere_farmer_nos, $rn['biodata_phonenumber']); }
+        }
 
         $total_acreage = 0;
         $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
@@ -80,6 +90,12 @@ foreach ($rows as $row) {
     else if($role == 2) {
         $token = $_GET['token'];
         $category = $_GET['category'];
+
+        $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id, biodata_phonenumber", "sacco_branch_name LIKE '$branch'");
+        if ( sizeof($rows_n) != 0) {
+//            $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+            foreach ($rows_n as $rn) { array_push($rushere_farmer_nos, $rn['biodata_phonenumber']); }
+        }
 
         $total_acreage = 0;
         $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
@@ -129,6 +145,12 @@ foreach ($rows as $row) {
         $token = $_GET['token'];
         $category = $_GET['category'];
 
+        $rows_n = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "id, 	biodata_phonenumber", "biodata_cooperative_name LIKE '$branch'");
+        if ( sizeof($rows_n) != 0) {
+//            $key = $util_obj->encrypt_decrypt("encrypt", $row['id']);
+            foreach ($rows_n as $rn) { array_push($rushere_farmer_nos, $rn['biodata_phonenumber']); }
+        }
+
         $total_acreage = 0;
         $dataset_id = $util_obj->encrypt_decrypt("decrypt", $_GET['token']);
 //        echo $dataset_id;
@@ -173,6 +195,17 @@ foreach ($rows as $row) {
         $tp_others += (int)$mCrudFunctions->get_count("$data_table", "mode_of_transport !='motorcycle' && mode_of_transport !='vehicle' && mode_of_transport !='bicycle' AND biodata_cooperative_name LIKE '$branch'");
         if($tp_others == 1) $tp_others = $tp_others." Farmer";
         else $tp_others = $tp_others." Farmers";
+    }
+}
+
+foreach ($milk_periodic_data as $milk_supply) {
+    $account = $milk_supply->account_no;
+    $mobile_no = substr($account, 6);
+
+    if($role == 1 || $role == 2 || $role == 3){
+        if(in_array($mobile_no, $rushere_farmer_nos)){
+            $milk_quantity += $milk_supply->milk_amount;
+        }
     }
 }
 
@@ -295,9 +328,9 @@ if (isset($_GET['token']) && $_GET['token'] != "" && isset($_GET['category']) &&
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <div class="x_panel tile  overflow_hidden">
-                            <h4 class="titles"><b>Total Farmers who got loans</b></h4>
+                            <h4 class="titles"><b>Quantity Of Milk Supplied Today</b></h4>
                             <div class="data">
-                                <a><b><?php echo $total_loans; ?></b></a>
+                                <a><b><?php echo $milk_quantity." Ltrs"; ?></b></a>
 
                             </div>
                         </div>
