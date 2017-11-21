@@ -660,6 +660,7 @@
             },
             success: function (data) {
                 $('#gender_graph').html(data);
+                $('#total_farmers').html('Farmer Analysis');
                 hideProgressBar();
             }
         });
@@ -671,6 +672,7 @@
         date_from = date_from_.value;
 
         $.ajax({
+            dataType: "json",
             type: "POST",
             url: "form_actions/get_milk_supplied_per_date.php",
             data: {
@@ -679,7 +681,7 @@
                 token: "date_range"
             },
             success: function (data) {
-                $('#line_graph').html(data);
+                $('#line_graph').highcharts(data);
                 hideProgressBar();
             }
         });

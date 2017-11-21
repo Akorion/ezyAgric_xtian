@@ -237,7 +237,7 @@
             <!--production data-->
 
             <!--production data-->
-            <div class="col-sm-2">
+            <div class="col-sm-2 hide">
                 <label style=" padding-top:10px;" for="inputPassword3" class="control-label">Village Agent</label>
                 <div>
                     <select id="sel_va" class="select2_single form-control">
@@ -248,7 +248,7 @@
             </div>
             <!--production data-->
 
-            <div class="col-sm-2">
+            <div class="col-sm-2 hide">
                 <label style=" padding-top:10px;" class="control-label">Age Range</label>
                 <div class="row" id="age">
                     <div class="col-sm-2">
@@ -264,7 +264,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-2">
+            <div class="col-sm-2 hide">
                 <label style=" padding-top:10px;" class="control-label">Age</label>
                 <input oninput="setage()" onblur="setage()" id="age_" type="number" class="form-control" name="min"
                        placeholder="Age"

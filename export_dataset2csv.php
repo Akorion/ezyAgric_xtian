@@ -10,7 +10,9 @@ $header="";
 $body="";
 
 if(isset($_POST['id'])&&$_POST['id']!=""){
-$id=$_POST['id'];
+    $id=$_POST['id'];
+    $role =  $_SESSION['role'];
+    $branch = $_SESSION['user_account'];
 
 $mCrudFunctions = new CrudFunctions();
 $util_obj= new Utilties();

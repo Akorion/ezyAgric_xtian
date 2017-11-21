@@ -121,7 +121,7 @@ class JSONModel
         return $response;
     }
 
-    public function get_column_graph($district, $no_farmers, $youth, $old, $type)
+    public function get_column_graph($district, $no_farmers, $youth, $old, $title)
     {
         $json['credits'] = array('enabled' => 0);
 
@@ -129,7 +129,7 @@ class JSONModel
 
         $json['chart'] = array('type' => 'column');
 
-        $json['title'] = array('text'=>'Number of farmers in districs');
+        $json['title'] = array('text'=>$title);
 
         $json['yAxis'] = array('MIN' => 0, 'title' => array('text' => 'Farmers'));
 

@@ -45,7 +45,6 @@ foreach ($rows as $row) {
         $calves = (int)$mCrudFunctions->get_sum("$data_table", "number_of_calves", "1");
         $bulls = (int)$mCrudFunctions->get_sum("$data_table", "number_of_bulls", "1");
         $total_cows = $cows +   $calves +    $bulls;
-//$total_cows
         $total_rarmers = (int)$mCrudFunctions->get_count("$data_table", "1");
 
         $total_lactating = (int)$mCrudFunctions->get_sum("$data_table", "lactating_cows", "1");

@@ -172,33 +172,33 @@ switch ($_POST["token"]) {
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 if($role == 1){
                     $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
-                        "biodata_farmer_location_farmer_subcounty AS district, COUNT(*) AS farmers, 
+                        "sacco_branch_name AS sacco, COUNT(*) AS farmers, 
                        SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) < 35 OR (2017-CONCAT(19,substring(biodata_age,-2,2))) = 35 THEN 1 ELSE 0 end) AS youth, 
-                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "1 GROUP by district ORDER by district ASC ");
+                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "1 GROUP by sacco ORDER by sacco ASC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($no_farmers, $sel['farmers']);
-                        array_push($district, $sel['district']);
+                        array_push($district, $sel['sacco']);
                         array_push($youth, $sel['youth']);
                         array_push($old, $sel['old']);
                     }
                 }elseif($role == 2){
                     $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
-                        "biodata_farmer_location_farmer_subcounty AS district, COUNT(*) AS farmers, 
+                        "biodata_cooperative_name AS cooperative, COUNT(*) AS farmers, 
                        SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) < 35 OR (2017-CONCAT(19,substring(biodata_age,-2,2))) = 35 THEN 1 ELSE 0 end) AS youth, 
-                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "sacco_branch_name LIKE '$branch' GROUP by district ORDER by district ASC ");
+                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "sacco_branch_name LIKE '$branch' GROUP by cooperative ORDER by cooperative ASC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($no_farmers, $sel['farmers']);
-                        array_push($district, $sel['district']);
+                        array_push($district, $sel['cooperative']);
                         array_push($youth, $sel['youth']);
                         array_push($old, $sel['old']);
                     }
                 } else{
                     $slected_rows = $mCrudFunctions->fetch_rows("dataset_" . $row['id'],
-                        "biodata_farmer_location_farmer_subcounty AS district, COUNT(*) AS farmers, 
+                        "biodata_farmer_location_farmer_village AS village, COUNT(*) AS farmers, 
                        SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) < 35 OR (2017-CONCAT(19,substring(biodata_age,-2,2))) = 35 THEN 1 ELSE 0 end) AS youth, 
-                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "biodata_cooperative_name LIKE '$branch' GROUP by district ORDER by district ASC ");
+                       SUM(CASE WHEN (2017-CONCAT(19,substring(biodata_age,-2,2))) > 35 THEN 1 ELSE 0 end) AS old ", "biodata_cooperative_name LIKE '$branch' GROUP by village ORDER by village ASC ");
 
                     foreach ($slected_rows as $sel) {
                         array_push($no_farmers, $sel['farmers']);
@@ -209,7 +209,9 @@ switch ($_POST["token"]) {
                 }
             }
         }
-        draw_graph($district, $no_farmers, $youth, $old, "column");
+        if($role == 1) draw_sacco_graph($district, $no_farmers, $youth, $old, "Number OF Farmers in Branches");
+        elseif ($role == 2) draw_branch_graph($district, $no_farmers, $youth, $old, "Number OF Farmers in Cooperatives");
+        else draw_cooperative_graph($district, $no_farmers, $youth, $old, "Number OF Farmers in Villages");
         break;
 
     case  "crops_grown" :
@@ -404,6 +406,49 @@ function draw_graph($district, $no_farmers, $youth, $old, $type)
     $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $type);
     $util_obj->deliver_response(200, 1, $data);
 }
+
+function draw_sacco_graph($district, $no_farmers, $youth, $old, $title)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    //converting a string array into an array of integers
+    $array_int = array_map(create_function('$value', 'return (int)$value;'), $no_farmers);
+    $old_int = array_map(create_function('$value', 'return (int)$value;'), $old);
+    $youth_int = array_map(create_function('$value', 'return (int)$value;'), $youth);
+
+    $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $title);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
+function draw_branch_graph($district, $no_farmers, $youth, $old, $title)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    //converting a string array into an array of integers
+    $array_int = array_map(create_function('$value', 'return (int)$value;'), $no_farmers);
+    $old_int = array_map(create_function('$value', 'return (int)$value;'), $old);
+    $youth_int = array_map(create_function('$value', 'return (int)$value;'), $youth);
+
+    $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $title);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
+function draw_cooperative_graph($district, $no_farmers, $youth, $old, $title)
+{
+    $json_model_obj = new JSONModel();
+    $util_obj = new Utilties();
+
+    //converting a string array into an array of integers
+    $array_int = array_map(create_function('$value', 'return (int)$value;'), $no_farmers);
+    $old_int = array_map(create_function('$value', 'return (int)$value;'), $old);
+    $youth_int = array_map(create_function('$value', 'return (int)$value;'), $youth);
+
+    $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $title);
+    $util_obj->deliver_response(200, 1, $data);
+}
+
 function draw_climate_graph($district, $used_action, $no_action, $type){
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
