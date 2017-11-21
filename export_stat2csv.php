@@ -213,7 +213,7 @@ if(isset($_POST['id'])&&isset($_POST['district'])
                 $body .= $header;
 
                 if(sizeof($rows) > 0){
-                    $i = 1;
+                    $i = 0;
                     foreach($bran_mlk_spd as $fdata){
                         $district = $branches[$i];
                         $frequency = $fdata;
@@ -1579,7 +1579,7 @@ if(isset($_POST['id'])&&isset($_POST['district'])
                 $body .= $header;
 
                 if(sizeof($rows) > 0){
-                    $i = 1;
+                    $i = 0;
                     foreach($bran_mlk_spd as $fdata){
                         $district = $branches[$i];
                         $frequency = $fdata;
@@ -2940,7 +2940,7 @@ if(isset($_POST['id'])&&isset($_POST['district'])
                 $body .= $header;
 
                 if(sizeof($rows) > 0){
-                    $i = 1;
+                    $i = 0;
                     foreach($bran_mlk_spd as $fdata){
                         $district = $branches[$i];
                         $frequency = $fdata;
