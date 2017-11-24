@@ -414,7 +414,6 @@ p, h6
 }
 
 span.img{
-
     margin-top: -130px;
     overflow: hidden;
     height: 150px;
@@ -422,6 +421,13 @@ span.img{
     border: 5px solid #fff;
     display: block;
 }
+span.img img{
+
+    height: 150px;
+    width:  100%;
+
+}
+
 p{
     color:#777;
     max-width:300px;}
@@ -534,10 +540,6 @@ h5,h3{
 #card1 img{
     width: 100% !important;
 }
-
-
-
-
 
 .card{
     box-shadow:0 0 2px rgba(0,0,0,0.2)}
