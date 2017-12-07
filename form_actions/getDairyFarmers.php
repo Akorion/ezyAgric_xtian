@@ -558,62 +558,64 @@ function output($id, $where)
     $mCrudFunctions = new CrudFunctions();
 
     $client_id = $_SESSION["client_id"];
+    $role =  $_SESSION['role'];
 
     $dts = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id'");
-
-//    $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
-    $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id =$id ");
+//    echo $id;
+//    $id_ = $util_obj->encrypt_decrypt("encrypt", $id);
+    $dataset = $mCrudFunctions->fetch_rows("datasets_tb", "*", " id = $id ");
     $dataset_name = $dataset[0]["dataset_name"];
     $dataset_type = $dataset[0]["dataset_type"];
 
     $table = "dataset_" . $id;
-    foreach ($dts as $dt){
-        $dataset_ = $util_obj->encrypt_decrypt("encrypt", $dt['id']);
+    if($role == 1){
+//        foreach ($dts as $dt){
+            $dataset_ = $util_obj->encrypt_decrypt("encrypt", $id);
 
-        $rows = $mCrudFunctions->fetch_rows( "dataset_" .$dt['id'], "*", $where);
+            $rows = $mCrudFunctions->fetch_rows( "dataset_" .$id, "*", $where);
 
-        if ($dataset_type == "Farmer") {
-            if (sizeof($rows) != 0) {
+            if ($dataset_type == "Farmer") {
+                if (sizeof($rows) != 0) {
 
 //                echo "<p hidden='hidden' id='check_contect'></p>";
-                $counter = 1;
-                //            echo "inside table ........";
-                foreach ($rows as $row) {
+                    $counter = 1;
+                    //            echo "inside table ........";
+                    foreach ($rows as $row) {
 
-                    //                print_r($row);
-                    $real_id = $row['id'];
+                        //                print_r($row);
+                        $real_id = $row['id'];
 
-                    $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
-                    $name = $row['biodata_first_name'];
-                    //                echo $name;
-                    $last_name = $row['biodata_last_name'];
-                    $gender = $row['biodata_gender'];
-                    $date = $row['biodata_age'];
-                    $district = $row['biodata_farmer_location_farmer_district'];
-                    $milk = '';
-                    $last_trans_date = '';
-                    $phone_number = $row['biodata_phonenumber'];
-                    $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
-                    $lactating_cows = $row['lactating_cows'];
-                    $age = explode('/',$date);
-                    $farmer_age = 2017 - $age[2];
-                    //                echo  "<br>".$farmer_age;
+                        $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+                        $name = $row['biodata_first_name'];
+                        //                echo $name;
+                        $last_name = $row['biodata_last_name'];
+                        $gender = $row['biodata_gender'];
+                        $date = $row['biodata_age'];
+                        $district = $row['biodata_farmer_location_farmer_district'];
+                        $milk = '';
+                        $last_trans_date = '';
+                        $phone_number = $row['biodata_phonenumber'];
+                        $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
+                        $lactating_cows = $row['lactating_cows'];
+                        $age = explode('/',$date);
+                        $farmer_age = 2017 - $age[2];
+                        //                echo  "<br>".$farmer_age;
 
-                    //                print_r($name);
-                    //                $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['gender']));
-                    //                $dob = $util_obj->remove_apostrophes($row['age']);
-                    ////                $picture = $util_obj->remove_apostrophes($row['farmer_image']);
-                    //                $district = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['district']));
-                    //                $phone_number = $util_obj->remove_apostrophes($row['phonenumber']);
-                    //
-                    //                //$uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
-                    //                $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
-                    //$name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
+                        //                print_r($name);
+                        //                $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['gender']));
+                        //                $dob = $util_obj->remove_apostrophes($row['age']);
+                        ////                $picture = $util_obj->remove_apostrophes($row['farmer_image']);
+                        //                $district = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['district']));
+                        //                $phone_number = $util_obj->remove_apostrophes($row['phonenumber']);
+                        //
+                        //                //$uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
+                        //                $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
+                        //$name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
 
-                    ////////////////////////////////////////////////////////////////////////
-                    //                if ($_SESSION['client_id'] == 1) {
-                    echo "<tr>";
-                    echo "
+                        ////////////////////////////////////////////////////////////////////////
+                        //                if ($_SESSION['client_id'] == 1) {
+                        echo "<tr>";
+                        echo "
                             <td>$counter</td>
     
                       <td style='line-height:12pt; align:center'>$name $last_name</td>
@@ -624,16 +626,140 @@ function output($id, $where)
                       <td style='line-height:12pt; align:center'>$lactating_cows</td>
                      ";
 
-                    echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
+                        echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
                            </td>";
-                    echo "</tr>";
-                    $counter++;
+                        echo "</tr>";
+                        $counter++;
+                    }
                 }
             }
-        }
 
+//        }
     }
+    elseif($role == 2) {
+        foreach ($dts as $dt){
+            $dataset_ = $util_obj->encrypt_decrypt("encrypt", $dt['id']);
 
+            $rows = $mCrudFunctions->fetch_rows( "dataset_" .$dt['id'], "*", $where);
+
+            if ($dataset_type == "Farmer") {
+                if (sizeof($rows) != 0) {
+
+//                echo "<p hidden='hidden' id='check_contect'></p>";
+                    $counter = 1;
+                    //            echo "inside table ........";
+                    foreach ($rows as $row) {
+
+                        //                print_r($row);
+                        $real_id = $row['id'];
+
+                        $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+                        $name = $row['biodata_first_name'];
+                        //                echo $name;
+                        $last_name = $row['biodata_last_name'];
+                        $gender = $row['biodata_gender'];
+                        $date = $row['biodata_age'];
+                        $district = $row['biodata_farmer_location_farmer_district'];
+                        $milk = '';
+                        $last_trans_date = '';
+                        $phone_number = $row['biodata_phonenumber'];
+                        $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
+                        $lactating_cows = $row['lactating_cows'];
+                        $age = explode('/',$date);
+                        $farmer_age = 2017 - $age[2];
+                        //                echo  "<br>".$farmer_age;
+
+                        //                print_r($name);
+                        //                $gender = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['gender']));
+                        //                $dob = $util_obj->remove_apostrophes($row['age']);
+                        ////                $picture = $util_obj->remove_apostrophes($row['farmer_image']);
+                        //                $district = $util_obj->captalizeEachWord($util_obj->remove_apostrophes($row['district']));
+                        //                $phone_number = $util_obj->remove_apostrophes($row['phonenumber']);
+                        //
+                        //                //$uuid = $util_obj->remove_apostrophes($row['meta_instanceID']);
+                        //                $age_ = $util_obj->getAge($dob, "Africa/Nairobi");
+                        //$name = strlen($name) <= 15 ? $name : substr($name, 0, 14) . "...";
+
+                        ////////////////////////////////////////////////////////////////////////
+                        //                if ($_SESSION['client_id'] == 1) {
+                        echo "<tr>";
+                        echo "
+                            <td>$counter</td>
+    
+                      <td style='line-height:12pt; align:center'>$name $last_name</td>
+                      <td style='line-height:12pt; align:center'>$farmer_age</td>
+                      <td style='line-height:12pt; align:center'>$gender</td>
+                      <td style='line-height:12pt; align:center'>$phone_number</td>
+                      <td style='line-height:12pt; align:center'>$cows</td>
+                      <td style='line-height:12pt; align:center'>$lactating_cows</td>
+                     ";
+
+                        echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
+                           </td>";
+                        echo "</tr>";
+                        $counter++;
+                    }
+                }
+            }
+
+        }
+    }
+    else {
+        foreach ($dts as $dt){
+            $dataset_ = $util_obj->encrypt_decrypt("encrypt", $dt['id']);
+
+            $rows = $mCrudFunctions->fetch_rows( "dataset_" .$dt['id'], "*", $where);
+
+            if ($dataset_type == "Farmer") {
+                if (sizeof($rows) != 0) {
+
+//                echo "<p hidden='hidden' id='check_contect'></p>";
+                    $counter = 1;
+                    //            echo "inside table ........";
+                    foreach ($rows as $row) {
+
+                        //                print_r($row);
+                        $real_id = $row['id'];
+
+                        $real_id = $util_obj->encrypt_decrypt("encrypt", $real_id);
+                        $name = $row['biodata_first_name'];
+                        //                echo $name;
+                        $last_name = $row['biodata_last_name'];
+                        $gender = $row['biodata_gender'];
+                        $date = $row['biodata_age'];
+                        $district = $row['biodata_farmer_location_farmer_district'];
+                        $milk = '';
+                        $last_trans_date = '';
+                        $phone_number = $row['biodata_phonenumber'];
+                        $cows = $row['number_of_cows'] + $row['number_of_bulls']+ $row['number_of_calves'];
+                        $lactating_cows = $row['lactating_cows'];
+                        $age = explode('/',$date);
+                        $farmer_age = 2017 - $age[2];
+
+                        ////////////////////////////////////////////////////////////////////////
+                        //                if ($_SESSION['client_id'] == 1) {
+                        echo "<tr>";
+                        echo "
+                            <td>$counter</td>
+    
+                      <td style='line-height:12pt; align:center'>$name $last_name</td>
+                      <td style='line-height:12pt; align:center'>$farmer_age</td>
+                      <td style='line-height:12pt; align:center'>$gender</td>
+                      <td style='line-height:12pt; align:center'>$phone_number</td>
+                      <td style='line-height:12pt; align:center'>$cows</td>
+                      <td style='line-height:12pt; align:center'>$lactating_cows</td>
+                     ";
+
+                        echo " <td> <a class='btn btn-success' href=\"dairyDetails.php?s=$dataset_&token=$real_id&type=$dataset_type\" style=\"color:#FFFFFF; padding: 8px; margin: 0;\">View Details</a>
+                           </td>";
+                        echo "</tr>";
+                        $counter++;
+                    }
+                }
+            }
+
+        }
+    }
 }
 
 ?>

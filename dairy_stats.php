@@ -23,11 +23,7 @@
 <div class="container farmer">
     <!--include filter here-->
     <?php
-//    if($_SESSION["account_name"] == "Rushere SACCO") {
-//        include("include/dairy_filter.php");
-////        header("Location: include/dairy_filter.php");
-//    } else
-        include("include/stats_filter.php");
+        include("include/dairy_filter.php");
     ##include("include/filtered.php");
     ?>
 
@@ -36,7 +32,6 @@
   <div class=\"right print_export\">
   <a class=\"btn btn-success btn-fab btn-raised mdi-action-class\" onclick=\"Export2Csv();\"  title=\" Export CSV\"></a>
 </div>";
-
 
     ?>
     <div class="row stat ">
@@ -76,13 +71,12 @@
             </div>
         </div>
 
-
         <div class="col-md-4">
 
             <div class="row">
                 <div class="col-md-12">
                     <div class="graph_box h4" style="margin-top: 0px;background: rgba(10,134,48,0.8); color: white;">
-                       <center> Total farmers : <span id="total_farmers"></span></center>
+                        <center> Total farmers : <span id="total_farmers"></span></center>
                     </div>
                     <br>
                     <div id="gender_graph" class="graph_box" style="min-height: 450px;">
@@ -99,12 +93,9 @@
             </div>
         </div>
 
-
     </div>
 
-
 </div>
-
 
 <div id="hidden_form_container">
 </div>
@@ -118,7 +109,7 @@
         hideProgressBar();
         //hideempty();
         getDatasets();
-
+//        sel_date();
     });
 
     function getDatasets() {
@@ -157,7 +148,6 @@
         });
 
     }
-
 
     function loadParish() {
 
@@ -224,7 +214,6 @@
         });
     }
 
-
     function loadDistricts() {
 
         var dataset_id = document.getElementById("sel_datasets");
@@ -242,6 +231,7 @@
         });
 
     }
+
     function Export2Csv() {
 
         var dataset_id = document.getElementById("sel_datasets");
@@ -264,9 +254,14 @@
         age_max = document.getElementById("age_max").value;
         age = document.getElementById("age_").value;
 
+        var date_from = document.getElementById("date_from").value;
+        var date_to = document.getElementById("date_to").value;
+        var date_ = document.getElementById("date_").value;
+
         va = document.getElementById('sel_va').value;
         var theForm, newInput1, newInput2, newInput3, newInput4;
         var newInput5, newInput6, newInput7, newInput8, newInput9, newInput10, newInput11;
+        var newInput12, newInput13, newInput14;
         // Start by creating a <form>
         theForm = document.createElement('form');
         theForm.action = 'export_stat2csv.php';
@@ -327,6 +322,21 @@
         newInput11.name = 'va';
         newInput11.value = va;
 
+        newInput12 = document.createElement('input');
+        newInput12.type = 'hidden';
+        newInput12.name = 'date_from';
+        newInput12.value = date_from;
+
+        newInput13 = document.createElement('input');
+        newInput13.type = 'hidden';
+        newInput13.name = 'date_to';
+        newInput13.value = date_to;
+
+        newInput14 = document.createElement('input');
+        newInput14.type = 'hidden';
+        newInput14.name = 'date_';
+        newInput14.value = date_;
+
         // Now put everything together...
         theForm.appendChild(newInput1);
         theForm.appendChild(newInput2);
@@ -339,6 +349,9 @@
         theForm.appendChild(newInput9);
         theForm.appendChild(newInput10);
         theForm.appendChild(newInput11);
+        theForm.appendChild(newInput12);
+        theForm.appendChild(newInput13);
+        theForm.appendChild(newInput14);
         // ...and it to the DOM...
         $('#hidden_form_container').empty();
         document.getElementById('hidden_form_container').appendChild(theForm);
@@ -419,6 +432,7 @@
         // ...and submit it
         theForm.submit();
     }
+
     function getProductionFilter() {
 
         var dataset_id = document.getElementById("sel_datasets");
@@ -439,6 +453,8 @@
     function filterDATA() {
         showProgressBar();
         // hideempty();
+        var date_ = document.getElementById("date_");
+        date = date_.value;
         var dataset_id = document.getElementById("sel_datasets");
         id = dataset_id.value;
         var parish_ = document.getElementById("sel_parish");
@@ -476,11 +492,12 @@
                 parish: parish,
                 village: village,
                 production: production,
-                gender: gender
+                gender: gender,
+                date: date
             },
             success: function (data) {
                 // window.alert(va);
-                FormLineGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender);
+                FormLineGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender, date);
             }
 
         });
@@ -507,7 +524,7 @@
 <script type="text/javascript">
 
 
-    function FormLineGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender) {
+    function FormLineGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender, date) {
 
         $.ajax({
             type: "POST",
@@ -524,14 +541,16 @@
                 parish: parish,
                 village: village,
                 production: production,
-                gender: gender
+                gender: gender,
+//                date: date
             },
             success: function (data) {
                 if (data != 0) {
                     $('#line_graph').highcharts(data);
 
-                    FormGenderGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender);
+                    FormGenderGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender, date);
                     FormProductionGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender);
+//                    sel_date(id, va, age_min, age_max, age, district, country, parish, village, production, gender, date);
 
                 }
                 else {
@@ -547,8 +566,7 @@
 
     }
 
-
-    function FormGenderGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender) {
+    function FormGenderGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender, date) {
 
         $.ajax({
             type: "POST",
@@ -566,6 +584,7 @@
                 village: village,
                 production: production,
                 gender: gender
+//                date: date
             },
             success: function (data) {
 
@@ -574,7 +593,7 @@
                 var male = data.series[0].data[0][1];
                 var female = data.series[0].data[1][1];
 
-                    $('#total_farmers').html(male+female);
+                $('#total_farmers').html(male+female);
 //                    if($('#total_farmers').val() < 1){
 //                        var ttl_farmers = data.series[0].data[2][1];
 //                        $('#total_farmers').html(ttl_farmers);
@@ -587,7 +606,6 @@
     }
 
     function FormProductionGraph(id, va, age_min, age_max, age, district, country, parish, village, production, gender) {
-
 
         $.ajax({
             type: "POST",
@@ -616,7 +634,6 @@
 
     }
 
-
     $("#sel_datasets").change(function () {
         $('#sel_va').val("all");
         loadDistricts();
@@ -633,9 +650,11 @@
     $("#sel_gender").change(function () {
         filterDATA();
     });
+
     $("#sel_production_data").change(function () {
         filterDATA();
     });
+
     $("#sel_parish").change(function () {
         filterDATA();
     });
@@ -651,6 +670,44 @@
     $("#sel_va").change(function () {
         //window.alert(2);
         filterDATA();
+    });
+
+    $("#date_").change(function () {
+        var date_ = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "form_actions/get_milk_supplied_per_date.php",
+            data: {
+                date: date_,
+                token: "specific_date"
+            },
+            success: function (data) {
+                $('#gender_graph').html(data);
+                $('#total_farmers').html('Farmer Analysis');
+                hideProgressBar();
+            }
+        });
+    });
+
+    $("#date_to").change(function () {
+        var date_to_ = $(this).val();
+        var date_from_ = document.getElementById('date_from');
+        date_from = date_from_.value;
+
+        $.ajax({
+            dataType: "json",
+            type: "POST",
+            url: "form_actions/get_milk_supplied_per_date.php",
+            data: {
+                date_to: date_to_,
+                date_from: date_from,
+                token: "date_range"
+            },
+            success: function (data) {
+                $('#line_graph').highcharts(data);
+                hideProgressBar();
+            }
+        });
     });
 
 </script>
@@ -688,7 +745,6 @@
 
     }
 
-
     function setmaxrange() {
 
         age_min = parseInt(document.getElementById("age_min").value);
@@ -717,7 +773,6 @@
         filterDATA();
 
     }
-
 
     function setage() {
 
