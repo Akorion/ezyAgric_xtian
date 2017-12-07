@@ -113,37 +113,19 @@ $path = $_SERVER["PHP_SELF"];
 
                     } ?>
                 </li>
-
-                <li class="dropdown">
-                    <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
-                                class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <?php
-                        if ($_SESSION["account_name"] == "Rushere SACCO"){
-                            echo "<li><a href='./dairy_stats.php'>Farmers</a></li>";
-                        } else {
-                            echo "<li><a href='./stat_farmers.php'>Farmers</a></li>";
-                        }
-                        ?>
-<!--                        <li><a href="./stat_farmers.php">Farmers</a></li>-->
-                        <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
-                    </ul>
-                </li>
                 <?php
                 if ($_SESSION["client_id"] != 22){
-                ?>
+                    ?>
                     <li class="dropdown">
                         <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
                                     class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="./stat_farmers.php">Farmers</a></li>
-                            <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
                         </ul>
                     </li>
                 <?php
                         }
                         ?>
-
             </ul>
             <form class="navbar-form navbar-left" style="font-size:18px;">
                 <?php
@@ -153,9 +135,6 @@ $path = $_SERVER["PHP_SELF"];
                     case  "view.php":
                         echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
                         break;
-//                    case "dashboardAll.php":
-//                        echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
-//                        break;
                 }
 
                 ?>
