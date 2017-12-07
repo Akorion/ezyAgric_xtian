@@ -484,10 +484,14 @@ switch ($_POST["token"]) {
         foreach ($rows as $row) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
-            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
-            if($acreage < 1){ $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1); }
-            if($_SESSION['client_id'] == 5) { $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
-            if($_SESSION['account_name'] == "Kiima Foods") {
+            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . $row['id'])[0]['ttl_acerage'];
+            if ($acreage < 1) {
+                $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_total_land_under_production", 1);
+            }
+            if ($_SESSION['client_id'] == 5) {
+                $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1);
+            }
+            if ($_SESSION['account_name'] == "Kiima Foods") {
                 $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_maize_production_land", 1);
                 $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "crop_production_data_money_used_for_fertilizers", 1);
             }
@@ -509,7 +513,9 @@ switch ($_POST["token"]) {
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
-                if($_SESSION["account_name"] == "Insurance"){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
+                if ($_SESSION["account_name"] == "Insurance") {
+                    $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "1");
+                }
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
@@ -602,7 +608,7 @@ switch ($_POST["token"]) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
             $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_acreage", 1);
-            if($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd" || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
+            if ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd" || $_SESSION["account_name"] == "Insurance") $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
 //            elseif($_SESSION['client_id'] == 5) { $acerage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1); }
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
@@ -623,7 +629,9 @@ switch ($_POST["token"]) {
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
-                if($_SESSION["account_name"] == "Insurance"){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
+                if ($_SESSION["account_name"] == "Insurance") {
+                    $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "1");
+                }
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
@@ -676,6 +684,38 @@ switch ($_POST["token"]) {
                    </div>
                  </div>";
         break;
+    case  "soil_test_dash":
+
+        $cash_given_out = $mCrudFunctions->get_count("sample_analysis_results", "1");
+        $total_pits = $mCrudFunctions->get_distinct_count("soil_profiles", "COUNT(DISTINCT(hole))", "1");
+
+        echo "
+                 <div class=\"col-md-6 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color:#822; padding:15px; border-radius:2px;color:#fff; margin-top: -20px;\">
+                           <i class=\"fa fa-money fa-3x\"></i>
+                       </div>
+                       <div class=\"col-md-9\">
+                       <h4> <a href='#'> Samples </a> </h4>
+                        
+                           <a style=\"font-size:15px; color:blue\"><b>Total samples: " . number_format($cash_given_out) . "</b></a> <br> <br>
+                       </div>
+                   </div>
+                 </div>
+                 
+                 <div class=\"col-md-6 col-sm-4 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+                   <div class=\"x_panel tile  overflow_hidden\">
+                       <div class=\"col-md-3\" style=\"background-color:#3a3; padding:10px; border-radius:2px;color:#fff; margin-top: -20px;\">
+                           <span class=\"fa fa-users fa-3x\"></span>
+                       </div>
+                       <div class=\"col-md-9\">
+                           <h4> <a href='#'> Holes/Pits </a> </h4>
+                         <a style=\"font-size:15px; color:blue\"><b>Total Holes: ".$total_pits."</b></a> <br>  <br>
+
+                       </div>
+                   </div>
+                 </div>";
+        break;
 
     case  "insurance_dash":
         session_start();
@@ -693,7 +733,14 @@ switch ($_POST["token"]) {
         $yield = 0;
         $insured = 0;
         $not_insured = 0;
-        $value_of_insured_yield=0;  $premium=0; $levy=0;    $vat=0; $subsidy=0; $farmer_acreage=0; $real_premium=0; $total_premium=0;
+        $value_of_insured_yield = 0;
+        $premium = 0;
+        $levy = 0;
+        $vat = 0;
+        $subsidy = 0;
+        $farmer_acreage = 0;
+        $real_premium = 0;
+        $total_premium = 0;
 
         foreach ($rows as $row) {
             $type = $row['dataset_type'];
@@ -701,17 +748,20 @@ switch ($_POST["token"]) {
             $key = $util_obj->encrypt_decrypt("encrypt", $dataset_id);
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
-            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=".$row['id'])[0]['ttl_acerage'];
-            if($acreage < 1){ $acreage += $mCrudFunctions->get_sum("dataset_".$row['id'], "production_data_land_size", 1); }
+            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . $row['id'])[0]['ttl_acerage'];
+            if ($acreage < 1) {
+                $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "production_data_land_size", 1);
+            }
 
-            $results = $mCrudFunctions->fetch_rows("dataset_".$row['id'], "*", "1");
+            $results = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "*", "1");
 
-            foreach ($results as $res){
+            foreach ($results as $res) {
                 $uuid = $util_obj->remove_apostrophes($res['meta_instanceID']);
                 $price_per_kg = $util_obj->remove_apostrophes($res['production_data_price_per_kg']);
                 $insured_yield = $util_obj->remove_apostrophes($res['production_data_insured_yield_in_kgs']);
 
-                $acares = array();   $farmer_acreage = 0;
+                $acares = array();
+                $farmer_acreage = 0;
                 $gardens_table = "garden_" . $row['id'];
                 if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
                     $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
@@ -745,8 +795,11 @@ switch ($_POST["token"]) {
                             $premium = 0.05 * $value_of_insured_yield;
                             $levy = 0.005 * $premium;
                             $vat = 0.18 * ($premium + $levy);
-                            if($farmer_acreage <= 5) { $subsidy = 0.5 * $premium; }
-                            else{ $subsidy = 0.3 * $premium; }
+                            if ($farmer_acreage <= 5) {
+                                $subsidy = 0.5 * $premium;
+                            } else {
+                                $subsidy = 0.3 * $premium;
+                            }
                             $real_premium = ($premium - $subsidy) + $levy + $vat;
                             $total_premium += $real_premium;
                         }
@@ -758,8 +811,11 @@ switch ($_POST["token"]) {
                     $premium = 0.05 * $value_of_insured_yield;
                     $levy = 0.005 * $premium;
                     $vat = 0.18 * ($premium + $levy);
-                    if($farmer_acreage <= 5) { $subsidy = 0.5 * $premium; }
-                    else{ $subsidy = 0.3 * $premium; }
+                    if ($farmer_acreage <= 5) {
+                        $subsidy = 0.5 * $premium;
+                    } else {
+                        $subsidy = 0.3 * $premium;
+                    }
                     $real_premium = ($premium - $subsidy) + $levy + $vat;
                     $total_premium += $real_premium;
                 }
@@ -793,7 +849,9 @@ switch ($_POST["token"]) {
 
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
-                if($_SESSION["account_name"] == "Insurance"){ $insured += $mCrudFunctions->get_count("dataset_".$row['id'], "1"); }
+                if ($_SESSION["account_name"] == "Insurance") {
+                    $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "1");
+                }
             }
             if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
                 $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);

@@ -12,7 +12,7 @@
 }
 
 .cssload-speeding-wheel {
-	width: 49px;
+	width: 40px;
 	height: 49px;
 	margin: 40px auto;
 	border: 3px solid rgb(255,255,255);

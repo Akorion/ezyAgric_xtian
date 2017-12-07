@@ -58,7 +58,7 @@ $path = $_SERVER["PHP_SELF"];
     <link rel="stylesheet" type="text/css" href="datepicker/css/bootstrap-datepicker3.css">
 
     <!-- Datatables -->
-    <link rel="stylesheet" type="text/css" href="css/dataTables.min.css" >
+    <link rel="stylesheet" type="text/css" href="css/dataTables.min.css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -68,7 +68,7 @@ $path = $_SERVER["PHP_SELF"];
     <title>EZY AGRIC</title>
     <script type="text/javascript" src="js/sorttable.js"></script>
 
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>-->
 </head>
 <body>
 <div class="navbar navbar-default static-top" role="navigation">
@@ -91,25 +91,34 @@ $path = $_SERVER["PHP_SELF"];
             <ul class="nav navbar-nav">
                 <li class="active"><?php
 
-                    if($_SESSION["account_name"] == "Insurance"){
+                    if ($_SESSION["account_name"] == "Insurance") {
                         echo "<a href=\"./insuranceDash.php\">Dashboard</a>";
-                    } elseif ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd"){
+                    } elseif ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd") {
                         echo "<a href='./acpudash.php'>Dashboard</a>";
-                    } elseif ($_SESSION["account_name"] == "Rushere SACCO"){
+                    } elseif ($_SESSION["account_name"] == "Rushere SACCO") {
                         echo "<a href='./dairyDashboard.php'>Dashboard</a>";
-                    }
-                    else {
+                    } elseif ($_SESSION["client_id"] == 22) {
+                        echo "<a href='#'>Dashboard</a>";
+                    } else {
                         echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
-                    } ?>
+                    }
+                    ?>
                 </li>
-                <li class="dropdown">
-                    <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
-                                class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="./stat_farmers.php">Farmers</a></li>
-                        <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
-                    </ul>
-                </li>
+                <?php
+                if ($_SESSION["client_id"] != 22){
+                ?>
+                    <li class="dropdown">
+                        <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
+                                    class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./stat_farmers.php">Farmers</a></li>
+                            <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
+                        </ul>
+                    </li>
+                <?php
+                        }
+                        ?>
+
             </ul>
             <form class="navbar-form navbar-left" style="font-size:18px;">
                 <?php
