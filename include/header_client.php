@@ -19,10 +19,6 @@ if (!isset($_SESSION['client_id'])) {
 
 $path = $_SERVER["PHP_SELF"];
 
-//$connect = mysqli_connect("localhost","root","","akorionc_ezyagric");
-//$query = "select biodata_farmer_gender, count(*) as number from dataset_67 GROUP BY biodata_farmer_gender";
-//$result = mysqli_query($connect,$query)or die("not querying");
-
 ?>
 <html>
 <head>
@@ -114,12 +110,10 @@ $path = $_SERVER["PHP_SELF"];
                         echo "<a href='#'>Dashboard</a>";
                     } else {
                         echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
-<<<<<<< HEAD
-                    }
-                    ?>
-=======
+
                     } ?>
                 </li>
+
                 <li class="dropdown">
                     <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
                                 class="caret"></b></a>
@@ -134,7 +128,6 @@ $path = $_SERVER["PHP_SELF"];
 <!--                        <li><a href="./stat_farmers.php">Farmers</a></li>-->
                         <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
                     </ul>
->>>>>>> master
                 </li>
                 <?php
                 if ($_SESSION["client_id"] != 22){
