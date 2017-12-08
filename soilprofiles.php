@@ -38,56 +38,11 @@
         width: 100%;
         padding-right: 0
     }
-
-    .right_col {
-        padding: 10px !important;
+    #soil_sample_profiles{
+        background-color: lightgray; padding: 10px;
     }
-
-    .navbar-right {
-        margin-right: 0;
-    }
-
-    .tile {
-        border-radius: 6px;
-    }
-
-    .x_panel {
-        position: relative;
-        width: 100%;
-        margin-bottom: 10px;
-        padding: 10px 17px;
-        display: inline-block;
-        background: #fff;
-        border: 1px solid #E6E9ED;
-        -webkit-column-break-inside: avoid;
-        -moz-column-break-inside: avoid;
-        column-break-inside: avoid;
-        opacity: 1;
-        -moz-transition: all .2s ease;
-        -o-transition: all .2s ease;
-        -webkit-transition: all .2s ease;
-        -ms-transition: all .2s ease;
-        transition: all .2s ease;
-    }
-
-    .x_title {
-        border-bottom: 2px solid #E6E9ED;
-        padding: 1px 5px 6px;
-        margin-bottom: 10px;
-    }
-
-    .x_titles {
-        border-bottom: 2px solid #E6E9ED;
-        padding: 1px 5px 6px;
-
-        margin-bottom: 10px;
-        margin-left: 13px;
-        width: 98%;
-    }
-
-    .x_title .filter {
-        width: 40%;
-        float: right;
+    #soil_samples{
+        background-color: lightgray; padding: 10px;
     }
 
     .x_title h2 {
@@ -107,14 +62,6 @@
         color: #BDBDBD;
     }
 
-    .x_content {
-        padding: 0 5px 6px;
-        position: relative;
-        width: 100%;
-        float: left;
-        clear: both;
-        margin-top: 5px;
-    }
 
     .x_content h4 {
         font-size: 16px;
@@ -125,37 +72,68 @@
         padding-bottom: 7px;
     }
 
-    .modal-title {
-        margin: 0;
-        line-height: 1.42857143;
-    }
-
-    .demo-placeholder {
-        height: 280px;
-    }
-
-    #dataset {
-        background: #ffffff;
-        padding-top: 15px;
-    }
-
-    #data_2 {
-        margin-top: -4.5em;
-    }
-
-    .move_data {
-        margin-left: 2em !important;
-    }
 
 </style>
 
 <?php include "./include/breadcrumb.php" ?>
 
-<div class="container-fluid">
-    <div class="col-md-12 col-sm-4 col-xs-12">
-        <div id="outgrower_dash" class="row" style='background-color: #F2F2F2; padding-top: 15px;'>
+<div class="container-fluid" style="padding:15px; border-radius:2px; margin-top: -20px;">
+    <div class="col-md-12 col-sm-4 col-xs-12" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
+        <div class="col-md-5">
+            <h2>Profile</h2>
+            <table class="table table-hover table-bordered">
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        Jim Tersteeg
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Farming District
+                    </td>
+                    <td>
+                        Mubende
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Crop
+                    </td>
+                    <td>
+                        Coffee
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Acreage
+                    </td>
+                    <td>
+                        80
+                    </td>
 
+                </tr>
+            </table>
         </div>
+        <div class="col-md-5 vertical-center" style="text-align: justify; height: auto; margin-top: 1px; padding: 4px">
+            <h2>Recomendation</h2>
+            In conclusion, as I earlier communicated 80% of land doesn’t have rocks as you were interested to
+            know but the 20%  has stone particles  starting at 1.5ft  which may not pose a big threat to rooting
+            system of coffee. On soil fertility, the pH is low which affects the availability and uptake of plant
+            nutrients. Also  major nutrients N, P, K, Ca, Mg  are low. This means that there is a need to improve
+            the nutrient content  by use of organic  manure  and inorganic fertilizer.    Use of agricultural lime can
+            improve soil  pH.  Liming can be done at least  3 months before planting.  However,  coffee can thrive
+            in the pH of 4.5
+        </div>
+        <div class="col-md-2">
+            <a href="./uploads/soil-sample-results.xls">
+<img src="images/downloadarrow.png" style="width: 60%; margin-top: 50%"/>
+            Download as pdf
+            </a>
+        </div>
+
     </div>
 </div>
 
@@ -168,11 +146,86 @@ include("include/preloader.php");
         <div id="soil_samples" class="col-lg-8" style='min-height:300px; padding-top: 10px;'>
             No samples
         </div>
-        <div class="col-md-4 vertical-center" style="background: teal; color: white; text-align: justify; height: auto; padding-top: 20px;
-   padding-bottom: 20px; margin-top: 10%">
-            The soils are generally acidic and low in major nutrients N,P,K,Ca,Mg meaning that the use of agricultural
-            lime is a must before any crop ammendment
-            can be done. Liming should be done atleast 3 months before planting.
+        <div class="col-md-4 vertical-center" style="">
+           <h2> Title</h2>
+            <table class="table" style="margin-top: 5%;">
+                <thead>
+                <td> Description</td>
+                <td>pH</td>
+                <td>Rating</td>
+                </thead>
+                <tr>
+                    <td> &nbsp;</td>
+                    <td>< 4.5</td>
+                    <td>Very Low</td>
+                </tr>
+                <tr>
+                    <td> Strongly acid
+                    </td>
+                    <td>4.6-5.5
+                    </td>
+                    <td>Low
+                    </td>
+                </tr>
+                <tr>
+                    <td> Moderately acid
+                    </td>
+                    <td>5.6-6.0
+                    </td>
+                    <td>Medium
+                    </td>
+                </tr>
+                <tr>
+                    <td> Slightly acid
+                    </td>
+                    <td>6.1-6.5
+                    </td>
+                    <td>Medium
+                    </td>
+                </tr>
+                <tr>
+                    <td>Neutral
+                    </td>
+                    <td>6.6-7.2
+                    </td>
+                    <td>High
+                    </td>
+                </tr>
+                <tr>
+                    <td>Slightly alkaline
+                    </td>
+                    <td>7.3-7.8
+                    </td>
+                    <td>High
+                    </td>
+                </tr>
+                <tr>
+                    <td>Moderately alkaline
+                    </td>
+                    <td>7.9-8.4
+                    </td>
+                    <td>Very high
+                    </td>
+                </tr>
+                <tr>
+                    <td>Strongly alkaline
+                    </td>
+                    <td>8.5-9.0
+                    </td>
+                    <td>Very high
+                    </td>
+                </tr>
+                <tr>
+                    <td>Very strongly alkaline
+                    </td>
+                    <td>> 9.0
+                    </td>
+                    <td>Very high
+                    </td>
+                </tr>
+
+
+            </table>
 
         </div>
     </div>
@@ -184,13 +237,13 @@ include("include/preloader.php");
             No sample profiles
         </div>
     </div>
-<!--    <div class="col-md-4 vertical-center" style="background: teal; color: white; text-align: justify; height: auto; padding-top: 5px;-->
-<!--   padding-bottom: 5px; max-width: 100%">-->
-<!--        <span> <img src=""></span>-->
-<!--        <span> <img src=""></span>-->
-<!--        <span> <img src=""></span>-->
-<!--        <span> <img height="300px" src="http://akorion.ftfcpm.com:7325/ODKAggregate/view/binaryData?blobKey=Soil_Sample_Form%5B%40version%3Dnull+and+%40uiVersion%3Dnull%5D%2FSoil_Sample_Form%5B%40key%3Duuid%3Af3af2f16-3ce2-421b-9c1e-f7c967c86dfa%5D%2Fsoil_sample%3Aanalysis%5B%40ordinal%3D1%5D%2Fprofile_photo"></span>-->
-<!--    </div>-->
+    <!--    <div class="col-md-4 vertical-center" style="background: teal; color: white; text-align: justify; height: auto; padding-top: 5px;-->
+    <!--   padding-bottom: 5px; max-width: 100%">-->
+    <!--        <span> <img src=""></span>-->
+    <!--        <span> <img src=""></span>-->
+    <!--        <span> <img src=""></span>-->
+    <!--        <span> <img height="300px" src="http://akorion.ftfcpm.com:7325/ODKAggregate/view/binaryData?blobKey=Soil_Sample_Form%5B%40version%3Dnull+and+%40uiVersion%3Dnull%5D%2FSoil_Sample_Form%5B%40key%3Duuid%3Af3af2f16-3ce2-421b-9c1e-f7c967c86dfa%5D%2Fsoil_sample%3Aanalysis%5B%40ordinal%3D1%5D%2Fprofile_photo"></span>-->
+    <!--    </div>-->
 </div>
 
 

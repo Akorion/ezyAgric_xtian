@@ -46,7 +46,8 @@ switch ($_POST["token"]) {
 
         $rows = $mCrudFunctions->fetch_rows("sample_analysis_results", "*", "1");
 
-        echo " <table class='table table-hover' id='dt_example'> <thead class='bg bg-success'><th>id</th> <th>Sample</th><th>pH</th> <th>OM</th> <th>N</th> <th>P</th><th>Ca</th> <th>Mg</th><th>K</th> </thead>";
+        echo " <table class='table table-hover' id='dt_example' style=''> 
+ <thead> <tr class='bg bg-primary' style='color: white'><th>id</th> <th>Sample</th><th>pH</th> <th>OM</th> <th>N</th> <th>P</th><th>Ca</th> <th>Mg</th><th>K</th> </tr></thead>";
 
         foreach ($rows as $row) {
 
@@ -62,7 +63,7 @@ switch ($_POST["token"]) {
 
         $rows = $mCrudFunctions->fetch_rows("soil_profiles", "*", "1");
 
-        echo " <table class='table table-hover' id='soil_prof'> <thead class='bg bg-success'><th>id</th> <th>Hole</th><th>Horizon</th><th>pH</th> <th>OM</th> <th>N</th> <th>P</th><th>Ca</th> <th>Mg</th><th>K</th> </thead>";
+        echo " <table class='table table-hover' id='soil_prof'> <thead class='bg bg-success'><tr class='bg bg-primary'><th>id</th> <th>Hole</th><th>Horizon</th><th>pH</th> <th>OM</th> <th>N</th> <th>P</th><th>Ca</th> <th>Mg</th><th>K</th></tr> </thead>";
 
         foreach ($rows as $row) {
 

@@ -136,7 +136,6 @@ $path = $_SERVER["PHP_SELF"];
                         echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
                         break;
                 }
-
                 ?>
             </form>
             <ul class="nav navbar-nav navbar-right">
