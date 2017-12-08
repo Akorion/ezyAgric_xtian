@@ -117,7 +117,7 @@
                 </tr>
             </table>
         </div>
-        <div class="col-md-5 vertical-center" style="text-align: justify; height: auto; margin-top: 1px; padding: 4px">
+        <div class="col-md-5 vertical-center" style="text-align: justify; height: auto; margin-top: 1px; padding-top: 2px; padding-bottom: 20px">
             <h2>Recomendation</h2>
             In conclusion, as I earlier communicated 80% of land doesn’t have rocks as you were interested to
             know but the 20%  has stone particles  starting at 1.5ft  which may not pose a big threat to rooting
@@ -127,11 +127,16 @@
             improve soil  pH.  Liming can be done at least  3 months before planting.  However,  coffee can thrive
             in the pH of 4.5
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 text-center" >
             <a href="./uploads/soil-sample-results.xls">
-<img src="images/downloadarrow.png" style="width: 60%; margin-top: 50%"/>
-            Download as pdf
+<img src="images/downloadarrow.png" style="width: 40%; margin-top: 10%"/><br>
+            Download results <br>
             </a>
+            <a href="./uploads/soil-results-report.pdf">
+<img src="images/downloadarrow.png" style="width: 40%;"/> <br>
+            Download report
+            </a>
+
         </div>
 
     </div>
