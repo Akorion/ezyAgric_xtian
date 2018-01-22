@@ -19,10 +19,6 @@ if (!isset($_SESSION['client_id'])) {
 
 $path = $_SERVER["PHP_SELF"];
 
-//$connect = mysqli_connect("localhost","root","","akorionc_ezyagric");
-//$query = "select biodata_farmer_gender, count(*) as number from dataset_67 GROUP BY biodata_farmer_gender";
-//$result = mysqli_query($connect,$query)or die("not querying");
-
 ?>
 <html>
 <head>
@@ -58,7 +54,7 @@ $path = $_SERVER["PHP_SELF"];
     <link rel="stylesheet" type="text/css" href="datepicker/css/bootstrap-datepicker3.css">
 
     <!-- Datatables -->
-    <link rel="stylesheet" type="text/css" href="css/dataTables.min.css" >
+    <link rel="stylesheet" type="text/css" href="css/dataTables.min.css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -68,7 +64,7 @@ $path = $_SERVER["PHP_SELF"];
     <title>EZY AGRIC</title>
     <script type="text/javascript" src="js/sorttable.js"></script>
 
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>-->
 </head>
 <body>
 <div class="navbar navbar-default static-top" role="navigation">
@@ -104,31 +100,30 @@ $path = $_SERVER["PHP_SELF"];
             <ul class="nav navbar-nav">
                 <li class="active"><?php
 
-                    if($_SESSION["account_name"] == "Insurance"){
+                    if ($_SESSION["account_name"] == "Insurance") {
                         echo "<a href=\"./insuranceDash.php\">Dashboard</a>";
-                    } elseif ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd"){
+                    } elseif ($_SESSION['account_name'] == "Ankole Coffee Producers Cooperative Union Ltd") {
                         echo "<a href='./acpudash.php'>Dashboard</a>";
-                    } elseif ($_SESSION["account_name"] == "Rushere SACCO"){
+                    } elseif ($_SESSION["account_name"] == "Rushere SACCO") {
                         echo "<a href='./dairyDashboard.php'>Dashboard</a>";
-                    }
-                    else {
+                    }else {
                         echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
+
                     } ?>
                 </li>
                 <li class="dropdown">
                     <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Statistics<b
                                 class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <?php
-                        if ($_SESSION["account_name"] == "Rushere SACCO"){
-                            echo "<li><a href='./dairy_stats.php'>Farmers</a></li>";
-                        } else {
-                            echo "<li><a href='./stat_farmers.php'>Farmers</a></li>";
-                        }
-                        ?>
+                    <ul class="dropdown-menu"><?php
+                        if($_SESSION["account_name"] == "Rushere SACCO") {
+                            echo "<li><a href=\"./dairy_stats.php\">Farmers</a></li>";
+                        }else {
+                            echo "<li><a href=\"./stat_farmers.php\">Farmers</a></li>";
+                        }   ?>
                     </ul>
                 </li>
             </ul>
+
             <form class="navbar-form navbar-left" style="font-size:18px;">
                 <?php
                 $page = basename($_SERVER['PHP_SELF']);
@@ -137,11 +132,7 @@ $path = $_SERVER["PHP_SELF"];
                     case  "view.php":
                         echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
                         break;
-//                    case "dashboardAll.php":
-//                        echo "<input id=\"search_holder\" type=\"text\" class=\"form-control col-lg-8\" placeholder=\"Search\">";
-//                        break;
                 }
-
                 ?>
             </form>
             <ul class="nav navbar-nav navbar-right">
