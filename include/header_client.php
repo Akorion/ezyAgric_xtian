@@ -126,8 +126,6 @@ $path = $_SERVER["PHP_SELF"];
                             echo "<li><a href='./stat_farmers.php'>Farmers</a></li>";
                         }
                         ?>
-<!--                        <li><a href="./stat_farmers.php">Farmers</a></li>-->
-                        <!--  <li><a href="stat_vas.php">Village Agents</a></li>-->
                     </ul>
                 </li>
             </ul>
