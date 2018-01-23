@@ -5,12 +5,119 @@ require_once dirname(dirname(__FILE__)) . "/php_lib/user_functions/crud_function
 require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/database_query_processor_class.php";
 require_once dirname(dirname(__FILE__)) . "/php_lib/lib_functions/utility_class.php";
 
-
 $mCrudFunctions = new CrudFunctions();
 $json_model_obj = new JSONModel();
 $util_obj = new Utilties();
 
 switch ($_POST["token"]) {
+    case "get_todays_milk":
+        session_start();
+        $client_id = $_SESSION["client_id"];
+        $role =  $_SESSION['role'];
+        $branch = $_SESSION['user_account'];
+
+        $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
+        $group = array();   $persons = array();
+        $today = date("Y-m-d", strtotime('today'));
+        $from = "2017-11-13";
+        $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$from&end_date=$today");
+        $milk_periodic_data = json_decode($milk_data);
+        foreach ($rows as $row){
+            if($mCrudFunctions->check_table_exists("dataset_".$row['id'])){
+                $data_table = "dataset_".$row['id'];
+                if($role == 1) {
+                    $results = $mCrudFunctions->fetch_rows($data_table, "biodata_first_name,biodata_last_name,biodata_phonenumber", 1);
+                    foreach ($results as $result) {
+                        $name = $result['biodata_first_name'] . " " . $result['biodata_last_name'];
+                        $person = array("name" => $name, "mobile" => $result['biodata_phonenumber']);
+                        array_push($persons, $person);
+                    }
+                }
+                elseif ($role == 2){
+                    $results = $mCrudFunctions->fetch_rows($data_table, "biodata_first_name,biodata_last_name,biodata_phonenumber", "sacco_branch_name LIKE '$branch'");
+                    foreach ($results as $result) {
+                        $name = $result['biodata_first_name'] . " " . $result['biodata_last_name'];
+                        $person = array("name" => $name, "mobile" => $result['biodata_phonenumber']);
+                        array_push($persons, $person);
+                    }
+                }
+                else {
+                    $results = $mCrudFunctions->fetch_rows($data_table, "biodata_first_name,biodata_last_name,biodata_phonenumber", "biodata_cooperative_name LIKE '$branch'");
+                    foreach ($results as $result) {
+                        $name = $result['biodata_first_name'] . " " . $result['biodata_last_name'];
+                        $person = array("name" => $name, "mobile" => $result['biodata_phonenumber']);
+                        array_push($persons, $person);
+                    }
+                }
+            }
+        }
+
+        foreach ($milk_periodic_data as $dairy_data){
+            $milk_quantity = 0;
+            $account = $dairy_data->account_no;
+            $mobile_no = substr($account, 6);
+             $milk = $dairy_data->milk_amount;
+             $date = new DateTime($dairy_data->created_at);
+             $date = $date->format("Y-m-d");
+            if($role == 1){
+                foreach ($persons as $farmer){
+                    $farmer_name = $farmer['name'];
+                    $farmer_mobile = $farmer['mobile'];
+                    if($farmer_mobile == $mobile_no){
+                        $milk_quantity += $milk;
+                        $farmer_data = array('name' => $farmer_name, 'milk' => $milk_quantity, 'phone_no' => $farmer_mobile, 'date' => $date);
+                        array_push($group, $farmer_data);
+                    }
+                }
+            }
+            elseif ($role == 2){
+                foreach ($persons as $farmer){
+                    $farmer_name = $farmer['name'];
+                    $farmer_mobile = $farmer['mobile'];
+                    if($farmer_mobile == $mobile_no){
+                        $milk_quantity += $milk;
+                        $farmer_data = array('name' => $farmer_name, 'milk' => $milk_quantity, 'phone_no' => $farmer_mobile, 'date' => $date);
+                        array_push($group, $farmer_data);
+                    }
+                }
+            }
+            else {
+                foreach ($persons as $farmer){
+                    $farmer_name = $farmer['name'];
+                    $farmer_mobile = $farmer['mobile'];
+                    if($farmer_mobile == $mobile_no){
+                        $milk_quantity += $milk;
+                        $farmer_data = array('name' => $farmer_name, 'milk' => $milk_quantity, 'phone_no' => $farmer_mobile, 'date' => $date);
+                        array_push($group, $farmer_data);
+                    }
+                }
+            }
+        }
+
+        echo "
+              <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-hover table-bordered\" id='dairyTable'>
+                <thead >
+                    <tr>
+                        <td><input type=\"text\" id=\"0\" class=\"transactions-search-input\"></td>
+                        <td><input type=\"text\" id=\"1\" class=\"transactions-search-input\"></td>
+                        <td><input type=\"date\" id=\"2\" class=\"transactions-search-input\" placeholder=\"Date\"></td>
+                 <!--      <td><input type=\"date\" id=\"3\" class=\"transactions-search-input\" placeholder=\"Date To\"></td> -->
+                        <td><input type=\"text\" id=\"3\" class=\"transactions-search-input\"</td>
+                    </tr>
+                    <tr><th>Farmer</th><th>Contact</th><th>Date</th><th>Quantity(Ltrs)</th></tr>
+                </thead>";
+            foreach ($group as $element){
+                $name = $element['name'];
+                $milk = $element['milk'];
+                $mobile_no = $element['phone_no'];
+                $date = $element['date'];
+                echo "<tr><td>$name</td><td>0$mobile_no</td><td>$date</td><td>$milk</td></tr>";
+            }
+
+        echo "</table>";
+
+        break;
+
     case  "get_expenditure":
         session_start();
         $client_id = $_SESSION["client_id"];

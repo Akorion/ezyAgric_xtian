@@ -208,9 +208,9 @@ switch ($_POST["token"]) {
                        <i class=\"fa fa-money fa-3x\"></i>
                    </div>
                    <div class=\"col-md-9\">
-                      <h4>Milk supplied today</h4>
+                      <h4><a href='milk_supplied_today.php'>Milk supplied today</a></h4>
                        <a style=\"font-size:15px; color:blue\"><b> " . number_format($milk_quantity) . " Litres</b></a> <br>
-                    <!--   <a style=\"font-size:13px; color:green\">UGX " . number_format($milkpayment) . " paid</a>  -->
+                       <a href='milk_supplied_today.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                    </div>
                </div>
              </div>
@@ -221,9 +221,9 @@ switch ($_POST["token"]) {
                        <i class=\"fa fa-sitemap fa-3x\"></i>
                    </div>
                    <div class=\"col-md-9\">
-                       <h4>Expenditure</h4>
+                       <h4><a href='expenditure.php'>Expenditure</a></h4>
                        <a style=\"font-size:15px; color:blue\">Total Amount: <b> " . number_format($expenditure) . " UGX</b></a> <br>
-                    <!--   <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>  -->
+                       <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                    </div>
                </div>
              </div>
@@ -251,9 +251,9 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-money fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                          <h4>Milk Supplied Today</h4>
-                           <a style=\"font-size:15px; color:blue\">Total Quantity: <b>" . number_format($milk_quantity) . " Litres</b></a> <br>
-                           <!-- <a style=\"font-size:13px; color:green\">UGX " . date('d/m/Y') . " paid</a>  -->
+                          <h4><a href='milk_supplied_today.php'>Milk supplied today</a></h4>
+                       <a style=\"font-size:15px; color:blue\"><b> " . number_format($milk_quantity) . " Litres</b></a> <br>
+                       <a href='milk_supplied_today.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>
@@ -264,9 +264,9 @@ switch ($_POST["token"]) {
                            <i class=\"fa fa-sitemap fa-3x\"></i>
                        </div>
                        <div class=\"col-md-9\">
-                           <h4>Expenditure</h4>
+                           <h4><a href='expenditure.php'>Expenditure</a></h4>
                            <a style=\"font-size:15px; color:blue\">Total Amount: <b> " . number_format($expenditure) . " UGX</b></a> <br>
-                        <!--   <a style=\"font-size:13px; color:green\"> ". $taken_no_loans ." didn't get</a>  -->
+                           <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>
