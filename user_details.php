@@ -447,7 +447,8 @@
                 $latitude = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Latitude']);
                 $longitude = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_location_farmer_home_gps_Longitude']);
                 $picture = $util_obj->remove_apostrophes($rows[0]['biodata_farmer_picture']);
-                $uuid = $util_obj->remove_apostrophes($rows[0]['meta_instanceID']);
+                $uuid = $rows[0]['meta_instanceID'] ? $rows[0]['meta_instanceID'] : 'NA';
+                $uuid = $util_obj->remove_apostrophes($uuid);
 
                 echo "<input id=\"picture\" type=\"hidden\" value=\"$picture\" />";
                 echo "<input id=\"uuid\" type=\"hidden\" value=\"$uuid\" />";
