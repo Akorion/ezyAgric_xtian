@@ -710,7 +710,7 @@ switch ($_POST["token"]) {
                 $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1);
             }
 
-            $f_acres = $mCrudFunctions->fetch_rows("dataset_" . 218, "DISTINCT(crop_production_data_crop_name) as crop,
+            $f_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
                                 SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
             if(!empty($f_acres)){
                 foreach ($f_acres as $res){
@@ -833,7 +833,7 @@ switch ($_POST["token"]) {
 //                $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
 //            }
         }
-        print_r($acreage_farmers);
+//         print_r($acreage_farmers);
         
         $coffee_acres = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . 71)[0]['ttl_acerage'];
         $props = new stdClass();
