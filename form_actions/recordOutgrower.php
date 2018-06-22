@@ -684,6 +684,7 @@ switch ($_POST["token"]) {
                    </div>
                  </div>";
         break;
+
     case "savana_dash":
         session_start();
         $client_id = $_SESSION["client_id"];
@@ -695,6 +696,7 @@ switch ($_POST["token"]) {
         $yield = 0;
         $farmer_acreage = 0;
         $enterprise_farmers = array();
+        $acreage_farmers = array();
 
         foreach ($rows as $row) {
             $type = $row['dataset_type'];
@@ -708,6 +710,23 @@ switch ($_POST["token"]) {
                 $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1);
             }
 
+            $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
+                                SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
+            if(count($farmers_acres) > 1){
+                foreach ($farmers_acres as $res){
+                    $props = new stdClass();
+                    $props->crop = ucfirst(trim(strtolower($res['crop'])));
+                    $props->acreage = number_format($res['acres'], 2);
+
+                    array_push($acreage_farmers, $props);
+                }
+            }
+//            else {
+//                $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
+//                                SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
+//            }
+
+
             $crop_farmers = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
                                 COUNT(biodata_farmer_name) as farmers", "1 GROUP BY crop_production_data_crop_name");
             foreach ($crop_farmers as $res){
@@ -717,7 +736,6 @@ switch ($_POST["token"]) {
 
                 array_push($enterprise_farmers, $items);
             }
-
 //            $results = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "*", "1");
 //            foreach ($results as $res) {
 //                $uuid = $util_obj->remove_apostrophes($res['meta_instanceID']);
@@ -815,6 +833,20 @@ switch ($_POST["token"]) {
 //            }
         }
 
+        $coffee_acres = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . 71)[0]['ttl_acerage'];
+        $props = new stdClass();
+        $props->crop = 'Coffee';
+        $props->acreage = number_format($coffee_acres, 2);
+        array_push($acreage_farmers, $props);
+
+        for($i=0; $i < count($acreage_farmers); $i++){
+            if($acreage_farmers[$i]->crop == $acreage_farmers[$i+1]->crop){
+                $acreage_farmers[$i]->acreage += $acreage_farmers[$i+1]->acreage;
+                unset($acreage_farmers[$i+1]);
+                $acreage_farmers = array_values($acreage_farmers);
+            }
+        }
+
         $tmp = new stdClass();
         $tmp->crop = 'Coffee';
         $tmp->no_of_farmers = $mCrudFunctions->get_count("dataset_" . 71, 1);
@@ -850,8 +882,11 @@ switch ($_POST["token"]) {
                        </div>
                        <div class=\"col-md-9\">
                        <h4> <a href='#'> Acreage </a> </h4>                        
-                           <span href='#' style=\"font-size:15px; color:blue\"><b>Total Acreage: " . number_format($acreage) . "</b></span> 
-                           <a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
+                           <span href='#' style=\"font-size:15px; color:blue\"><b>Total Acreage: " . number_format($acreage) . "</b></span><br>";
+                            foreach($acreage_farmers as $rs){
+                                echo "<span style =\"font-size:15px; color:blue\" >". $rs->crop .": ". $rs->acreage ."</span><br>";
+                            }
+                           echo "<a href='expenditure.php'><span class='pull-right glyphicon glyphicon-circle-arrow-right' style='color: green; font-size: 20px;'> </span></a>
                        </div>
                    </div>
                  </div>
