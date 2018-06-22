@@ -712,12 +712,15 @@ switch ($_POST["token"]) {
                                 COUNT(biodata_farmer_name) as farmers", "1 GROUP BY crop_production_data_crop_name");
             foreach ($crop_farmers as $res){
                 $items = new stdClass();
-                $items->crop = $res['crop'];
+                $items->crop =  ucfirst(trim(strtolower($res['crop'])));
                 $items->no_of_farmers = $res['farmers'];
 
                 array_push($enterprise_farmers, $items);
             }
-
+            $tmp = new stdClass();
+            $tmp->crop = 'Coffee';
+            $tmp->no_of_farmers = $mCrudFunctions->get_count("dataset_" . 71, 1);
+            array_push($enterprise_farmers, $tmp);
 //            $results = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "*", "1");
 //            foreach ($results as $res) {
 //                $uuid = $util_obj->remove_apostrophes($res['meta_instanceID']);
