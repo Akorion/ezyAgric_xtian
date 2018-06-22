@@ -721,6 +721,7 @@ switch ($_POST["token"]) {
                     array_push($acreage_farmers, $props);
                 }
             }
+            print_r($acreage_farmers);
 //            else {
 //                $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
 //                                SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
