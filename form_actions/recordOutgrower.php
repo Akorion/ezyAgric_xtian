@@ -703,7 +703,7 @@ switch ($_POST["token"]) {
 
             $farmers += $mCrudFunctions->get_count("dataset_" . $row['id'], 1);
 
-            $acreage = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . $row['id'])[0]['ttl_acerage'];
+            $acreage += $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . $row['id'])[0]['ttl_acerage'];
             if ($acreage < 1) {
                 $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1);
             }
