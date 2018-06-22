@@ -20,7 +20,8 @@ if(!isset($_SESSION['user_id'])){
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="../css/material.min.css">
-<script src="https://maps.googleapis.com/maps/api/js"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChJn8njjZxU_B2LtFFjxR5c3M9gTnR0xo&callback=initMap" type="text/javascript"></script>
 <script src="js/sorttable.js"></script>
 <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../css/datepicker.css">
