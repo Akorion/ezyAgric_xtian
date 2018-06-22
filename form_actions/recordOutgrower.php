@@ -721,12 +721,6 @@ switch ($_POST["token"]) {
                     array_push($acreage_farmers, $props);
                 }
             }
-//             echo $row['id'];
-//             print_r($acreage_farmers);
-//            else {
-//                $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
-//                                SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
-//            }
 
             $crop_farmers = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
                                 COUNT(biodata_farmer_name) as farmers", "1 GROUP BY crop_production_data_crop_name");
@@ -737,104 +731,8 @@ switch ($_POST["token"]) {
 
                 array_push($enterprise_farmers, $items);
             }
-//            $results = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "*", "1");
-//            foreach ($results as $res) {
-//                $uuid = $util_obj->remove_apostrophes($res['meta_instanceID']);
-////                $price_per_kg = $util_obj->remove_apostrophes($res['production_data_price_per_kg']);
-////                $insured_yield = $util_obj->remove_apostrophes($res['production_data_insured_yield_in_kgs']);
-//
-//                //----------  calculating total acreage for the farmers ------------------
-//                $acares = array();
-//                $farmer_acreage = 0;
-//                $gardens_table = "garden_" . $row['id'];
-//                if ($mCrudFunctions->check_table_exists($gardens_table) > 0) {
-//                    $gardens = $mCrudFunctions->fetch_rows($gardens_table, " DISTINCT PARENT_KEY_ ", " PARENT_KEY_ LIKE '$uuid%' ");
-//
-//                    if (sizeof($gardens) < 0) {
-//
-//                    } else {
-//                        $z = 1;
-//                        foreach ($gardens as $garden) {
-//                            $keyz = $uuid . "/gardens[$z]";
-//                            $data_rows = $mCrudFunctions->fetch_rows($gardens_table, "garden_gps_point_Latitude,garden_gps_point_Longitude", " PARENT_KEY_ ='$keyz'");
-//                            if (sizeof($data_rows) == 0) {
-//                                $data_rows = $mCrudFunctions->fetch_rows($gardens_table, "garden_gps_point_Latitude,garden_gps_point_Longitude", " PARENT_KEY_ ='$uuid'");
-//                            }
-//                            $latitudes = array();
-//                            $longitudes = array();
-//
-//                            foreach ($data_rows as $row_) {
-//                                array_push($longitudes, $row_['garden_gps_point_Longitude']);
-//                                array_push($latitudes, $row_['garden_gps_point_Latitude']);
-//                            }
-//                            $acerage = $util_obj->get_acerage_from_geo($latitudes, $longitudes);
-//                            array_push($acares, $acerage);
-//                            $z++;
-//                        }
-//                        $total_gardens = sizeof($gardens);
-//
-//                        if ($total_gardens != 0) {
-//                            $farmer_acreage += round(array_sum($acares)/*$total_gardens*/, 2);
-////                            $value_of_insured_yield = $farmer_acreage * $price_per_kg * $insured_yield;
-////                            $premium = 0.05 * $value_of_insured_yield;
-////                            $levy = 0.005 * $premium;
-////                            $vat = 0.18 * ($premium + $levy);
-////                            if ($farmer_acreage <= 5) {
-////                                $subsidy = 0.5 * $premium;
-////                            } else {
-////                                $subsidy = 0.3 * $premium;
-////                            }
-////                            $real_premium = ($premium - $subsidy) + $levy + $vat;
-////                            $total_premium += $real_premium;
-//                        }
-//                    }
-//
-//                }
-////                else {
-////                    $farmer_acreage = $util_obj->remove_apostrophes($row['production_data_land_size']);
-////                    $value_of_insured_yield = $farmer_acreage * $price_per_kg * $insured_yield;
-////                    $premium = 0.05 * $value_of_insured_yield;
-////                    $levy = 0.005 * $premium;
-////                    $vat = 0.18 * ($premium + $levy);
-////                    if ($farmer_acreage <= 5) {
-////                        $subsidy = 0.5 * $premium;
-////                    } else {
-////                        $subsidy = 0.3 * $premium;
-////                    }
-////                    $real_premium = ($premium - $subsidy) + $levy + $vat;
-////                    $total_premium += $real_premium;
-////                }
-//            }
-//
-//
-//            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-//                $cash_given_out += $mCrudFunctions->get_sum("dataset_" . $row['id'], "maize_production_data_money_used_for_fertilizers", 1);
-//            }
-//
-//            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-////                echo "the table exists";
-//                $taken_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='yes'");
-//            }
-//            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-//                $taken_no_loans += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_loan_accessed_before='no'");
-//            }
-//
-//            if ($mCrudFunctions->check_table_exists("tractor_money_returned_" . $row['id'])) {
-//                $tractor_money_returned = $tractor_money_returned + $mCrudFunctions->get_sum("tractor_money_returned_" . $row['id'], "tractor_money_returned", 1);
-//            }
-//
-//            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-//                $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='yes'", 1);
-//                if ($_SESSION["account_name"] == "Insurance") {
-//                    $insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "1");
-//                }
-//            }
-//            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
-//                $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
-//            }
         }
-//         print_r($acreage_farmers);
-        
+
         $coffee_acres = $mCrudFunctions->fetch_rows("total_acerage_tb", "ttl_acerage", "dataset_id=" . 71)[0]['ttl_acerage'];
         $props = new stdClass();
         $props->crop = 'Coffee';
@@ -848,10 +746,6 @@ switch ($_POST["token"]) {
                 $acreage_farmers = array_values($acreage_farmers);
             }
         }
-//        $props->crop = 'Barley';
-//        $props->acreage = 20;
-//        array_push($acreage_farmers, $props);
-
 
         $tmp = new stdClass();
         $tmp->crop = 'Coffee';
