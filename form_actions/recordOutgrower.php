@@ -717,10 +717,7 @@ switch ($_POST["token"]) {
 
                 array_push($enterprise_farmers, $items);
             }
-            $tmp = new stdClass();
-            $tmp->crop = 'Coffee';
-            $tmp->no_of_farmers = $mCrudFunctions->get_count("dataset_" . 71, 1);
-            array_push($enterprise_farmers, $tmp);
+
 //            $results = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "*", "1");
 //            foreach ($results as $res) {
 //                $uuid = $util_obj->remove_apostrophes($res['meta_instanceID']);
@@ -816,6 +813,19 @@ switch ($_POST["token"]) {
 //            if ($mCrudFunctions->check_table_exists("dataset_" . $row['id'])) {
 //                $not_insured += $mCrudFunctions->get_count("dataset_" . $row['id'], "general_questions_crop_insurance_accessed_before='no'", 1);
 //            }
+        }
+
+        $tmp = new stdClass();
+        $tmp->crop = 'Coffee';
+        $tmp->no_of_farmers = $mCrudFunctions->get_count("dataset_" . 71, 1);
+        array_push($enterprise_farmers, $tmp);
+
+        for($i=0; $i < count($enterprise_farmers); $i++){
+            if($enterprise_farmers[$i]->crop == $enterprise_farmers[$i+1]->crop){
+                $enterprise_farmers[$i]->no_of_farmers += $enterprise_farmers[$i+1]->no_of_farmers;
+                unset($enterprise_farmers[$i+1]);
+                $enterprise_farmers = array_values($enterprise_farmers);
+            }
         }
 
         echo "<div class=\"col-md-6 col-sm-6 col-xs-12\" style='box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);'>
