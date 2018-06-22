@@ -710,7 +710,7 @@ switch ($_POST["token"]) {
                 $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1);
             }
 
-            $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
+            $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . 236, "DISTINCT(crop_production_data_crop_name) as crop,
                                 SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
             if(count($farmers_acres) > 1){
                 foreach ($farmers_acres as $res){
@@ -721,8 +721,8 @@ switch ($_POST["token"]) {
                     array_push($acreage_farmers, $props);
                 }
             }
-            echo $row['id'];
-//             print_r($acreage_farmers);
+//             echo $row['id'];
+            print_r($acreage_farmers);
 //            else {
 //                $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . $row['id'], "DISTINCT(crop_production_data_crop_name) as crop,
 //                                SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
