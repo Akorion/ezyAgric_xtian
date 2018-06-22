@@ -64,6 +64,9 @@ if(isset($_POST["login"]) && isset($_POST["username"]) && $_POST["username"]!=''
 
 //	$util_obj->redirect_to( "../dash1.php" );
 	}
+	elseif($_SESSION["client_id"]==5){
+        $util_obj->redirect_to( "../savana-dash.php" );
+    }
 	elseif($_SESSION["client_id"]==22){
         $util_obj->redirect_to( "../soilprofiles.php" );
     }elseif($_SESSION["account_name"]== 'Ankole Coffee Producers Cooperative Union Ltd'){

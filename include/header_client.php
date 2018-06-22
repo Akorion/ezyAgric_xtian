@@ -30,7 +30,7 @@ $path = $_SERVER["PHP_SELF"];
     <link rel="stylesheet" type="text/css" href="css/material.min.css">
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!--<script src="https://maps.googleapis.com/maps/api/js"></script>-->
+    <!--<script src="https://maps.googleapis.com/maps/api/js"   ></script>-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChJn8njjZxU_B2LtFFjxR5c3M9gTnR0xo&callback=initMap"
             type="text/javascript"></script>
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300' rel='stylesheet' type='text/css'>
@@ -106,6 +106,8 @@ $path = $_SERVER["PHP_SELF"];
                         echo "<a href='./acpudash.php'>Dashboard</a>";
                     } elseif ($_SESSION["account_name"] == "Rushere SACCO") {
                         echo "<a href='./dairyDashboard.php'>Dashboard</a>";
+                    } elseif ($_SESSION["account_name"] == "Savannah Commodities") {
+                        echo "<a href='./savana-dash.php'>Dashboard</a>";
                     }else {
                         echo "<a href=\"./dashboardAll.php\" >Dashboard</a>";
 

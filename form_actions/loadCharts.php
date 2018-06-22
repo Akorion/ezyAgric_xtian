@@ -290,7 +290,7 @@ switch ($_POST["token"]) {
                 }
             }
         }
-        draw_graph($district, $no_farmers, $youth, $old, "column");
+        draw_graph($district, $no_farmers, $youth, $old, "Farmers Per District");
         break;
 
     case  "crops_grown" :
@@ -495,11 +495,11 @@ switch ($_POST["token"]) {
         $rows = $mCrudFunctions->fetch_rows("datasets_tb", "*", "client_id='$client_id' AND dataset_type='Farmer'");
         $farmers_number = array();
         $levels = array("Very low", "Low", "Medium", "High", "Very high");
-        $medium;
-        $high;
-        $very_high;
-        $low;
-        $verylow;
+        $medium=0;
+        $high=0;
+        $very_high=0;
+        $low=0;
+        $verylow=0;
 
         foreach ($rows as $row) {
 
@@ -862,7 +862,7 @@ function draw_organic_matter_chart($low, $moderate, $high, $very_high)
     $util_obj->deliver_response(200, 1, $data);
 }
 
-function draw_graph($district, $no_farmers, $youth, $old, $type)
+function draw_graph($district, $no_farmers, $youth, $old, $title)
 {
     $json_model_obj = new JSONModel();
     $util_obj = new Utilties();
@@ -872,7 +872,7 @@ function draw_graph($district, $no_farmers, $youth, $old, $type)
     $old_int = array_map(create_function('$value', 'return (int)$value;'), $old);
     $youth_int = array_map(create_function('$value', 'return (int)$value;'), $youth);
 
-    $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $type);
+    $data = $json_model_obj->get_column_graph($district, $array_int, $youth_int, $old_int, $title);
     $util_obj->deliver_response(200, 1, $data);
 }
 

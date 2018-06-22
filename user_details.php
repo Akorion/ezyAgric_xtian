@@ -2269,6 +2269,7 @@
                     }
 
                     echo "<input type=\"hidden\" id=\"enterprise\" value=\"$enterprise\" /> ";
+                    if ($mCrudFunctions->check_table_exists("soil_results_" . $dataset_id)) {
                     echo "  <br>     
                         <h6><b style='font-size: medium'> Soil Results </b></h6><hr/>
                         <p style='padding-left: 10px;'><b> Soil Properties </b></p><p style='padding-left: 60px'><b>Values</b></p><b style='padding-left: 70px'>Description</b><hr/>
@@ -2283,7 +2284,7 @@
                         <h7 class='trim'><b>Nitrogen Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$n_requiremt</p><hr/>                          
                         <h7 class='trim'><b>Phosphorous Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$p_requiremt</p><hr/>
                         <h7 class='trim'><b>Potassium Requirement:</b></h7><p style='width: 600px; padding-left: 10px'>$k_requiremt</p><hr/>
-                        ";
+                        ";}
                     echo "</div>
     </div>
   </div>";
@@ -2449,7 +2450,7 @@ if($_SESSION['account_name'] == "Kiima Foods"){
     $acres = $rows_yield[0]['crop_production_data_maize_production_land'] ? $rows_yield[0]['crop_production_data_maize_production_land'] : "N/A";
 } else {
     $rows_yield = $mCrudFunctions->fetch_rows("out_grower_produce_tb", "*", " dataset_id='$dataset_id' AND  meta_id='$id' ");
-    $yield = $rows_yield[0]['qty'] == "" ? "N/A" : $rows_yield[0]['qty'];
+    $yield = $rows_yield[0]['qty'] == "" ? 0 : $rows_yield[0]['qty'];
 }
 
 $rows_cash_returned = $mCrudFunctions->get_sum("cash_returned_" . $dataset_id, "cash_returned", " farmer_id='$id' ");
