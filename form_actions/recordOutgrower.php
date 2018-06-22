@@ -710,10 +710,10 @@ switch ($_POST["token"]) {
                 $acreage += $mCrudFunctions->get_sum("dataset_" . $row['id'], "coffee_production_data_number_of_acres_of_coffee", 1);
             }
 
-            $farmers_acres = $mCrudFunctions->fetch_rows("dataset_" . 236, "DISTINCT(crop_production_data_crop_name) as crop,
+            $f_acres = $mCrudFunctions->fetch_rows("dataset_" . 218, "DISTINCT(crop_production_data_crop_name) as crop,
                                 SUM(crop_acreage) as acres", "1 GROUP BY crop_production_data_crop_name");
-            if(count($farmers_acres) > 1){
-                foreach ($farmers_acres as $res){
+            if(!empty($f_acres)){
+                foreach ($f_acres as $res){
                     $props = new stdClass();
                     $props->crop = ucfirst(trim(strtolower($res['crop'])));
                     $props->acreage = $res['acres'] == 'NA' ? 0 : $res['acres'];
