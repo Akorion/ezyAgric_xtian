@@ -130,10 +130,10 @@
 
         <div class="col-md-2 text-center">
             <a href="./uploads/soil-sample-results.xlsx">
-                <img src="images/downloadarrow.jpg" style="width: 40%; margin-top: 10%"/><br> Download results <br>
+                <img src="images/download.png" style="width: 40%; margin-top: 10%"/><br> Download results <br>
             </a>
             <a href="./uploads/soil-results-report.pdf">
-                <img src="images/downloadarrow.jpg" style="width: 40%;"/> <br> Download report
+                <img src="images/download.png" style="width: 40%;"/> <br> Download report
             </a>
         </div>
 
