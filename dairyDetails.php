@@ -363,7 +363,8 @@
                 $today = date("Y-m-d", strtotime('today'));
                 $svndays = date("Y-m-d", strtotime('-5 days'));
 
-                $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
+                $milk_data = file_get_contents("http://test.mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
+//                 $milk_data = file_get_contents("https://mcash.ug/farmers/?query=milkdata&access_token=b31ff5eb07171e028e7af6920bbbccab0b43136e08af525fd2cd40333db2ab31&start_date=$svndays&end_date=$today");
                 $milk_periodic_data = json_decode($milk_data);
                 foreach ($milk_periodic_data as $milk_supply) {
                     $milk_quantity = $milk_supply->milk_amount;
