@@ -374,7 +374,7 @@
                     /**introduce farmer phone to get their specific data**/
                     $account = $milk_supply->account_no;
 //                     $mobile_no = substr($account, 6);
-                    $mobile_no = substr($account, 2);
+                    $mobile_no = substr($account, 1);
                     if($mobile_no == $phone){
                         echo "
                         <p style='padding-left: 40px;'>$milk_quantity </p><p style='padding-left: 60px'> $date </p></hr>
